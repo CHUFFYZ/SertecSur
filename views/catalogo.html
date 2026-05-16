@@ -1,0 +1,99 @@
+<!-- =============================================
+  VIEW: views/catalogo.html
+  Vista de catálogo con filtros y listado.
+============================================= -->
+<div id="view-catalogo" class="view">
+
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home'); return false;">Inicio</a></li>
+      <li class="breadcrumb__item" id="bc-category">Catálogo</li>
+    </ol>
+  </nav>
+
+  <main class="container" style="padding-block: 1.5rem 3rem;">
+    <div class="catalog-layout">
+
+      <!-- Panel de filtros ──────────────────── -->
+      <aside aria-label="Filtros de productos">
+        <div class="filters">
+          <div class="filters__header">
+            <i class="fa-solid fa-sliders"></i> Filtrar productos
+          </div>
+
+          <div class="filter-group">
+            <p class="filter-group__title">Categoría</p>
+            <label class="filter-label"><input type="checkbox" checked /> Circuito Cerrado CCTV</label>
+            <label class="filter-label"><input type="checkbox" /> Redes</label>
+            <label class="filter-label"><input type="checkbox" /> Automatización e Intrusión</label>
+            <label class="filter-label"><input type="checkbox" /> Kits con Instalación</label>
+          </div>
+
+          <div class="filter-group">
+            <p class="filter-group__title">Tipo de cámara</p>
+            <label class="filter-label"><input type="checkbox" checked /> Bullet</label>
+            <label class="filter-label"><input type="checkbox" /> Domo</label>
+            <label class="filter-label"><input type="checkbox" /> IP</label>
+            <label class="filter-label"><input type="checkbox" /> PTZ</label>
+            <label class="filter-label"><input type="checkbox" /> DVR / NVR</label>
+          </div>
+
+          <div class="filter-group">
+            <p class="filter-group__title">Marca</p>
+            <label class="filter-label"><input type="checkbox" /> Hikvision</label>
+            <label class="filter-label"><input type="checkbox" /> Dahua</label>
+            <label class="filter-label"><input type="checkbox" /> Epcom</label>
+            <label class="filter-label"><input type="checkbox" /> Saxxon</label>
+            <label class="filter-label"><input type="checkbox" /> Samsung</label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Listado de productos ──────────────── -->
+      <section aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <h1 class="section-heading__title" id="catalog-title">Catálogo de Productos</h1>
+        </div>
+
+        <div class="catalog-toolbar">
+          <nav class="pagination" aria-label="Paginación de resultados">
+            <button class="pagination__btn pagination__btn--active" aria-current="page">1</button>
+            <button class="pagination__btn">2</button>
+            <button class="pagination__btn">3</button>
+            <button class="pagination__btn">4</button>
+            <button class="pagination__btn">5</button>
+            <button class="pagination__btn" aria-label="Página siguiente">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </nav>
+          <p class="catalog-toolbar__count">
+            Mostrando <strong>1–12</strong> de <strong>576</strong> productos
+          </p>
+          <div class="catalog-toolbar__controls">
+            <label for="sort-sel"><i class="fa-solid fa-arrow-up-a-z"></i> Ordenar:</label>
+            <select id="sort-sel" class="catalog-toolbar__select">
+              <option>Más recientes</option>
+              <option>Nombre A–Z</option>
+              <option>Nombre Z–A</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Renderizado dinámico desde app.js: renderProducts('catalog-products', ...) -->
+        <div class="products-grid" id="catalog-products"></div>
+
+        <nav class="pagination" aria-label="Paginación de resultados">
+          <button class="pagination__btn pagination__btn--active" aria-current="page">1</button>
+          <button class="pagination__btn">2</button>
+          <button class="pagination__btn">3</button>
+          <button class="pagination__btn">4</button>
+          <button class="pagination__btn">5</button>
+          <button class="pagination__btn" aria-label="Página siguiente">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </nav>
+      </section>
+
+    </div>
+  </main>
+</div>

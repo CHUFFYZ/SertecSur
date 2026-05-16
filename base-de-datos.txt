@@ -1,0 +1,195 @@
+DROP DATABASE IF EXISTS sistema;
+CREATE DATABASE sistema;
+USE sistema;
+
+-- =========================
+-- USUARIO
+-- =========================
+CREATE TABLE Usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    direccion VARCHAR(150),
+    telefono VARCHAR(20),
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    contrasena VARCHAR(100) NOT NULL,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- =========================
+-- CLIENTE
+-- =========================
+CREATE TABLE Cliente (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT UNIQUE,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- =========================
+-- EMPLEADO
+-- =========================
+CREATE TABLE Empleado (
+    id_empleado INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT UNIQUE,
+    permisos JSON,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id_usuario)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- =========================
+-- PRODUCTO
+-- =========================
+CREATE TABLE Producto (
+    id_producto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50),
+    precio DECIMAL(10,2) NOT NULL,
+    stock INT DEFAULT 0,
+    certificacion VARCHAR(100),
+    descripcion TEXT,
+    ficha_tecnica JSON
+) ENGINE=InnoDB;
+
+-- =========================
+-- CARACTERISTICAS
+-- =========================
+CREATE TABLE Caracteristicas (
+    id_caracteristica INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT,
+    nombre VARCHAR(100),
+    valor VARCHAR(100),
+    FOREIGN KEY (producto_id) REFERENCES Producto(id_producto)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- =========================
+-- CARRITO
+-- =========================
+CREATE TABLE Carrito (
+    id_carrito INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Carrito_item (
+    id_item INT AUTO_INCREMENT PRIMARY KEY,
+    carrito_id INT,
+    producto_id INT,
+    cantidad INT DEFAULT 1,
+    FOREIGN KEY (carrito_id) REFERENCES Carrito(id_carrito)
+        ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id_producto)
+) ENGINE=InnoDB;
+
+-- =========================
+-- COTIZACION
+-- =========================
+CREATE TABLE Cotizacion (
+    id_cotizacion INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(50),
+    subtotal DECIMAL(10,2),
+    total DECIMAL(10,2),
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- =========================
+-- DETALLE COTIZACION
+-- =========================
+CREATE TABLE Detalle_cotizacion (
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    cotizacion_id INT,
+    producto_id INT,
+    cantidad INT,
+    precio_unitario DECIMAL(10,2),
+    FOREIGN KEY (cotizacion_id) REFERENCES Cotizacion(id_cotizacion)
+        ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id_producto)
+) ENGINE=InnoDB;
+
+-- =========================
+-- RESEÑAS
+-- =========================
+CREATE TABLE Resena (
+    id_resena INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    producto_id INT,
+    comentario TEXT,
+    calificacion DECIMAL(2,1) CHECK (calificacion >= 0 AND calificacion <= 5),
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(cliente_id, producto_id),
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+        ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id_producto)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- =========================
+-- SIMULADOR
+-- =========================
+CREATE TABLE Simulador_sesion (
+    id_sesion INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    config_entorno JSON,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(50),
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE Simulador_item (
+    id_item INT AUTO_INCREMENT PRIMARY KEY,
+    sesion_id INT,
+    producto_id INT,
+    pos_x DECIMAL(10,2),
+    pos_y DECIMAL(10,2),
+    rotacion INT,
+    escala INT,
+    activo BOOLEAN,
+    alcance DECIMAL(10,2),
+    distancia_objeto DECIMAL(10,2),
+    angulo_vision DECIMAL(5,2),
+    FOREIGN KEY (sesion_id) REFERENCES Simulador_sesion(id_sesion)
+        ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id_producto)
+) ENGINE=InnoDB;
+
+-- =========================
+-- CHATBOT
+-- =========================
+
+-- Sesiones del chatbot
+CREATE TABLE Chatbot_sesion (
+    id_sesion INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    contexto JSON,
+    fecha_inicio DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(50),
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id_cliente)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Mensajes del chatbot
+CREATE TABLE Chatbot_mensaje (
+    id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
+    sesion_id INT,
+    emisor VARCHAR(20), -- 'usuario' o 'bot'
+    mensaje TEXT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sesion_id) REFERENCES Chatbot_sesion(id_sesion)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Acciones del chatbot
+CREATE TABLE Chatbot_accion (
+    id_accion INT AUTO_INCREMENT PRIMARY KEY,
+    sesion_id INT,
+    tipo VARCHAR(50), -- 'recomendacion', 'cotizacion', etc.
+    referencia_id INT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sesion_id) REFERENCES Chatbot_sesion(id_sesion)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;

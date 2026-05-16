@@ -1,0 +1,166 @@
+<!-- =============================================
+  PARTIAL: partials/header.html
+  Header principal + navegación de escritorio.
+  Actualizado: botón de sesión dinámico + carrito
+============================================= -->
+<header class="site-header" role="banner">
+  <div class="header__inner">
+
+    <!-- Botón hamburguesa (móvil) -->
+    <button
+      class="btn-hamburger"
+      aria-label="Abrir menú de navegación"
+      aria-expanded="false"
+      aria-controls="sidebar"
+      onclick="toggleSidebar()"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Logo -->
+    <a
+      class="header__logo"
+      href="#"
+      onclick="showView('home'); return false;"
+      aria-label="SERTECSUR — Ir al inicio"
+    >
+      <img
+        src="img/SVG/logo.svg"
+        alt="SERTECSUR — Servicios Tecnológicos del Sureste"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+      />
+      <span class="header__logo-fallback" style="display:none">SERTECSUR</span>
+    </a>
+
+    <!-- Búsqueda (escritorio) -->
+    <div class="header__search">
+      <form class="search-form" role="search" onsubmit="return false;">
+        <label for="site-search" class="sr-only">Buscar productos</label>
+        <input
+          id="site-search"
+          class="search-form__input"
+          type="search"
+          placeholder="Buscar cámaras, redes, alarmas…"
+          autocomplete="off"
+        />
+        <button class="search-form__btn" type="submit" aria-label="Buscar">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- Acciones (escritorio) -->
+    <div class="header__actions">
+      <a class="btn btn--primary btn--md" href="#" onclick="showView('contacto'); return false;">
+        <i class="fa-solid fa-headset" aria-hidden="true"></i> Contáctenos
+      </a>
+
+      <!-- Botón carrito (solo visible para clientes autenticados) -->
+      <button
+        data-cart-btn
+        class="btn btn--ghost btn--md"
+        onclick="Cart.open()"
+        aria-label="Ver carrito"
+        style="display:none; position:relative;"
+      >
+        <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+        <span
+          data-cart-count
+          style="display:none; position:absolute; top:-5px; right:-5px;
+                 background:var(--clr-accent); color:#fff; font-size:.6rem;
+                 font-weight:700; min-width:17px; height:17px; border-radius:50%;
+                 display:none; align-items:center; justify-content:center;
+                 line-height:1; padding:0 3px;"
+        >0</span>
+      </button>
+
+      <!-- Botón usuario (login / perfil) -->
+      <a
+        class="btn btn--ghost btn--md"
+        href="#"
+        data-action="login-btn"
+        onclick="showView('login'); return false;"
+        aria-label="Iniciar sesión"
+      >
+        <i class="fa-solid fa-user" aria-hidden="true"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ── Navegación principal (escritorio) ─────────────────────── -->
+  <nav class="main-nav" aria-label="Navegación principal">
+    <ul class="main-nav__list" role="menubar">
+
+      <li class="main-nav__item active" role="none">
+        <a class="main-nav__link" href="#" onclick="showView('home'); return false;" role="menuitem">
+          <i class="fa-solid fa-house" aria-hidden="true"></i> Inicio
+        </a>
+      </li>
+
+      <!-- Mega menú: Productos -->
+      <li class="main-nav__item" role="none">
+        <button class="main-nav__toggle" aria-haspopup="true" aria-expanded="false" role="menuitem">
+          <i class="fa-solid fa-box-open" aria-hidden="true"></i> Productos
+          <i class="fa-solid fa-chevron-down arrow" aria-hidden="true"></i>
+        </button>
+        <div class="dropdown--mega" role="menu" aria-label="Submenú de Productos">
+          <div class="mega-grid">
+
+            <div class="mega-col">
+              <p class="mega-col__title">Circuito Cerrado CCTV</p>
+              <a class="mega-col__link" href="#" onclick="showCatalog('CCTV Kits'); return false;"><i class="fa-solid fa-box"></i> CCTV Kits</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cámaras Bullet'); return false;"><i class="fa-solid fa-camera"></i> Cámaras Bullet</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cámaras Domo'); return false;"><i class="fa-solid fa-camera"></i> Cámaras Domo</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cámaras Especiales'); return false;"><i class="fa-solid fa-camera"></i> Cámaras Especiales</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cámaras IP'); return false;"><i class="fa-solid fa-wifi"></i> Cámaras IP</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cámaras PTZ'); return false;"><i class="fa-solid fa-rotate"></i> Cámaras PTZ</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('DVR / NVR'); return false;"><i class="fa-solid fa-server"></i> DVR / NVR</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('HDCVI TurboHD'); return false;"><i class="fa-solid fa-film"></i> HDCVI TurboHD</a>
+            </div>
+
+            <div class="mega-col">
+              <p class="mega-col__title">Redes</p>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Ubiquiti'); return false;"><i class="fa-solid fa-signal"></i> Ubiquiti</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('TP-Link'); return false;"><i class="fa-solid fa-signal"></i> TP-Link</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cisco'); return false;"><i class="fa-solid fa-signal"></i> Cisco</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Torres'); return false;"><i class="fa-solid fa-tower-broadcast"></i> Torres de Comunicación</a>
+              <p class="mega-col__title" style="margin-top:.9rem">Kits con Instalación</p>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Kits con Instalación'); return false;"><i class="fa-solid fa-screwdriver-wrench"></i> Kits con Instalación</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Videoportero'); return false;"><i class="fa-solid fa-door-open"></i> Kit Videoportero</a>
+            </div>
+
+            <div class="mega-col">
+              <p class="mega-col__title">Automatización e Intrusión</p>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Cercas Eléctricas'); return false;"><i class="fa-solid fa-bolt"></i> Cercas Eléctricas</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Paneles de Alarma'); return false;"><i class="fa-solid fa-shield-halved"></i> Paneles de Alarma</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Control de Acceso'); return false;"><i class="fa-solid fa-id-card"></i> Control de Acceso</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Detectores / Sensores'); return false;"><i class="fa-solid fa-wave-square"></i> Detectores / Sensores</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Contactos Magnéticos'); return false;"><i class="fa-solid fa-magnet"></i> Contactos Magnéticos</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Sirenas y Estrobos'); return false;"><i class="fa-solid fa-bell"></i> Sirenas y Estrobos</a>
+              <a class="mega-col__link" href="#" onclick="showCatalog('Botones de Pánico'); return false;"><i class="fa-solid fa-hand-point-up"></i> Botones de Pánico</a>
+            </div>
+
+          </div>
+        </div>
+      </li>
+
+      <li class="main-nav__item" role="none">
+        <a class="main-nav__link" href="#" onclick="showView('catalogo'); return false;"><i class="fa-solid fa-screwdriver-wrench"></i> Servicios</a>
+      </li>
+      <li class="main-nav__item" role="none">
+        <a class="main-nav__link" href="#" onclick="showView('simulador'); return false;"><i class="fa-solid fa-house-signal"></i> Simulador</a>
+      </li>
+      <li class="main-nav__item" role="none">
+        <a class="main-nav__link" href="#" onclick="showView('vision'); return false;"><i class="fa-solid fa-bullseye"></i> Visión y Misión</a>
+      </li>
+      <li class="main-nav__item" role="none">
+        <a class="main-nav__link" href="#" onclick="showView('clientes'); return false;"><i class="fa-solid fa-users"></i> Nuestros Clientes</a>
+      </li>
+      <li class="main-nav__item" role="none">
+        <a class="main-nav__link" href="#" onclick="showView('contacto'); return false;"><i class="fa-solid fa-envelope"></i> Contacto</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>

@@ -1,0 +1,82 @@
+<!-- =============================================
+  VIEW: views/login.html
+  Vista de inicio de sesión — con autenticación real
+============================================= -->
+<div id="view-login" class="view">
+
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home'); return false;">Inicio</a></li>
+      <li class="breadcrumb__item">Iniciar sesión</li>
+    </ol>
+  </nav>
+
+  <div class="login-wrapper">
+    <div class="login-box">
+
+      <div class="login-box__logo">
+        <img src="img/SVG/logo.svg" alt="SERTECSUR" onerror="this.style.display='none'" />
+      </div>
+
+      <h1 class="login-box__title">
+        <i class="fa-solid fa-user-lock"></i> Iniciar sesión
+      </h1>
+      <p class="login-box__sub">Accede a tu cuenta de cliente</p>
+
+      <!-- Alerta de error / éxito -->
+      <div id="loginAlert" style="display:none; padding:.6rem 1rem; border-radius:8px; font-size:.84rem; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem;"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="login-email">
+            <i class="fa-solid fa-envelope"></i> Correo electrónico
+          </label>
+          <input
+            class="form-input"
+            type="email"
+            id="login-email"
+            name="email"
+            placeholder="tu@correo.com"
+            autocomplete="email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-pass">
+            <i class="fa-solid fa-lock"></i> Contraseña
+          </label>
+          <input
+            class="form-input"
+            type="password"
+            id="login-pass"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button class="btn btn--primary btn--md btn--full" type="submit" id="loginBtn">
+          <i class="fa-solid fa-right-to-bracket"></i> Entrar
+        </button>
+
+      </form>
+
+      <!-- Credenciales de prueba (quitar en producción) -->
+      <div style="margin-top:1.25rem; padding:.75rem; background:var(--clr-info-bg); border-radius:8px; font-size:.78rem; color:var(--clr-muted);">
+        <p style="font-weight:700; color:var(--clr-primary); margin-bottom:.35rem;">
+          <i class="fa-solid fa-circle-info"></i> Cuentas de prueba
+        </p>
+        <p>Admin: <code>admin@mail.com</code> / <code>admin</code></p>
+        <p>Cliente: <code>juan@mail.com</code> / <code>1234</code></p>
+      </div>
+
+      <hr class="login-divider" />
+      <a class="login-link" href="#"><i class="fa-solid fa-key"></i> ¿Olvidaste tu contraseña?</a>
+
+    </div>
+  </div>
+
+</div>

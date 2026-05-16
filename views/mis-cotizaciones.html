@@ -1,0 +1,23 @@
+<!-- VIEW: views/mis-cotizaciones.html v3 -->
+<div id="view-mis-cotizaciones" class="view">
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home');return false;">Inicio</a></li>
+      <li class="breadcrumb__item">Mis Cotizaciones</li>
+    </ol>
+  </nav>
+  <main class="container" style="padding-block:1.5rem 3rem;">
+    <div class="section-heading">
+      <h1 class="section-heading__title">
+        <i class="fa-solid fa-file-invoice-dollar"></i> Mis Cotizaciones
+      </h1>
+      <p class="section-heading__subtitle">Consulta el estado de tus solicitudes y reseña productos aprobados</p>
+    </div>
+    <div id="misCotBody">
+      <div style="text-align:center;padding:3rem;color:var(--clr-muted);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;display:block;margin-bottom:.75rem;"></i>
+        Cargando cotizaciones…
+      </div>
+    </div>
+  </main>
+</div>

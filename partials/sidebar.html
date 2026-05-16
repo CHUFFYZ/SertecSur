@@ -1,0 +1,76 @@
+<!-- =============================================
+  PARTIAL: partials/sidebar.html
+  Menú lateral para dispositivos móviles.
+============================================= -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()" aria-hidden="true"></div>
+
+<aside class="sidebar" id="sidebar" aria-label="Menú de navegación móvil" aria-hidden="true">
+
+  <div class="sidebar__header">
+    <img class="sidebar__logo" src="img/SVG/logo.svg" alt="SERTECSUR" onerror="this.style.display='none'" />
+    <button class="sidebar__close" onclick="toggleSidebar()" aria-label="Cerrar menú">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <div class="sidebar__search">
+    <input class="sidebar__search-input" type="search" placeholder="Buscar productos…" aria-label="Buscar" />
+  </div>
+
+  <nav aria-label="Menú lateral">
+    <ul class="sidebar__nav">
+
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('home'); toggleSidebar(); return false;">
+          <i class="fa-solid fa-house"></i> Inicio
+        </a>
+      </li>
+
+      <li class="sidebar__nav-item">
+        <button class="sidebar__nav-toggle" onclick="toggleSub(this)" aria-expanded="false">
+          <i class="fa-solid fa-box-open"></i> Productos
+          <i class="fa-solid fa-chevron-down toggle-arrow"></i>
+        </button>
+        <ul class="sidebar__sub" aria-label="Submenú Productos">
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('CCTV Kits'); toggleSidebar(); return false;"><i class="fa-solid fa-box"></i> CCTV Kits</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Cámaras Bullet'); toggleSidebar(); return false;"><i class="fa-solid fa-camera"></i> Cámaras Bullet</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Cámaras Domo'); toggleSidebar(); return false;"><i class="fa-solid fa-camera"></i> Cámaras Domo</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Cámaras IP'); toggleSidebar(); return false;"><i class="fa-solid fa-wifi"></i> Cámaras IP</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Cámaras PTZ'); toggleSidebar(); return false;"><i class="fa-solid fa-rotate"></i> Cámaras PTZ</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('DVR / NVR'); toggleSidebar(); return false;"><i class="fa-solid fa-server"></i> DVR / NVR</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Redes'); toggleSidebar(); return false;"><i class="fa-solid fa-signal"></i> Redes</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Cercas Eléctricas'); toggleSidebar(); return false;"><i class="fa-solid fa-bolt"></i> Cercas Eléctricas</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Paneles de Alarma'); toggleSidebar(); return false;"><i class="fa-solid fa-shield-halved"></i> Paneles de Alarma</a></li>
+          <li><a class="sidebar__sub-link" href="#" onclick="showCatalog('Control de Acceso'); toggleSidebar(); return false;"><i class="fa-solid fa-id-card"></i> Control de Acceso</a></li>
+        </ul>
+      </li>
+
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('catalogo'); toggleSidebar(); return false;"><i class="fa-solid fa-screwdriver-wrench"></i> Servicios</a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('simulador'); toggleSidebar(); return false;"><i class="fa-solid fa-screwdriver-wrench"></i> Simulador</a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('vision'); toggleSidebar(); return false;"><i class="fa-solid fa-bullseye"></i> Visión y Misión</a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('clientes'); toggleSidebar(); return false;"><i class="fa-solid fa-users"></i> Nuestros Clientes</a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('contacto'); toggleSidebar(); return false;"><i class="fa-solid fa-envelope"></i> Contacto</a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link" href="#" onclick="showView('login'); toggleSidebar(); return false;"><i class="fa-solid fa-user"></i> Iniciar sesión</a>
+      </li>
+
+    </ul>
+  </nav>
+
+  <div class="sidebar__footer">
+    <strong><i class="fa-solid fa-phone"></i> Llámanos</strong>
+    Tel: 938 153 2506 &nbsp;|&nbsp; Cel: 938 132 9935<br />
+    <a href="mailto:ventas@sertecsur.net">ventas@sertecsur.net</a>
+  </div>
+
+</aside>

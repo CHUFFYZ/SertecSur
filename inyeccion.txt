@@ -1,0 +1,112 @@
+-- =========================
+-- USUARIOS
+-- =========================
+INSERT INTO Usuario (nombre, direccion, telefono, correo, contrasena) VALUES
+('Juan Perez', 'Calle 1', '9381111111', 'juan@mail.com', '1234'),
+('Maria Lopez', 'Calle 2', '9382222222', 'maria@mail.com', '1234'),
+('Carlos Ruiz', 'Calle 3', '9383333333', 'carlos@mail.com', '1234'),
+('Ana Torres', 'Calle 4', '9384444444', 'ana@mail.com', '1234'),
+('Admin', 'Oficina', '9389999999', 'admin@mail.com', 'admin');
+
+-- =========================
+-- CLIENTES
+-- =========================
+INSERT INTO Cliente (usuario_id) VALUES (1),(2),(3),(4);
+
+-- =========================
+-- EMPLEADO
+-- =========================
+INSERT INTO Empleado (usuario_id, permisos)
+VALUES (5, '{"rol":"admin","nivel":1}');
+
+-- =========================
+-- PRODUCTOS
+-- =========================
+INSERT INTO Producto (nombre, tipo, precio, stock, descripcion) VALUES
+('Camara HD', 'Seguridad', 1500, 10, 'Camara vigilancia 1080p'),
+('Sensor Movimiento', 'Seguridad', 800, 20, 'Sensor infrarrojo'),
+('Alarma Sonora', 'Seguridad', 1200, 15, 'Alarma de alta potencia'),
+('Kit Seguridad', 'Paquete', 3000, 5, 'Incluye camara + sensor'),
+('Cerradura Inteligente', 'Acceso', 2500, 7, 'Control por app');
+
+-- =========================
+-- CARACTERISTICAS
+-- =========================
+INSERT INTO Caracteristicas (producto_id, nombre, valor) VALUES
+(1, 'Resolucion', '1080p'),
+(1, 'Vision nocturna', 'Si'),
+(2, 'Rango', '5m'),
+(3, 'Sonido', '120dB'),
+(5, 'Conexion', 'WiFi');
+
+-- =========================
+-- CARRITOS
+-- =========================
+INSERT INTO Carrito (cliente_id) VALUES (1),(2);
+
+INSERT INTO Carrito_item (carrito_id, producto_id, cantidad) VALUES
+(1, 1, 2),
+(1, 2, 1),
+(2, 3, 1),
+(2, 5, 2);
+
+-- =========================
+-- COTIZACIONES
+-- =========================
+INSERT INTO Cotizacion (cliente_id, estado, subtotal, total) VALUES
+(1, 'pendiente', 3800, 3800),
+(2, 'aprobada', 3700, 3700);
+
+-- =========================
+-- DETALLE COTIZACION
+-- =========================
+INSERT INTO Detalle_cotizacion (cotizacion_id, producto_id, cantidad, precio_unitario) VALUES
+(1, 1, 2, 1500),
+(1, 2, 1, 800),
+(2, 3, 1, 1200),
+(2, 5, 1, 2500);
+
+-- =========================
+-- RESEÑAS
+-- =========================
+INSERT INTO Resena (cliente_id, producto_id, comentario, calificacion) VALUES
+(1, 1, 'Excelente camara', 5.0),
+(2, 1, 'Buena calidad', 4.5),
+(3, 2, 'Funciona bien', 4.0),
+(4, 3, 'Muy ruidosa', 3.5),
+(1, 5, 'Muy practica', 5.0);
+
+-- =========================
+-- SIMULADOR
+-- =========================
+INSERT INTO Simulador_sesion (cliente_id, estado) VALUES
+(1, 'activo'),
+(2, 'activo');
+
+INSERT INTO Simulador_item (sesion_id, producto_id, pos_x, pos_y, rotacion, escala, activo) VALUES
+(1, 1, 10, 20, 0, 1, TRUE),
+(1, 2, 5, 15, 90, 1, TRUE),
+(2, 3, 8, 12, 45, 1, TRUE);
+
+-- =========================
+-- CHATBOT
+-- =========================
+
+-- Sesiones
+INSERT INTO Chatbot_sesion (cliente_id, estado) VALUES
+(1, 'activa'),
+(2, 'activa');
+
+-- Mensajes
+INSERT INTO Chatbot_mensaje (sesion_id, emisor, mensaje) VALUES
+(1, 'usuario', 'Quiero una camara de seguridad'),
+(1, 'bot', 'Te recomiendo la Camara HD'),
+(1, 'usuario', 'Hazme una cotizacion'),
+(2, 'usuario', 'Busco una alarma'),
+(2, 'bot', 'Te recomiendo la Alarma Sonora');
+
+-- Acciones
+INSERT INTO Chatbot_accion (sesion_id, tipo, referencia_id) VALUES
+(1, 'recomendacion', 1),
+(1, 'cotizacion', 1),
+(2, 'recomendacion', 3);

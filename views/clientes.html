@@ -1,0 +1,61 @@
+<!-- =============================================
+  VIEW: views/clientes.html
+  Vista "Nuestros Clientes"
+============================================= -->
+<div id="view-clientes" class="view">
+
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home'); return false;">Inicio</a></li>
+      <li class="breadcrumb__item">Nuestros Clientes</li>
+    </ol>
+  </nav>
+
+  <main class="container" style="padding-block: 1.5rem 3rem;">
+
+    <div class="clients-intro">
+      <h1 class="clients-intro__title">
+        <i class="fa-solid fa-users"></i> Nuestros Clientes
+      </h1>
+      <p class="clients-intro__sub">
+        SERTECSUR brinda servicios y soluciones a una amplia gama de clientes particulares y empresas.
+      </p>
+    </div>
+
+    <!-- Estadísticas ──────────────────────────── -->
+    <div class="clients-stats">
+      <div class="stat-card">
+        <p class="stat-card__number">+50</p>
+        <p class="stat-card__label">Empresas atendidas</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__number">+10</p>
+        <p class="stat-card__label">Años de experiencia</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__number">+500</p>
+        <p class="stat-card__label">Cámaras instaladas</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__number">100%</p>
+        <p class="stat-card__label">Compromiso</p>
+      </div>
+    </div>
+
+    <!-- Imagen listado de clientes ────────────── -->
+    <div class="clients-image-block">
+      <img
+        src="http://sertecsur.net/tienda//img/cms/listado_clientes.jpg"
+        alt="Listado de clientes de SERTECSUR"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+      />
+      <p style="display:none; color:var(--clr-muted); font-size:.9rem; padding:2rem;">
+        <i class="fa-solid fa-image"></i> Listado de clientes (imagen no disponible en este entorno)
+      </p>
+      <p class="clients-image-caption">
+        Algunas de las empresas y particulares a quienes brindamos servicios en cómputo, CCTV, redes y alarmas.
+      </p>
+    </div>
+
+  </main>
+</div>

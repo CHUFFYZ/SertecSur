@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2979 614.05">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: .016em;
+      }
+
+      .cls-2 {
+        font-family: ArialMT, Arial;
+        font-size: 135px;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #37b9d9;
+      }
+
+      .cls-4 {
+        letter-spacing: -.095em;
+      }
+
+      .cls-5 {
+        letter-spacing: .001em;
+      }
+
+      .cls-6 {
+        letter-spacing: -.002em;
+      }
+
+      .cls-7 {
+        letter-spacing: .016em;
+      }
+
+      .cls-8 {
+        fill: #e94c53;
+      }
+
+      .cls-9 {
+        letter-spacing: .01em;
+      }
+
+      .cls-3 {
+        font-family: Arial-Black, Arial;
+        font-size: 495px;
+        font-weight: 800;
+        stroke: #37b9d9;
+        stroke-miterlimit: 10;
+        stroke-width: 9px;
+      }
+    </style>
+  </defs>
+  <g id="Capa_2-2" data-name="Capa 2">
+    <g>
+      <rect class="cls-8" y="77.556" width="693" height="18"/>
+      <rect class="cls-8" y="311.556" width="693" height="108"/>
+      <rect class="cls-8" y="149.556" width="693" height="63"/>
+      <rect class="cls-8" y="104.556" width="693" height="36"/>
+      <rect class="cls-8" y="221.556" width="693" height="81"/>
+    </g>
+  </g>
+  <g id="Capa_3" data-name="Capa 3">
+    <text class="cls-3" transform="translate(733.953 429.166)"><tspan class="cls-9" x="0" y="0">SE</tspan><tspan class="cls-5" x="724.846" y="0">R</tspan><tspan class="cls-9" x="1110.472" y="0">TEC</tspan></text>
+    <g id="Capa_4" data-name="Capa 4">
+      <text class="cls-2" transform="translate(792 570.214)"><tspan class="cls-1" x="0" y="0">Servicios</tspan><tspan class="cls-6" x="567.086" y="0"> </tspan><tspan class="cls-4" x="604.315" y="0">T</tspan><tspan class="cls-7" x="673.975" y="0">ecnológicos del Sureste</tspan></text>
+    </g>
+  </g>
+</svg>

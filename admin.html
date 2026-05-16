@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Panel Admin — SERTECSUR</title>
+  <link rel="icon" type="image/svg" href="img/SVG/logo2Recurso 2.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous"/>
+  <style>
+    :root{--clr-primary:#1a3a5c;--clr-primary-dark:#0f2440;--clr-accent:#e63337;--clr-white:#fff;--clr-bg:#f0f4f8;--clr-border:#dde1e7;--clr-muted:#6b7280;--clr-text:#1f2937;--clr-dark:#111827;--clr-success:#22c55e;--clr-danger:#ef4444;--sidebar-w:260px;--font-base:'Roboto',sans-serif;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.10);--transition:.2s ease}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font-base);background:var(--clr-bg);color:var(--clr-text);min-height:100vh;display:flex}
+    a{color:inherit;text-decoration:none} button{cursor:pointer;border:none;background:none;font:inherit;color:inherit} input,textarea,select{font:inherit} img{max-width:100%;display:block}
+
+    /* SIDEBAR */
+    .adm-sidebar{width:var(--sidebar-w);background:var(--clr-primary);min-height:100vh;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:200;transition:transform var(--transition)}
+    .adm-sidebar__logo{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:.75rem}
+    .adm-sidebar__logo img{height:40px}
+    .adm-sidebar__logo-text{color:#fff;font-size:.9rem;font-weight:700;line-height:1.2}
+    .adm-sidebar__logo-sub{color:rgba(255,255,255,.5);font-size:.7rem}
+    .adm-sidebar__user{padding:1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:.75rem}
+    .adm-sidebar__avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#fff;flex-shrink:0}
+    .adm-sidebar__uname{font-size:.82rem;font-weight:700;color:#fff}
+    .adm-sidebar__urole{font-size:.7rem;color:rgba(255,255,255,.55)}
+    .adm-nav{flex:1;padding:.75rem 0;overflow-y:auto}
+    .adm-nav__section{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);padding:.75rem 1.4rem .3rem;font-weight:700}
+    .adm-nav__link{display:flex;align-items:center;gap:.65rem;padding:.65rem 1.4rem;font-size:.87rem;color:rgba(255,255,255,.75);transition:background var(--transition),color var(--transition);cursor:pointer;border-left:3px solid transparent}
+    .adm-nav__link i{width:16px;font-size:.85rem;flex-shrink:0}
+    .adm-nav__link:hover{background:rgba(255,255,255,.08);color:#fff}
+    .adm-nav__link.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--clr-accent)}
+    .adm-nav__link .badge-count{margin-left:auto;background:var(--clr-accent);color:#fff;font-size:.6rem;font-weight:700;padding:.1rem .4rem;border-radius:10px;min-width:18px;text-align:center}
+    .adm-sidebar__logout{padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.1)}
+    .adm-sidebar__logout button{display:flex;align-items:center;gap:.5rem;width:100%;color:rgba(255,255,255,.6);font-size:.84rem;padding:.5rem .75rem;border-radius:6px;transition:background var(--transition),color var(--transition)}
+    .adm-sidebar__logout button:hover{background:rgba(255,255,255,.08);color:#fff}
+
+    /* OVERLAY MÓVIL SIDEBAR */
+    .adm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+    .adm-overlay.open{display:block}
+
+    /* MAIN */
+    .adm-main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+    .adm-topbar{background:#fff;border-bottom:1px solid var(--clr-border);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    .adm-topbar__hamburger{display:none;flex-direction:column;gap:5px;padding:.3rem;cursor:pointer;background:none;border:none}
+    .adm-topbar__hamburger span{display:block;width:22px;height:2px;background:var(--clr-primary);border-radius:2px}
+    .adm-topbar__title{font-size:1.05rem;font-weight:700;color:var(--clr-primary)}
+    .adm-topbar__breadcrumb{font-size:.78rem;color:var(--clr-muted);margin-top:.1rem}
+    .adm-section{display:none;padding:1.5rem}
+    .adm-section.active{display:block}
+
+    /* STATS */
+    .adm-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .adm-stat{background:#fff;border:1px solid var(--clr-border);border-radius:var(--radius);padding:1.25rem 1.1rem;display:flex;align-items:flex-start;gap:.85rem}
+    .adm-stat__icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+    .adm-stat__icon--blue{background:#dbeafe;color:#1d4ed8}.adm-stat__icon--green{background:#dcfce7;color:#15803d}
+    .adm-stat__icon--orange{background:#ffedd5;color:#c2410c}.adm-stat__icon--red{background:#fee2e2;color:#b91c1c}
+    .adm-stat__icon--purple{background:#ede9fe;color:#6d28d9}.adm-stat__icon--teal{background:#ccfbf1;color:#0f766e}
+    .adm-stat__icon--yellow{background:#fef3c7;color:#92400e}
+    .adm-stat__num{font-size:1.8rem;font-weight:700;color:var(--clr-dark);line-height:1}
+    .adm-stat__label{font-size:.78rem;color:var(--clr-muted);margin-top:.2rem}
+
+    /* CARD */
+    .adm-card{background:#fff;border:1px solid var(--clr-border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem;box-shadow:var(--shadow)}
+    .adm-card__header{padding:.85rem 1.25rem;border-bottom:1px solid var(--clr-border);display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+    .adm-card__title{font-size:.93rem;font-weight:700;color:var(--clr-primary);display:flex;align-items:center;gap:.5rem}
+    .adm-card__title i{color:var(--clr-accent);font-size:.85rem}
+    .adm-card__body{padding:1.25rem}
+    .adm-table-wrap{overflow-x:auto}
+    .adm-table{width:100%;border-collapse:collapse;font-size:.84rem}
+    .adm-table th{background:var(--clr-bg);padding:.6rem .85rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--clr-muted);border-bottom:1px solid var(--clr-border);white-space:nowrap}
+    .adm-table td{padding:.65rem .85rem;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+    .adm-table tr:last-child td{border-bottom:none}.adm-table tr:hover td{background:#fafbfc}
+
+    /* BOTONES */
+    .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:7px;font-size:.82rem;font-weight:500;cursor:pointer;transition:background var(--transition),opacity var(--transition);border:none;white-space:nowrap}
+    .btn i{font-size:.78rem}
+    .btn--primary{background:var(--clr-primary);color:#fff}.btn--primary:hover{background:var(--clr-primary-dark)}
+    .btn--accent{background:var(--clr-accent);color:#fff}.btn--accent:hover{opacity:.9}
+    .btn--danger{background:var(--clr-danger);color:#fff}.btn--danger:hover{opacity:.85}
+    .btn--ghost{background:transparent;color:var(--clr-primary);border:1px solid var(--clr-border)}.btn--ghost:hover{border-color:var(--clr-primary)}
+    .btn--sm{padding:.3rem .65rem;font-size:.76rem}.btn--icon{width:30px;height:30px;padding:0;justify-content:center;border-radius:6px}
+
+    /* BADGE */
+    .badge{display:inline-block;padding:.2rem .55rem;border-radius:20px;font-size:.7rem;font-weight:700}
+    .badge--green{background:#dcfce7;color:#15803d}.badge--yellow{background:#fef3c7;color:#92400e}
+    .badge--red{background:#fee2e2;color:#b91c1c}.badge--blue{background:#dbeafe;color:#1e40af}
+    .badge--gray{background:#f3f4f6;color:#4b5563}.badge--purple{background:#ede9fe;color:#6d28d9}
+
+    /* FORMS */
+    .adm-form-group{margin-bottom:.9rem}
+    .adm-form-label{display:block;font-size:.8rem;font-weight:700;color:var(--clr-primary);margin-bottom:.3rem}
+    .adm-form-input,.adm-form-select,.adm-form-textarea{width:100%;border:1px solid var(--clr-border);border-radius:7px;padding:.5rem .75rem;font-size:.87rem;color:var(--clr-text);background:#fff;outline:none;transition:border-color var(--transition)}
+    .adm-form-input:focus,.adm-form-select:focus,.adm-form-textarea:focus{border-color:var(--clr-primary);box-shadow:0 0 0 3px rgba(26,58,92,.08)}
+    .adm-form-textarea{resize:vertical;min-height:80px}
+    .adm-form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+    .adm-form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem}
+
+    /* MODAL */
+    .adm-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center}
+    .adm-modal-overlay.open{display:flex}
+    .adm-modal{background:#fff;border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:modalIn .2s ease}
+    @keyframes modalIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+    .adm-modal--wide{max-width:720px}
+    .adm-modal__header{padding:1rem 1.25rem;border-bottom:1px solid var(--clr-border);display:flex;align-items:center;justify-content:space-between}
+    .adm-modal__title{font-size:.95rem;font-weight:700;color:var(--clr-primary)}
+    .adm-modal__close{color:var(--clr-muted);font-size:1rem;padding:.25rem;border-radius:4px}.adm-modal__close:hover{background:var(--clr-bg)}
+    .adm-modal__body{padding:1.25rem}
+    .adm-modal__footer{padding:.85rem 1.25rem;border-top:1px solid var(--clr-border);display:flex;justify-content:flex-end;gap:.5rem}
+
+    /* ALERT */
+    .adm-alert{padding:.65rem 1rem;border-radius:7px;font-size:.84rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+    .adm-alert--success{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+    .adm-alert--error{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+
+    /* TOOLBAR */
+    .adm-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+    .adm-search{display:flex;align-items:center;gap:.35rem;border:1px solid var(--clr-border);border-radius:7px;padding:.35rem .75rem;background:#fff}
+    .adm-search input{border:none;outline:none;font-size:.84rem;width:180px;background:transparent}
+    .adm-search i{color:var(--clr-muted);font-size:.8rem}
+
+    /* Características */
+    .caract-row{display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem;margin-bottom:.4rem;align-items:center}
+    .caract-row input{padding:.35rem .6rem;font-size:.82rem;border:1px solid var(--clr-border);border-radius:6px;outline:none}
+    .caract-row input:focus{border-color:var(--clr-primary)}
+    .caract-rm{color:var(--clr-danger);font-size:.8rem;padding:.2rem .4rem;border-radius:4px;background:none;border:none;cursor:pointer}
+    .caract-rm:hover{background:#fee2e2}
+    .sim-fields{background:#f0f5fb;border:1px solid #bbd0e8;border-radius:8px;padding:1rem;margin-top:.5rem}
+    .sim-fields-title{font-size:.78rem;font-weight:700;color:var(--clr-primary);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+
+    /* BUZÓN */
+    .msg-card{background:#fff;border:1px solid var(--clr-border);border-radius:8px;margin-bottom:.75rem;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    .msg-card.unread{border-left:3px solid var(--clr-accent)}
+    .msg-card__header{padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;cursor:pointer;transition:background var(--transition)}
+    .msg-card__header:hover{background:var(--clr-bg)}
+    .msg-card__avatar{width:36px;height:36px;border-radius:50%;background:var(--clr-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;font-weight:700}
+    .msg-card__info{flex:1;min-width:0}
+    .msg-card__name{font-size:.88rem;font-weight:700;color:var(--clr-dark)}
+    .msg-card__subject{font-size:.78rem;color:var(--clr-muted)}
+    .msg-card__meta{font-size:.72rem;color:var(--clr-muted);white-space:nowrap}
+    .msg-card__body{padding:.75rem 1rem 1rem;border-top:1px solid var(--clr-border);background:#fafbfc;display:none}
+    .msg-card__body.open{display:block}
+    .msg-card__text{font-size:.85rem;line-height:1.6;color:var(--clr-text)}
+    .msg-card__contact{font-size:.78rem;color:var(--clr-muted);margin-top:.5rem;display:flex;gap:1rem;flex-wrap:wrap}
+
+    /* COTIZACIÓN PRINT — solo el modal */
+    .cot-print-wrap{font-family:'Segoe UI',sans-serif;}
+    .cot-ph{background:var(--clr-primary);color:#fff;padding:1rem 1.25rem;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+    .cot-ph h3{font-size:1rem;font-weight:700;margin:0}
+    .cot-info{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;font-size:.83rem;margin-bottom:1rem}
+    .cot-info span:first-child{color:var(--clr-muted)}
+    .cot-tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+    .cot-tbl th{background:var(--clr-bg);padding:.5rem .75rem;border:1px solid var(--clr-border);font-size:.72rem;text-transform:uppercase}
+    .cot-tbl td{padding:.5rem .75rem;border:1px solid var(--clr-border)}
+    .cot-tbl tfoot td{font-weight:700;background:#f9fafb}
+
+    /* EMPTY */
+    .adm-empty{text-align:center;padding:2.5rem 1rem;color:var(--clr-muted);font-size:.88rem}
+    .adm-empty i{font-size:2.5rem;margin-bottom:.75rem;opacity:.3;display:block}
+
+    /* TOAST */
+    #admToast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:500;transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+    #admToast.show{transform:translateY(0);opacity:1}
+    .adm-toast{background:#0f2440;color:#fff;padding:.7rem 1.1rem;border-radius:8px;font-size:.85rem;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+    .adm-toast.success{background:#166534}.adm-toast.error{background:#991b1b}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .adm-sidebar{transform:translateX(-100%)}
+      .adm-sidebar.open{transform:translateX(0)}
+      .adm-main{margin-left:0}
+      .adm-topbar__hamburger{display:flex}
+      .adm-form-row,.adm-form-row-3{grid-template-columns:1fr}
+      .adm-stats{grid-template-columns:1fr 1fr}
+      .adm-section{padding:1rem}
+    }
+    @media(max-width:480px){.adm-stats{grid-template-columns:1fr}}
+
+    /* PRINT — solo el contenido del modal de cotización */
+    @media print{
+      body>*:not(#printArea){display:none!important}
+      #printArea{display:block!important;position:fixed;inset:0;background:#fff;padding:2rem;z-index:9999}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Overlay móvil -->
+<div class="adm-overlay" id="admOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="adm-sidebar" id="admSidebar">
+  <div class="adm-sidebar__logo">
+    <img src="img/SVG/logo.svg" alt="SERTECSUR" onerror="this.style.display='none'"/>
+    <div><div class="adm-sidebar__logo-text">SERTECSUR</div><div class="adm-sidebar__logo-sub">Panel de administración</div></div>
+  </div>
+  <div class="adm-sidebar__user">
+    <div class="adm-sidebar__avatar"><i class="fa-solid fa-user-tie"></i></div>
+    <div><div class="adm-sidebar__uname" id="sidebarUserName">Admin</div><div class="adm-sidebar__urole">Administrador</div></div>
+  </div>
+  <nav class="adm-nav">
+    <div class="adm-nav__section">Principal</div>
+    <div class="adm-nav__link active" onclick="showSection('dashboard');closeSidebar()"><i class="fa-solid fa-gauge"></i> Dashboard</div>
+    <div class="adm-nav__section">Catálogo</div>
+    <div class="adm-nav__link" onclick="showSection('productos');closeSidebar()"><i class="fa-solid fa-box-open"></i> Productos</div>
+    <div class="adm-nav__section">Ventas</div>
+    <div class="adm-nav__link" onclick="showSection('cotizaciones');closeSidebar()">
+      <i class="fa-solid fa-file-invoice-dollar"></i> Cotizaciones
+      <span class="badge-count" id="badgePendientes" style="display:none">0</span>
+    </div>
+    <div class="adm-nav__section">Usuarios</div>
+    <div class="adm-nav__link" onclick="showSection('usuarios');closeSidebar()"><i class="fa-solid fa-users"></i> Usuarios / Clientes</div>
+    <div class="adm-nav__section">Mensajes</div>
+    <div class="adm-nav__link" onclick="showSection('buzon');closeSidebar()">
+      <i class="fa-solid fa-envelope"></i> Buzón de contacto
+      <span class="badge-count" id="badgeBuzon" style="display:none">0</span>
+    </div>
+    <div class="adm-nav__section">Sitio</div>
+    <div class="adm-nav__link" onclick="window.location.href='index.html'"><i class="fa-solid fa-globe"></i> Ver sitio web</div>
+  </nav>
+  <div class="adm-sidebar__logout">
+    <button onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="adm-main">
+  <div class="adm-topbar">
+    <button class="adm-topbar__hamburger" onclick="openSidebar()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+    <div style="flex:1;">
+      <div class="adm-topbar__title" id="topbarTitle">Dashboard</div>
+      <div class="adm-topbar__breadcrumb" id="topbarBreadcrumb">Panel principal</div>
+    </div>
+    <span style="font-size:.82rem;color:var(--clr-muted);white-space:nowrap;">
+      <i class="fa-regular fa-clock"></i> <span id="admClock"></span>
+    </span>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section class="adm-section active" id="sec-dashboard">
+    <div class="adm-stats">
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--blue"><i class="fa-solid fa-box-open"></i></div><div><div class="adm-stat__num" id="st-productos">—</div><div class="adm-stat__label">Productos</div></div></div>
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--green"><i class="fa-solid fa-users"></i></div><div><div class="adm-stat__num" id="st-clientes">—</div><div class="adm-stat__label">Clientes</div></div></div>
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--orange"><i class="fa-solid fa-file-invoice-dollar"></i></div><div><div class="adm-stat__num" id="st-cotizaciones">—</div><div class="adm-stat__label">Cotizaciones</div></div></div>
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--red"><i class="fa-solid fa-clock"></i></div><div><div class="adm-stat__num" id="st-pendientes">—</div><div class="adm-stat__label">Pendientes</div></div></div>
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--teal"><i class="fa-solid fa-circle-check"></i></div><div><div class="adm-stat__num" id="st-aprobadas">—</div><div class="adm-stat__label">Aprobadas</div></div></div>
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--purple"><i class="fa-solid fa-user"></i></div><div><div class="adm-stat__num" id="st-usuarios">—</div><div class="adm-stat__label">Usuarios totales</div></div></div>
+      <div class="adm-stat"><div class="adm-stat__icon adm-stat__icon--yellow"><i class="fa-solid fa-envelope"></i></div><div><div class="adm-stat__num" id="st-buzon">—</div><div class="adm-stat__label">Mensajes sin leer</div></div></div>
+    </div>
+    <div class="adm-card">
+      <div class="adm-card__header"><div class="adm-card__title"><i class="fa-solid fa-bolt"></i> Acciones rápidas</div></div>
+      <div class="adm-card__body" style="display:flex;gap:.75rem;flex-wrap:wrap;">
+        <button class="btn btn--primary" onclick="showSection('productos');openProductModal()"><i class="fa-solid fa-plus"></i> Nuevo producto</button>
+        <button class="btn btn--accent" onclick="showSection('cotizaciones')"><i class="fa-solid fa-file-invoice-dollar"></i> Ver cotizaciones</button>
+        <button class="btn btn--ghost" onclick="showSection('usuarios');openUserModal()"><i class="fa-solid fa-user-plus"></i> Crear usuario</button>
+        <button class="btn btn--ghost" onclick="showSection('buzon')"><i class="fa-solid fa-envelope"></i> Ver buzón</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section class="adm-section" id="sec-productos">
+    <div class="adm-toolbar">
+      <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar producto…" id="searchProductos" oninput="filterProductos()"/></div>
+      <button class="btn btn--primary" onclick="openProductModal()"><i class="fa-solid fa-plus"></i> Nuevo producto</button>
+    </div>
+    <div class="adm-card">
+      <div class="adm-card__body" style="padding:0;">
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>#</th><th>Img</th><th>Nombre</th><th>Tipo</th><th>Precio</th><th>Stock</th><th>Cert.</th><th>Simulable</th><th>Acciones</th></tr></thead>
+            <tbody id="tbProductos"><tr><td colspan="9" class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COTIZACIONES -->
+  <section class="adm-section" id="sec-cotizaciones">
+    <div class="adm-toolbar">
+      <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar cotización…" id="searchCotizaciones" oninput="filterCotizaciones()"/></div>
+      <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterEstado" onchange="filterCotizaciones()">
+        <option value="">Todos los estados</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="aprobada">Aprobada</option>
+        <option value="rechazada">Rechazada</option>
+      </select>
+    </div>
+    <div class="adm-card">
+      <div class="adm-card__body" style="padding:0;">
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>#</th><th>Cliente</th><th>Correo</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tbCotizaciones"><tr><td colspan="7" class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USUARIOS -->
+  <section class="adm-section" id="sec-usuarios">
+    <div class="adm-toolbar">
+      <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar usuario…" id="searchUsuarios" oninput="filterUsuarios()"/></div>
+      <button class="btn btn--primary" onclick="openUserModal()"><i class="fa-solid fa-user-plus"></i> Nuevo usuario</button>
+    </div>
+    <div class="adm-card">
+      <div class="adm-card__body" style="padding:0;">
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>#</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Rol</th><th>Registro</th><th>Acciones</th></tr></thead>
+            <tbody id="tbUsuarios"><tr><td colspan="7" class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUZÓN -->
+  <section class="adm-section" id="sec-buzon">
+    <div class="adm-toolbar">
+      <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar mensaje…" id="searchBuzon" oninput="filterBuzon()"/></div>
+      <div style="display:flex;gap:.5rem;align-items:center;">
+        <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterLeido" onchange="filterBuzon()">
+          <option value="">Todos</option>
+          <option value="0">No leídos</option>
+          <option value="1">Leídos</option>
+        </select>
+      </div>
+    </div>
+    <div id="buzonContainer">
+      <div class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando mensajes…</div>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL: PRODUCTO -->
+<div class="adm-modal-overlay" id="modalProducto">
+  <div class="adm-modal adm-modal--wide">
+    <div class="adm-modal__header">
+      <div class="adm-modal__title" id="modalProductoTitle">Nuevo producto</div>
+      <button class="adm-modal__close" onclick="closeModal('modalProducto')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="adm-modal__body">
+      <div id="modalProductoAlert"></div>
+      <input type="hidden" id="pId"/>
+      <div class="adm-form-row">
+        <div class="adm-form-group"><label class="adm-form-label">Nombre *</label><input class="adm-form-input" id="pNombre" placeholder="Nombre del producto"/></div>
+        <div class="adm-form-group"><label class="adm-form-label">Tipo / Categoría</label><input class="adm-form-input" id="pTipo" placeholder="Ej: Seguridad…"/></div>
+      </div>
+      <div class="adm-form-row">
+        <div class="adm-form-group"><label class="adm-form-label">Precio (MXN) *</label><input class="adm-form-input" id="pPrecio" type="number" min="0" step="0.01"/></div>
+        <div class="adm-form-group"><label class="adm-form-label">Stock</label><input class="adm-form-input" id="pStock" type="number" min="0"/></div>
+      </div>
+      <div class="adm-form-row">
+        <div class="adm-form-group"><label class="adm-form-label">Certificación</label><input class="adm-form-input" id="pCert" placeholder="Ej: IP66, CE…"/></div>
+        <div class="adm-form-group"><label class="adm-form-label">URL de imagen</label><input class="adm-form-input" id="pImg" placeholder="https://…"/></div>
+      </div>
+      <div class="adm-form-group"><label class="adm-form-label">Descripción</label><textarea class="adm-form-textarea" id="pDesc"></textarea></div>
+      <div class="adm-form-group">
+        <label class="adm-form-label" style="display:flex;align-items:center;justify-content:space-between;">
+          Características técnicas
+          <button type="button" class="btn btn--ghost btn--sm" onclick="addCaractRow()"><i class="fa-solid fa-plus"></i> Agregar</button>
+        </label>
+        <div id="caractContainer"></div>
+      </div>
+      <div class="adm-form-group">
+        <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;font-size:.87rem;font-weight:700;color:var(--clr-primary);">
+          <input type="checkbox" id="pSimulable" onchange="toggleSimFields(this.checked)" style="width:16px;height:16px;accent-color:var(--clr-primary);"/>
+          Este producto puede usarse en el Simulador
+        </label>
+      </div>
+      <div id="simFieldsWrap" style="display:none;">
+        <div class="sim-fields">
+          <p class="sim-fields-title"><i class="fa-solid fa-house-signal"></i> Configuración del simulador</p>
+          <div class="adm-form-row-3">
+            <div class="adm-form-group"><label class="adm-form-label">Pos. X (0-100)</label><input class="adm-form-input" id="sX" type="number" min="0" max="100" placeholder="50"/></div>
+            <div class="adm-form-group"><label class="adm-form-label">Pos. Y (0-100)</label><input class="adm-form-input" id="sY" type="number" min="0" max="100" placeholder="50"/></div>
+            <div class="adm-form-group"><label class="adm-form-label">Rotación (°)</label><input class="adm-form-input" id="sRot" type="number" min="0" max="360" placeholder="0"/></div>
+          </div>
+          <div class="adm-form-row-3">
+            <div class="adm-form-group"><label class="adm-form-label">Escala (%)</label><input class="adm-form-input" id="sEscala" type="number" min="40" max="200" placeholder="100"/></div>
+            <div class="adm-form-group"><label class="adm-form-label">Alcance (u)</label><input class="adm-form-input" id="sAlcance" type="number" min="10" max="600" placeholder="70"/></div>
+            <div class="adm-form-group"><label class="adm-form-label">Ángulo visión (°)</label><input class="adm-form-input" id="sAngulo" type="number" min="10" max="360" placeholder="90"/></div>
+          </div>
+          <div class="adm-form-row">
+            <div class="adm-form-group"><label class="adm-form-label">Distancia al objeto</label><input class="adm-form-input" id="sDist" type="number" min="-26" max="40" placeholder="0"/></div>
+            <div class="adm-form-group" style="display:flex;align-items:center;gap:.5rem;padding-top:1.6rem;">
+              <input type="checkbox" id="sActivo" checked style="width:16px;height:16px;accent-color:var(--clr-primary);">
+              <label for="sActivo" style="font-size:.87rem;cursor:pointer;">Activo por defecto</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('modalProducto')">Cancelar</button>
+      <button class="btn btn--primary" onclick="saveProducto()"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: USUARIO (crear / editar) -->
+<div class="adm-modal-overlay" id="modalUsuario">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <div class="adm-modal__title" id="modalUsuarioTitle">Nuevo usuario</div>
+      <button class="adm-modal__close" onclick="closeModal('modalUsuario')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="adm-modal__body">
+      <div id="modalUsuarioAlert"></div>
+      <input type="hidden" id="uId"/>
+      <div class="adm-form-row">
+        <div class="adm-form-group"><label class="adm-form-label">Nombre completo *</label><input class="adm-form-input" id="uNombre" placeholder="Juan Pérez"/></div>
+        <div class="adm-form-group"><label class="adm-form-label">Correo electrónico *</label><input class="adm-form-input" id="uCorreo" type="email"/></div>
+      </div>
+      <div class="adm-form-row">
+        <div class="adm-form-group"><label class="adm-form-label">Teléfono</label><input class="adm-form-input" id="uTel" placeholder="938 000 0000"/></div>
+        <div class="adm-form-group"><label class="adm-form-label">Rol *</label>
+          <select class="adm-form-select" id="uRol"><option value="cliente">Cliente</option><option value="admin">Administrador</option></select>
+        </div>
+      </div>
+      <div class="adm-form-group"><label class="adm-form-label">Dirección</label><input class="adm-form-input" id="uDir"/></div>
+      <div class="adm-form-group"><label class="adm-form-label" id="uPassLabel">Contraseña *</label>
+        <input class="adm-form-input" id="uPass" type="password" placeholder="••••••••"/>
+        <p id="uPassHint" style="font-size:.74rem;color:var(--clr-muted);margin-top:.2rem;display:none;">Dejar vacío para no cambiar la contraseña</p>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('modalUsuario')">Cancelar</button>
+      <button class="btn btn--primary" id="uSaveBtn" onclick="saveUsuario()"><i class="fa-solid fa-user-plus"></i> Crear usuario</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALLE COTIZACIÓN -->
+<div class="adm-modal-overlay" id="modalCotizacion">
+  <div class="adm-modal adm-modal--wide">
+    <div class="adm-modal__header">
+      <div class="adm-modal__title">Detalle de cotización</div>
+      <button class="adm-modal__close" onclick="closeModal('modalCotizacion')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="adm-modal__body" id="cotizacionDetailBody"></div>
+    <div class="adm-modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('modalCotizacion')">Cerrar</button>
+      <button class="btn btn--primary" onclick="printCotizacion()"><i class="fa-solid fa-print"></i> Imprimir / PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MENSAJE BUZÓN -->
+<div class="adm-modal-overlay" id="modalMensaje">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <div class="adm-modal__title">Mensaje de contacto</div>
+      <button class="adm-modal__close" onclick="closeModal('modalMensaje')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="adm-modal__body" id="mensajeDetailBody"></div>
+    <div class="adm-modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('modalMensaje')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Área de impresión (solo visible en print) -->
+<div id="printArea" style="display:none;"></div>
+
+<div id="admToast"></div>
+
+<script>
+'use strict';
+const API='db.php?action=';
+async function api(action,method='GET',body=null){const o={method,headers:{'Content-Type':'application/json'}};if(body)o.body=JSON.stringify(body);const r=await fetch(API+action,o);return r.json();}
+
+let _tt;
+function toast(msg,type='success'){const el=document.getElementById('admToast');el.innerHTML=`<div class="adm-toast ${type}"><i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-xmark'}"></i>${msg}</div>`;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),3000);}
+
+(function clock(){const el=document.getElementById('admClock');const tick=()=>{if(el)el.textContent=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})};tick();setInterval(tick,60000);})();
+
+/* SIDEBAR RESPONSIVE */
+function openSidebar(){document.getElementById('admSidebar').classList.add('open');document.getElementById('admOverlay').classList.add('open');}
+function closeSidebar(){document.getElementById('admSidebar').classList.remove('open');document.getElementById('admOverlay').classList.remove('open');}
+
+async function checkSession(){const r=await api('me');if(!r.ok||!r.data||r.data.rol!=='admin'){window.location.href='index.html';return false;}document.getElementById('sidebarUserName').textContent=r.data.nombre;return true;}
+async function doLogout(){await api('logout','POST');window.location.href='index.html';}
+
+function showSection(id){
+  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.adm-nav__link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('sec-'+id)?.classList.add('active');
+  document.querySelectorAll('.adm-nav__link').forEach(l=>{if(l.textContent.trim().toLowerCase().includes(id==='buzon'?'buz':id))l.classList.add('active');});
+  const titles={dashboard:['Dashboard','Resumen general'],productos:['Productos','Gestión de catálogo'],cotizaciones:['Cotizaciones','Gestión de solicitudes'],usuarios:['Usuarios','Gestión de usuarios'],buzon:['Buzón de contacto','Mensajes recibidos']};
+  const t=titles[id]||[id,''];
+  document.getElementById('topbarTitle').textContent=t[0];
+  document.getElementById('topbarBreadcrumb').textContent=t[1];
+  if(id==='dashboard')    loadStats();
+  if(id==='productos')    loadProductos();
+  if(id==='cotizaciones') loadCotizaciones();
+  if(id==='usuarios')     loadUsuarios();
+  if(id==='buzon')        loadBuzon();
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.adm-modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.adm-modal-overlay.open').forEach(o=>o.classList.remove('open'));closeSidebar();}});
+
+/* STATS */
+async function loadStats(){
+  const r=await api('stats');if(!r.ok)return;const d=r.data;
+  document.getElementById('st-productos').textContent=d.total_productos;
+  document.getElementById('st-clientes').textContent=d.total_clientes;
+  document.getElementById('st-cotizaciones').textContent=d.total_cotizaciones;
+  document.getElementById('st-pendientes').textContent=d.pendientes;
+  document.getElementById('st-aprobadas').textContent=d.aprobadas;
+  document.getElementById('st-usuarios').textContent=d.total_usuarios;
+  document.getElementById('st-buzon').textContent=d.buzon_no_leidos;
+  const bp=document.getElementById('badgePendientes');
+  if(d.pendientes>0){bp.textContent=d.pendientes;bp.style.display='inline-block';}else bp.style.display='none';
+  const bb=document.getElementById('badgeBuzon');
+  if(d.buzon_no_leidos>0){bb.textContent=d.buzon_no_leidos;bb.style.display='inline-block';}else bb.style.display='none';
+}
+
+/* PRODUCTOS */
+let allProductos=[];
+async function loadProductos(){const r=await api('productos');if(!r.ok)return;allProductos=r.data;renderProductos(allProductos);}
+function renderProductos(list){
+  const tb=document.getElementById('tbProductos');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="9"><div class="adm-empty"><i class="fa-solid fa-box-open"></i><br>Sin productos</div></td></tr>`;return;}
+  tb.innerHTML=list.map(p=>`<tr>
+    <td style="color:var(--clr-muted);font-size:.75rem;">#${p.id_producto}</td>
+    <td><img src="${escHtml(p.img_url||'')}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--clr-border);" onerror="this.style.display='none'"/></td>
+    <td style="font-weight:500;">${escHtml(p.nombre)}</td>
+    <td><span class="badge badge--blue">${escHtml(p.tipo||'—')}</span></td>
+    <td>$${parseFloat(p.precio).toLocaleString('es-MX',{minimumFractionDigits:2})}</td>
+    <td><span class="badge ${p.stock>5?'badge--green':p.stock>0?'badge--yellow':'badge--red'}">${p.stock} uds</span></td>
+    <td style="font-size:.78rem;">${escHtml(p.certificacion||'—')}</td>
+    <td><span class="badge ${p.simulable?'badge--purple':'badge--gray'}">${p.simulable?'Sí':'No'}</span></td>
+    <td style="display:flex;gap:.3rem;">
+      <button class="btn btn--ghost btn--icon btn--sm" onclick="editProducto(${p.id_producto})"><i class="fa-solid fa-pen"></i></button>
+      <button class="btn btn--danger btn--icon btn--sm" onclick="deleteProducto(${p.id_producto},'${escHtml(p.nombre).replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash"></i></button>
+    </td>
+  </tr>`).join('');
+}
+function filterProductos(){const q=document.getElementById('searchProductos').value.toLowerCase();renderProductos(allProductos.filter(p=>p.nombre.toLowerCase().includes(q)||(p.tipo||'').toLowerCase().includes(q)));}
+
+function addCaractRow(nombre='',valor=''){
+  const c=document.getElementById('caractContainer');
+  const row=document.createElement('div');row.className='caract-row';
+  row.innerHTML=`<input type="text" placeholder="Nombre" value="${escHtml(nombre)}"/><input type="text" placeholder="Valor" value="${escHtml(valor)}"/><button type="button" class="caract-rm" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
+  c.appendChild(row);
+}
+function getCaracteristicas(){return[...document.querySelectorAll('#caractContainer .caract-row')].map(r=>{const i=r.querySelectorAll('input');return{nombre:i[0].value.trim(),valor:i[1].value.trim()};}).filter(c=>c.nombre);}
+function toggleSimFields(checked){document.getElementById('simFieldsWrap').style.display=checked?'':'none';}
+
+function openProductModal(p=null){
+  document.getElementById('modalProductoTitle').textContent=p?'Editar producto':'Nuevo producto';
+  document.getElementById('pId').value=p?p.id_producto:'';
+  document.getElementById('pNombre').value=p?p.nombre:'';
+  document.getElementById('pTipo').value=p?(p.tipo||''):'';
+  document.getElementById('pPrecio').value=p?p.precio:'';
+  document.getElementById('pStock').value=p?p.stock:'';
+  document.getElementById('pCert').value=p?(p.certificacion||''):'';
+  document.getElementById('pImg').value=p?(p.img_url||''):'';
+  document.getElementById('pDesc').value=p?(p.descripcion||''):'';
+  document.getElementById('pSimulable').checked=p?!!p.simulable:false;
+  document.getElementById('simFieldsWrap').style.display=(p&&p.simulable)?'':'none';
+  document.getElementById('modalProductoAlert').innerHTML='';
+  document.getElementById('caractContainer').innerHTML='';
+  if(p&&p.caracteristicas)p.caracteristicas.forEach(c=>addCaractRow(c.nombre,c.valor));
+  openModal('modalProducto');
+}
+function editProducto(id){const p=allProductos.find(x=>x.id_producto==id);if(p)openProductModal(p);}
+async function saveProducto(){
+  const id=document.getElementById('pId').value;
+  const nombre=document.getElementById('pNombre').value.trim();
+  const precio=document.getElementById('pPrecio').value;
+  if(!nombre||!precio){document.getElementById('modalProductoAlert').innerHTML='<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i> Nombre y precio son requeridos.</div>';return;}
+  const simulable=document.getElementById('pSimulable').checked;
+  const body={id_producto:id?parseInt(id):undefined,nombre,tipo:document.getElementById('pTipo').value.trim(),precio:parseFloat(precio),stock:parseInt(document.getElementById('pStock').value)||0,certificacion:document.getElementById('pCert').value.trim()||null,descripcion:document.getElementById('pDesc').value.trim(),img_url:document.getElementById('pImg').value.trim(),simulable:simulable?1:0,caracteristicas:getCaracteristicas()};
+  if(simulable)body.sim={pos_x:parseFloat(document.getElementById('sX').value)||50,pos_y:parseFloat(document.getElementById('sY').value)||50,rotacion:parseInt(document.getElementById('sRot').value)||0,escala:parseInt(document.getElementById('sEscala').value)||100,alcance:parseFloat(document.getElementById('sAlcance').value)||70,angulo_vision:parseFloat(document.getElementById('sAngulo').value)||90,distancia_objeto:parseFloat(document.getElementById('sDist').value)||0,activo:document.getElementById('sActivo').checked?1:0};
+  const r=await api('productos',id?'PUT':'POST',body);
+  if(r.ok){closeModal('modalProducto');toast(id?'Producto actualizado':'Producto creado');loadProductos();}
+  else document.getElementById('modalProductoAlert').innerHTML=`<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i>${r.error}</div>`;
+}
+async function deleteProducto(id,nombre){
+  if(!confirm(`¿Eliminar "${nombre}"?`))return;
+  const r=await api('productos&id='+id,'DELETE');
+  if(r.ok){toast('Producto eliminado');loadProductos();}else toast(r.error,'error');
+}
+
+/* COTIZACIONES */
+let allCotizaciones=[];
+async function loadCotizaciones(){const r=await api('cotizaciones');if(!r.ok)return;allCotizaciones=r.data;renderCotizaciones(allCotizaciones);}
+function renderCotizaciones(list){
+  const tb=document.getElementById('tbCotizaciones');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="adm-empty"><i class="fa-solid fa-file-invoice"></i><br>Sin cotizaciones</div></td></tr>`;return;}
+  tb.innerHTML=list.map(c=>`<tr>
+    <td style="color:var(--clr-muted);font-size:.75rem;">#${c.id_cotizacion}</td>
+    <td style="font-weight:500;">${escHtml(c.cliente_nombre)}</td>
+    <td style="font-size:.78rem;color:var(--clr-muted);">${escHtml(c.cliente_correo)}</td>
+    <td style="font-size:.78rem;">${formatDate(c.fecha)}</td>
+    <td><strong>$${parseFloat(c.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</strong></td>
+    <td><select class="adm-form-select" style="font-size:.76rem;padding:.2rem .5rem;width:auto;" onchange="updateEstado(${c.id_cotizacion},this.value)">
+      <option value="pendiente" ${c.estado==='pendiente'?'selected':''}>Pendiente</option>
+      <option value="aprobada"  ${c.estado==='aprobada'?'selected':''}>Aprobada</option>
+      <option value="rechazada" ${c.estado==='rechazada'?'selected':''}>Rechazada</option>
+    </select></td>
+    <td style="display:flex;gap:.3rem;">
+      <button class="btn btn--ghost btn--icon btn--sm" title="Ver" onclick="verCotizacion(${c.id_cotizacion})"><i class="fa-solid fa-eye"></i></button>
+      <button class="btn btn--primary btn--icon btn--sm" title="Imprimir" onclick="verCotizacion(${c.id_cotizacion},true)"><i class="fa-solid fa-print"></i></button>
+    </td>
+  </tr>`).join('');
+}
+function filterCotizaciones(){const q=document.getElementById('searchCotizaciones').value.toLowerCase();const est=document.getElementById('filterEstado').value;renderCotizaciones(allCotizaciones.filter(c=>(c.cliente_nombre.toLowerCase().includes(q)||c.cliente_correo.toLowerCase().includes(q))&&(!est||c.estado===est)));}
+async function updateEstado(id,estado){const r=await api('cotizaciones','PUT',{id_cotizacion:id,estado});if(r.ok){toast('Estado actualizado');loadStats();}else toast(r.error,'error');}
+
+function verCotizacion(id,autoPrint=false){
+  const c=allCotizaciones.find(x=>x.id_cotizacion==id);if(!c)return;
+  const bMap={pendiente:'badge--yellow',aprobada:'badge--green',rechazada:'badge--red'};
+  const detalle=(c.detalle||[]).map(d=>`<tr><td>${escHtml(d.producto_nombre)}</td><td style="text-align:center;">${d.cantidad}</td><td style="text-align:right;">$${parseFloat(d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td><td style="text-align:right;font-weight:700;">$${(d.cantidad*d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>`).join('');
+  const html=`<div class="cot-print-wrap">
+    <div class="cot-ph"><div><h3>SERTECSUR</h3><p style="font-size:.75rem;opacity:.75;">Servicios Tecnológicos del Sureste</p></div><div style="text-align:right;"><p style="font-size:1rem;font-weight:700;margin:0;">COTIZACIÓN #${c.id_cotizacion}</p><p style="font-size:.75rem;opacity:.75;">Fecha: ${formatDate(c.fecha)}</p></div></div>
+    <div class="cot-info">
+      <span style="color:var(--clr-muted);">Cliente:</span><strong>${escHtml(c.cliente_nombre)}</strong>
+      <span style="color:var(--clr-muted);">Correo:</span><span>${escHtml(c.cliente_correo)}</span>
+      <span style="color:var(--clr-muted);">Teléfono:</span><span>${escHtml(c.cliente_telefono||'—')}</span>
+      <span style="color:var(--clr-muted);">Estado:</span><span class="badge ${bMap[c.estado]||'badge--gray'}">${c.estado}</span>
+      <span style="color:var(--clr-muted);">Vigencia:</span><span>30 días</span>
+    </div>
+    <table class="cot-tbl">
+      <thead><tr><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">Precio u.</th><th style="text-align:right;">Subtotal</th></tr></thead>
+      <tbody>${detalle||'<tr><td colspan="4" style="text-align:center;color:var(--clr-muted);">Sin detalle</td></tr>'}</tbody>
+      <tfoot>
+        <tr><td colspan="3" style="text-align:right;">Subtotal</td><td style="text-align:right;">$${parseFloat(c.subtotal||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>
+        <tr><td colspan="3" style="text-align:right;font-size:1rem;">TOTAL</td><td style="text-align:right;font-size:1rem;">$${parseFloat(c.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:.75rem;color:var(--clr-muted);margin-top:.75rem;">Tel: 938 153 2506 · ventas@sertecsur.net · Calle 55 #50, Col. Electricistas, Cd. del Carmen, Cam.</p>
+  </div>`;
+  document.getElementById('cotizacionDetailBody').innerHTML=html;
+  // Área de impresión separada para no imprimir toda la página
+  document.getElementById('printArea').innerHTML=html;
+  openModal('modalCotizacion');
+  if(autoPrint)setTimeout(printCotizacion,400);
+}
+
+function printCotizacion(){
+  document.getElementById('printArea').style.display='block';
+  window.print();
+  setTimeout(()=>document.getElementById('printArea').style.display='none',1000);
+}
+
+/* USUARIOS */
+let allUsuarios=[];
+async function loadUsuarios(){const r=await api('usuarios');if(!r.ok)return;allUsuarios=r.data;renderUsuarios(allUsuarios);}
+function renderUsuarios(list){
+  const tb=document.getElementById('tbUsuarios');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="adm-empty"><i class="fa-solid fa-users"></i><br>Sin usuarios</div></td></tr>`;return;}
+  tb.innerHTML=list.map(u=>`<tr>
+    <td style="color:var(--clr-muted);font-size:.75rem;">#${u.id_usuario}</td>
+    <td style="font-weight:500;">${escHtml(u.nombre)}</td>
+    <td style="font-size:.78rem;">${escHtml(u.correo)}</td>
+    <td style="font-size:.78rem;color:var(--clr-muted);">${escHtml(u.telefono||'—')}</td>
+    <td><span class="badge ${u.rol==='admin'?'badge--red':'badge--blue'}">${u.rol}</span></td>
+    <td style="font-size:.75rem;color:var(--clr-muted);">${formatDate(u.fecha_registro)}</td>
+    <td style="display:flex;gap:.3rem;">
+      <button class="btn btn--ghost btn--icon btn--sm" title="Editar" onclick="editUsuario(${u.id_usuario})"><i class="fa-solid fa-pen"></i></button>
+      <button class="btn btn--danger btn--icon btn--sm" title="Eliminar" onclick="deleteUsuario(${u.id_usuario},'${escHtml(u.nombre).replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash"></i></button>
+    </td>
+  </tr>`).join('');
+}
+function filterUsuarios(){const q=document.getElementById('searchUsuarios').value.toLowerCase();renderUsuarios(allUsuarios.filter(u=>u.nombre.toLowerCase().includes(q)||u.correo.toLowerCase().includes(q)));}
+
+function openUserModal(u=null){
+  document.getElementById('modalUsuarioTitle').textContent=u?'Editar usuario':'Nuevo usuario';
+  document.getElementById('uId').value=u?u.id_usuario:'';
+  document.getElementById('uNombre').value=u?u.nombre:'';
+  document.getElementById('uCorreo').value=u?u.correo:'';
+  document.getElementById('uTel').value=u?(u.telefono||''):'';
+  document.getElementById('uDir').value=u?(u.direccion||''):'';
+  document.getElementById('uRol').value=u?(u.rol||'cliente'):'cliente';
+  document.getElementById('uPass').value='';
+  document.getElementById('uPassLabel').textContent=u?'Contraseña':'Contraseña *';
+  document.getElementById('uPassHint').style.display=u?'block':'none';
+  document.getElementById('uSaveBtn').innerHTML=u?'<i class="fa-solid fa-floppy-disk"></i> Guardar cambios':'<i class="fa-solid fa-user-plus"></i> Crear usuario';
+  document.getElementById('modalUsuarioAlert').innerHTML='';
+  openModal('modalUsuario');
+}
+function editUsuario(id){const u=allUsuarios.find(x=>x.id_usuario==id);if(u)openUserModal(u);}
+
+async function saveUsuario(){
+  const id=document.getElementById('uId').value;
+  const nombre=document.getElementById('uNombre').value.trim();
+  const correo=document.getElementById('uCorreo').value.trim();
+  const pass=document.getElementById('uPass').value.trim();
+  if(!nombre||!correo||(!id&&!pass)){document.getElementById('modalUsuarioAlert').innerHTML='<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i> Nombre, correo y contraseña son requeridos.</div>';return;}
+  const payload={nombre,correo,telefono:document.getElementById('uTel').value.trim(),direccion:document.getElementById('uDir').value.trim(),rol:document.getElementById('uRol').value};
+  if(pass)payload.contrasena=pass;
+  let r;
+  if(id){payload.id_usuario=parseInt(id);r=await api('usuarios','PUT',payload);}
+  else r=await api('usuarios','POST',payload);
+  if(r.ok){closeModal('modalUsuario');toast(id?'Usuario actualizado':'Usuario creado');loadUsuarios();loadStats();}
+  else document.getElementById('modalUsuarioAlert').innerHTML=`<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i>${r.error}</div>`;
+}
+async function deleteUsuario(id,nombre){
+  if(!confirm(`¿Eliminar al usuario "${nombre}"?`))return;
+  const r=await api('usuarios&id='+id,'DELETE');
+  if(r.ok){toast('Usuario eliminado');loadUsuarios();loadStats();}else toast(r.error,'error');
+}
+
+/* BUZÓN */
+let allMensajes=[];
+async function loadBuzon(){
+  const r=await api('buzon');if(!r.ok)return;
+  allMensajes=r.data.mensajes||[];
+  renderBuzon(allMensajes);
+  loadStats();
+}
+function renderBuzon(list){
+  const c=document.getElementById('buzonContainer');
+  if(!list.length){c.innerHTML=`<div class="adm-empty"><i class="fa-solid fa-envelope-open"></i><br>No hay mensajes en el buzón</div>`;return;}
+  c.innerHTML=list.map(m=>{
+    const inicial=(m.nombre||'?')[0].toUpperCase();
+    const fechaStr=formatDate(m.fecha);
+    return `<div class="msg-card ${m.leido?'':'unread'}" id="msg-${m.id_mensaje}">
+      <div class="msg-card__header" onclick="toggleMsgCard(${m.id_mensaje},${m.leido})">
+        <div class="msg-card__avatar">${inicial}</div>
+        <div class="msg-card__info">
+          <p class="msg-card__name">${escHtml(m.nombre)} ${m.leido?'':'<span style="background:var(--clr-accent);color:#fff;font-size:.6rem;padding:.1rem .35rem;border-radius:10px;font-weight:700;vertical-align:middle;">Nuevo</span>'}</p>
+          <p class="msg-card__subject">${escHtml(m.asunto||'Sin asunto')}</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;">
+          <p class="msg-card__meta">${fechaStr}</p>
+          <button onclick="event.stopPropagation();deleteMensaje(${m.id_mensaje})" class="btn btn--danger btn--sm btn--icon" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="msg-card__body" id="msgbody-${m.id_mensaje}">
+        <p class="msg-card__text">${escHtml(m.mensaje).replace(/\n/g,'<br>')}</p>
+        <div class="msg-card__contact">
+          <span><i class="fa-solid fa-envelope" style="color:var(--clr-accent);"></i> <a href="mailto:${escHtml(m.correo)}">${escHtml(m.correo)}</a></span>
+          ${m.telefono?`<span><i class="fa-solid fa-phone" style="color:var(--clr-accent);"></i> <a href="tel:${escHtml(m.telefono)}">${escHtml(m.telefono)}</a></span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function filterBuzon(){
+  const q=document.getElementById('searchBuzon').value.toLowerCase();
+  const leido=document.getElementById('filterLeido').value;
+  renderBuzon(allMensajes.filter(m=>
+    (m.nombre.toLowerCase().includes(q)||m.correo.toLowerCase().includes(q)||(m.asunto||'').toLowerCase().includes(q)||(m.mensaje||'').toLowerCase().includes(q))
+    &&(leido===''||String(m.leido)===leido)
+  ));
+}
+async function toggleMsgCard(id,yaLeido){
+  const body=document.getElementById('msgbody-'+id);
+  if(!body)return;
+  body.classList.toggle('open');
+  if(!yaLeido&&body.classList.contains('open')){
+    await api('buzon','PUT',{id_mensaje:id});
+    const card=document.getElementById('msg-'+id);
+    if(card){card.classList.remove('unread');const badge=card.querySelector('.msg-card__name span');if(badge)badge.remove();}
+    // Actualizar en array local
+    const m=allMensajes.find(x=>x.id_mensaje==id);if(m)m.leido=1;
+    loadStats();
+  }
+}
+async function deleteMensaje(id){
+  if(!confirm('¿Eliminar este mensaje?'))return;
+  const r=await api('buzon&id='+id,'DELETE');
+  if(r.ok){toast('Mensaje eliminado');allMensajes=allMensajes.filter(m=>m.id_mensaje!=id);renderBuzon(allMensajes);loadStats();}
+  else toast(r.error,'error');
+}
+
+/* HELPERS */
+function escHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function formatDate(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});}catch{return d;}}
+
+/* INIT */
+(async function init(){const ok=await checkSession();if(!ok)return;loadStats();})();
+</script>
+</body>
+</html>

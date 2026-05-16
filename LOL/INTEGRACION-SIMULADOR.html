@@ -1,0 +1,56 @@
+<!-- =====================================================================
+  INSTRUCCIONES DE INTEGRACIÓN — Simulador de Seguridad
+  Agregar los siguientes fragmentos al index.html existente
+====================================================================== -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+  1. En el <head>, después de los otros <link> de CSS:
+═══════════════════════════════════════════════════════════════════ -->
+<link rel="stylesheet" href="simulador.css" />
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+  2. MENÚ DESKTOP (main-nav__list) — agregar DESPUÉS de "Servicios"
+     y ANTES de "Visión y Misión"
+═══════════════════════════════════════════════════════════════════ -->
+<li class="main-nav__item" role="none">
+  <a class="main-nav__link" href="#" onclick="showView('simulador'); return false;" role="menuitem">
+    <i class="fa-solid fa-house-signal" aria-hidden="true"></i> Simulador
+  </a>
+</li>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+  3. SIDEBAR MÓVIL (sidebar__nav) — agregar DESPUÉS de "Servicios"
+     y ANTES de "Visión y Misión"
+═══════════════════════════════════════════════════════════════════ -->
+<li class="sidebar__nav-item">
+  <a class="sidebar__nav-link" href="#" onclick="showView('simulador'); toggleSidebar(); return false;">
+    <i class="fa-solid fa-house-signal"></i> Simulador
+  </a>
+</li>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+  4. VISTA DEL SIMULADOR — agregar después de view-catalogo
+     (colocar el contenido completo de views/simulador.html aquí)
+     O incluir el archivo si usas un sistema de templates:
+═══════════════════════════════════════════════════════════════════ -->
+<!-- PEGAR AQUÍ TODO EL CONTENIDO DE views/simulador.html -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+  5. SCRIPTS — agregar ANTES del </body>, después de app.js
+═══════════════════════════════════════════════════════════════════ -->
+<script src="simulador.js"></script>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+  6. FOOTER — agregar enlace opcional en la columna "Información"
+═══════════════════════════════════════════════════════════════════ -->
+<li>
+  <a class="footer-col__link" href="#" onclick="showView('simulador'); return false;">
+    <i class="fa-solid fa-chevron-right"></i> Simulador
+  </a>
+</li>

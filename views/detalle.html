@@ -1,0 +1,46 @@
+<!-- VIEW: views/detalle.html v3 -->
+<div id="view-detalle" class="view">
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home');return false;">Inicio</a></li>
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('catalogo');return false;">Catálogo</a></li>
+      <li class="breadcrumb__item" id="bc-product">Producto</li>
+    </ol>
+  </nav>
+  <main class="container" style="padding-block:1.5rem 3rem;">
+    <div class="product-detail">
+      <div class="product-detail__gallery" aria-label="Imagen del producto">
+        <i class="fa-solid fa-camera"></i>
+      </div>
+      <div class="product-detail__info">
+        <p class="product-detail__cat" id="detail-cat">Categoría</p>
+        <h1 class="product-detail__name" id="detail-name">Nombre del producto</h1>
+        <p class="product-detail__desc" id="detail-desc">Descripción.</p>
+        <div class="product-detail__specs">
+          <table><caption class="sr-only">Especificaciones técnicas</caption><tbody></tbody></table>
+        </div>
+        <div class="product-detail__cta" style="flex-wrap:wrap;gap:.6rem;align-items:flex-start;">
+
+          <!-- Desplegable "Cotizar" — contenido inyectado por app.js -->
+          <div id="detailCotDropWrap"></div>
+
+          <!-- Agregar al carrito (solo clientes) -->
+          <button id="detailCartBtn" class="btn btn--lg"
+            style="display:none;background:var(--clr-accent);color:#fff;border:2px solid var(--clr-accent);">
+            <i class="fa-solid fa-cart-plus"></i> Agregar al carrito
+          </button>
+        </div>
+        <p style="margin-top:.6rem;font-size:.76rem;color:var(--clr-muted);display:flex;align-items:center;gap:.3rem;">
+          <i class="fa-solid fa-circle-info"></i>
+          "Cotizar ahora" guarda tu solicitud y genera un PDF descargable. Un asesor la revisará en breve.
+        </p>
+      </div>
+    </div>
+    <section aria-labelledby="related-title" style="margin-top:2rem;">
+      <div class="section-heading">
+        <h2 class="section-heading__title" id="related-title">Productos relacionados</h2>
+      </div>
+      <div class="products-grid" id="related-products"></div>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,31 @@
+<!-- =============================================
+  PARTIAL: partials/topbar.html
+  Barra superior con datos de contacto rápido.
+  Actualizado: data-login-link para sesión dinámica
+============================================= -->
+<div class="topbar" role="complementary" aria-label="Información de contacto rápida">
+  <div class="topbar__inner">
+    <div class="topbar__left">
+      <span class="topbar__item">
+        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+        Tel: <a href="tel:9381532506">938 153 2506</a>
+      </span>
+      <span class="topbar__item">
+        <i class="fa-solid fa-mobile-screen" aria-hidden="true"></i>
+        Cel: <a href="https://api.whatsapp.com/send/?phone=529381329935&text&type=phone_number&app_absent=0" target="_blank">938 132 9935</a>
+      </span>
+      <span class="topbar__item">
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+        <a href="mailto:ventas@sertecsur.net">ventas@sertecsur.net</a>
+      </span>
+    </div>
+    <div class="topbar__right">
+      <a href="#" data-login-link onclick="showView('login'); return false;">
+        <i class="fa-solid fa-user" aria-hidden="true"></i> Iniciar sesión
+      </a>
+      <a href="#" onclick="showView('contacto'); return false;">
+        <i class="fa-solid fa-headset" aria-hidden="true"></i> Contáctenos
+      </a>
+    </div>
+  </div>
+</div>

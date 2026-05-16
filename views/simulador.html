@@ -1,0 +1,491 @@
+<!-- =============================================
+  VIEW: views/simulador.html
+  Simulador visual de productos SERTECSUR
+============================================= -->
+
+<div id="view-simulador" class="view">
+
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home'); return false;">Inicio</a></li>
+      <li class="breadcrumb__item">Simulador</li>
+    </ol>
+  </nav>
+
+  <main class="sim-wrap">
+
+    <!-- ── Encabezado ──────────────────────── -->
+    <div class="sim-header">
+      <div class="sim-header__text">
+        <h1 class="sim-header__title">
+          <i class="fa-solid fa-house-signal"></i> Simulador de Seguridad
+        </h1>
+        <p class="sim-header__sub">Coloca y configura productos en el plano de tu hogar antes de instalarlos</p>
+      </div>
+      <div class="sim-header__badges">
+        <span class="sim-badge sim-badge--info">
+          <i class="fa-solid fa-circle-info"></i> Demo interactivo
+        </span>
+      </div>
+    </div>
+
+    <!-- ── Layout principal ───────────────── -->
+    <div class="sim-layout">
+
+      <!-- Panel lateral izquierdo: productos -->
+      <aside class="sim-panel sim-panel--left">
+
+        <div class="sim-panel__section">
+          <p class="sim-panel__title">
+            <i class="fa-solid fa-box-open"></i> Productos
+          </p>
+          <div class="sim-search-wrap">
+            <i class="fa-solid fa-magnifying-glass sim-search-icon"></i>
+            <input type="search" id="simSearch" class="sim-search" placeholder="Buscar…" oninput="Sim.filterProducts(this.value)" />
+          </div>
+        </div>
+
+        <!-- Categorías con productos -->
+        <div class="sim-product-list" id="simProductList"></div>
+
+        <!-- Info del producto seleccionado 
+        <div class="sim-product-info" id="simProductInfo" style="display:none;">
+          <div class="sim-product-info__img" id="simInfoImg"></div>
+          <p class="sim-product-info__name" id="simInfoName"></p>
+          <p class="sim-product-info__cat" id="simInfoCat"></p>
+          <div class="sim-product-info__specs" id="simInfoSpecs"></div>
+          <div class="sim-product-info__tags" id="simInfoTags"></div>
+          <button class="sim-btn sim-btn--primary sim-btn--full" onclick="Sim.addSelected()">
+            <i class="fa-solid fa-plus"></i> Agregar al plano
+          </button>
+        </div>-->
+
+      </aside>
+
+      <!-- Canvas central: plano de casa -->
+      <div class="sim-canvas-wrap">
+
+        <!-- Barra de herramientas superior -->
+        <div class="sim-toolbar">
+          <div class="sim-toolbar__group">
+            <button class="sim-tool-btn" id="btnNight" onclick="Sim.toggleNight()" title="Modo noche">
+              <i class="fa-solid fa-moon"></i>
+              <span>Modo noche</span>
+            </button>
+            <button class="sim-tool-btn" id="btnRain" onclick="Sim.toggleRain()" title="Simular lluvia">
+              <i class="fa-solid fa-cloud-rain"></i>
+              <span>Lluvia</span>
+            </button>
+            <button class="sim-tool-btn" id="btnIntruder" onclick="Sim.toggleIntruder()" title="Simular intruso">
+              <i class="fa-solid fa-person-running"></i>
+              <span>Intruso</span>
+            </button>
+          </div>
+          <div class="sim-toolbar__group">
+            <button class="sim-tool-btn" onclick="Sim.clearAll()" title="Limpiar plano">
+              <i class="fa-solid fa-trash"></i>
+              <span>Limpiar</span>
+            </button>
+            <button class="sim-tool-btn" onclick="Sim.resetView()" title="Centrar vista">
+              <i class="fa-solid fa-maximize"></i>
+              <span>Centrar</span>
+            </button>
+          </div>
+          <div class="sim-toolbar__group sim-toolbar__group--floor">
+            <button class="sim-tool-btn sim-tool-btn--floor" onclick="SimFloor.openUpload()" title="Subir imagen del plano">
+              <i class="fa-solid fa-image"></i>
+              <span>Subir plano</span>
+            </button>
+            <button class="sim-tool-btn sim-tool-btn--floor" onclick="SimFloor.openVideoGen()" title="Generar plano desde video">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Generar plano</span>
+            </button>
+            <button class="sim-tool-btn sim-tool-btn--floor sim-tool-btn--reset" id="btnResetFloor" onclick="SimFloor.reset()" title="Restablecer plano original" style="display:none;">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Plano original</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Escena SVG con el plano -->
+        <div class="sim-canvas" id="simCanvas">
+
+          <!-- Plano vectorial de la casa (SVG fondo) -->
+          <svg class="sim-floor-svg" id="simFloor" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- Definiciones -->
+            <defs>
+              <pattern id="gridPat" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.25"/>
+              </pattern>
+              <filter id="nightFilter">
+                <feColorMatrix type="matrix"
+                  values="0.15 0.15 0.15 0 0
+                          0.15 0.15 0.15 0 0
+                          0.30 0.30 0.30 0 0
+                          0    0    0    1 0"/>
+              </filter>
+            </defs>
+
+            <!-- Grid de fondo -->
+            <rect width="900" height="600" fill="url(#gridPat)" class="sim-grid"/>
+
+            <!-- ── Plano de la casa ── -->
+
+            <!-- Terreno exterior -->
+            <rect x="30" y="30" width="840" height="540" rx="4" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.2" stroke-dasharray="8 4"/>
+
+            <!-- Jardín frontal -->
+            <rect x="50" y="50" width="200" height="150" rx="4" fill="currentColor" opacity="0.04"/>
+            <text x="150" y="132" text-anchor="middle" class="sim-room-label">Jardín</text>
+
+            <!-- Cochera -->
+            <rect x="660" y="50" width="200" height="140" rx="4" fill="currentColor" opacity="0.04"/>
+            <text x="760" y="125" text-anchor="middle" class="sim-room-label">Cochera</text>
+            <!-- Puerta de cochera -->
+            <rect x="700" y="186" width="120" height="6" rx="2" fill="currentColor" opacity="0.35"/>
+
+            <!-- Paredes externas de la casa -->
+            <rect x="270" y="50" width="370" height="500" rx="6" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="2.5" class="sim-wall"/>
+
+            <!-- Sala -->
+            <rect x="280" y="60" width="170" height="160" rx="0" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="365" y="145" text-anchor="middle" class="sim-room-label">Sala</text>
+            <!-- Puerta sala-entrada -->
+            <rect x="280" y="175" width="6" height="45" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+            <path d="M 286 175 Q 320 175 320 220" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2" opacity="0.4"/>
+
+            <!-- Comedor -->
+            <rect x="450" y="60" width="180" height="160" rx="0" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="540" y="145" text-anchor="middle" class="sim-room-label">Comedor</text>
+
+            <!-- Cocina -->
+            <rect x="450" y="220" width="180" height="140" rx="0" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="540" y="295" text-anchor="middle" class="sim-room-label">Cocina</text>
+
+            <!-- Pasillo -->
+            <rect x="280" y="220" width="170" height="60" rx="0" fill="currentColor" opacity="0.03" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 3" class="sim-room"/>
+            <text x="365" y="255" text-anchor="middle" class="sim-room-label sim-room-label--sm">Pasillo</text>
+
+            <!-- Recámara 1 (principal) -->
+            <rect x="280" y="280" width="170" height="150" rx="0" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="365" y="360" text-anchor="middle" class="sim-room-label">Recámara 1</text>
+            <!-- Puerta -->
+            <rect x="430" y="280" width="6" height="36" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+            <path d="M 430 280 Q 430 316 394 316" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2" opacity="0.4"/>
+
+            <!-- Recámara 2 -->
+            <rect x="450" y="360" width="180" height="140" rx="0" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="540" y="435" text-anchor="middle" class="sim-room-label">Recámara 2</text>
+
+            <!-- Baño -->
+            <rect x="280" y="430" width="80" height="100" rx="0" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="320" y="485" text-anchor="middle" class="sim-room-label sim-room-label--sm">Baño</text>
+
+            <!-- Estudio -->
+            <rect x="360" y="430" width="90" height="100" rx="0" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-width="1" class="sim-room"/>
+            <text x="405" y="485" text-anchor="middle" class="sim-room-label sim-room-label--sm">Estudio</text>
+
+            <!-- Patio trasero -->
+            <rect x="50" y="220" width="200" height="330" rx="4" fill="currentColor" opacity="0.03"/>
+            <text x="150" y="390" text-anchor="middle" class="sim-room-label">Patio</text>
+            <!-- Árbol decorativo -->
+            <circle cx="100" cy="300" r="22" fill="currentColor" opacity="0.08"/>
+            <line x1="100" y1="322" x2="100" y2="350" stroke="currentColor" stroke-width="2" opacity="0.15"/>
+            <circle cx="170" cy="360" r="16" fill="currentColor" opacity="0.06"/>
+            <line x1="170" y1="376" x2="170" y2="400" stroke="currentColor" stroke-width="2" opacity="0.12"/>
+
+            <!-- Barda perimetral -->
+            <rect x="660" y="200" width="200" height="350" rx="4" fill="currentColor" opacity="0.03"/>
+            <text x="760" y="390" text-anchor="middle" class="sim-room-label">Área exterior</text>
+
+            <!-- Entrada principal -->
+            <rect x="398" y="44" width="60" height="18" rx="3" fill="currentColor" opacity="0.12"/>
+            <text x="428" y="56" text-anchor="middle" class="sim-room-label sim-room-label--sm">Entrada</text>
+
+            <!-- Ventanas decorativas -->
+            <rect x="320" y="50" width="40" height="6" rx="2" fill="currentColor" opacity="0.3"/>
+            <rect x="480" y="50" width="40" height="6" rx="2" fill="currentColor" opacity="0.3"/>
+            <rect x="630" y="50" width="20" height="6" rx="2" fill="currentColor" opacity="0.3"/>
+            <rect x="270" y="140" width="6" height="30" rx="2" fill="currentColor" opacity="0.3"/>
+            <rect x="270" y="340" width="6" height="30" rx="2" fill="currentColor" opacity="0.3"/>
+
+            <!-- Brújula decorativa -->
+            <circle cx="856" cy="556" r="20" fill="none" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+            <text x="856" y="550" text-anchor="middle" class="sim-compass">N</text>
+            <line x1="856" y1="536" x2="856" y2="544" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+
+          </svg>
+
+          <!-- Capa de productos (elementos DOM sobre el SVG) -->
+          <div class="sim-items-layer" id="simItemsLayer"></div>
+
+          <!-- Overlay modo noche -->
+          <div class="sim-night-overlay" id="simNightOverlay"></div>
+
+          <!-- Overlay intruso animado -->
+          <div class="sim-intruder" id="simIntruder">
+            <i class="fa-solid fa-person-running"></i>
+            <div class="sim-intruder__pulse"></div>
+          </div>
+
+          <!-- Indicador de alarma -->
+          <div class="sim-alarm-banner" id="simAlarmBanner">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>¡Movimiento detectado! — Sistema de alarma activado</span>
+          </div>
+
+          <!-- Tooltip de producto -->
+          <div class="sim-tooltip" id="simTooltip"></div>
+
+        </div>
+
+        <!-- Barra de estado inferior -->
+        <div class="sim-statusbar">
+           <!--<span id="simStatus">Selecciona un producto del panel y haz clic en <strong>Agregar al plano</strong></span>-->
+          
+          <span class="sim-statusbar__count">
+            <i class="fa-solid fa-cubes"></i>
+            <span id="simCount">0</span> elemento(s)
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Panel lateral derecho: propiedades -->
+      <aside class="sim-panel sim-panel--right" id="simRightPanel">
+
+        <!-- Sin selección -->
+         <div class="sim-product-info" id="simProductInfo" style="display:none;">
+            <div class="sim-product-info__img" id="simInfoImg"></div>
+            <p class="sim-product-info__name" id="simInfoName"></p>
+            <p class="sim-product-info__cat" id="simInfoCat"></p>
+            <div class="sim-product-info__specs" id="simInfoSpecs"></div>
+            <div class="sim-product-info__tags" id="simInfoTags"></div>
+            <button class="sim-btn sim-btn--primary sim-btn--full" onclick="Sim.addSelected()">
+              <i class="fa-solid fa-plus"></i> Agregar al plano
+            </button>
+        </div>
+        <div id="simNoSelection">
+          <p class="sim-panel__title"><i class="fa-solid fa-sliders"></i> Propiedades</p>
+          <p class="sim-panel__hint">Haz clic en un elemento del plano para editarlo</p>
+
+          <div class="sim-panel__section" style="margin-top:1.2rem;">
+            <p class="sim-panel__title"><i class="fa-solid fa-layer-group"></i> Cobertura</p>
+            <div class="sim-legend" id="simLegend"></div>
+          </div>
+
+          <div class="sim-panel__section" style="margin-top:1.2rem;">
+            <p class="sim-panel__title"><i class="fa-solid fa-circle-check"></i> Zona cubierta</p>
+            <div class="sim-coverage-bars" id="simCovBars">
+              <div class="sim-cov-row"><span>Perímetro</span><div class="sim-cov-bar"><div class="sim-cov-fill" id="covPerimeter" style="width:0%"></div></div><span class="sim-cov-pct" id="covPeriPct">0%</span></div>
+              <div class="sim-cov-row"><span>Interior</span><div class="sim-cov-bar"><div class="sim-cov-fill" id="covInterior" style="width:0%"></div></div><span class="sim-cov-pct" id="covIntPct">0%</span></div>
+              <div class="sim-cov-row"><span>Alarma</span><div class="sim-cov-bar"><div class="sim-cov-fill sim-cov-fill--alarm" id="covAlarm" style="width:0%"></div></div><span class="sim-cov-pct" id="covAlarmPct">0%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Propiedades del elemento seleccionado -->
+        <div id="simSelection" style="display:none;">
+          <div class="sim-sel-header">
+            <p class="sim-panel__title"><i class="fa-solid fa-pen-to-square"></i> Editar elemento</p>
+            <button class="sim-icon-btn" onclick="Sim.deselectItem()" title="Cerrar">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="sim-sel-img" id="simSelImg"></div>
+          <p class="sim-sel-name" id="simSelName"></p>
+
+          <!-- Rotación -->
+          <div class="sim-prop-group">
+            <label class="sim-prop-label">
+              <i class="fa-solid fa-rotate"></i> Rotación
+              <span class="sim-prop-value" id="simRotVal">0°</span>
+            </label>
+            <input type="range" min="0" max="360" step="1" value="0" id="simRotSlider" oninput="Sim.rotateItem(this.value)" />
+            <div class="sim-rot-btns">
+              <button class="sim-tool-btn sim-tool-btn--sm" onclick="Sim.rotateBy(-45)"><i class="fa-solid fa-rotate-left"></i> -45°</button>
+              <button class="sim-tool-btn sim-tool-btn--sm" onclick="Sim.rotateBy(45)"><i class="fa-solid fa-rotate-right"></i> +45°</button>
+            </div>
+          </div>
+
+          <!-- Escala -->
+          <div class="sim-prop-group">
+            <label class="sim-prop-label">
+              <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Tamaño
+              <span class="sim-prop-value" id="simScaleVal">100%</span>
+            </label>
+            <input type="range" min="40" max="200" step="5" value="100" id="simScaleSlider" oninput="Sim.scaleItem(this.value)" />
+          </div>
+
+          <!-- Ángulo de visión (solo cámaras) -->
+          <div class="sim-prop-group" id="simFovGroup" style="display:none;">
+            <label class="sim-prop-label">
+              <i class="fa-solid fa-expand"></i> Ángulo de visión
+              <span class="sim-prop-value" id="simFovVal">90°</span>
+            </label>
+            <input type="range" min="30" max="360" step="5" value="90" id="simFovSlider" oninput="Sim.setFov(this.value)" />
+          </div>
+          <!-- Alcance del cono (distancia de visión) -->
+          <div class="sim-prop-group" id="simReachGroup" style="display:none;">
+            <label class="sim-prop-label">
+              <i class="fa-solid fa-ruler-horizontal"></i> Alcance
+              <span class="sim-prop-value"><span id="simReachVal">70</span> u</span>
+            </label>
+            <input type="range" min="20" max="600" step="5" value="70"
+                  id="simReachSlider" oninput="Sim.setReach(this.value)" />
+          </div>
+
+          <!-- Distancia desde el icono (cercanía) -->
+          <div class="sim-prop-group" id="simOffsetGroup" style="display:none;">
+            <label class="sim-prop-label">
+              <i class="fa-solid fa-arrows-up-down"></i> Distancia al objeto
+              <span class="sim-prop-value"><span id="simOffsetVal">0</span> u</span>
+            </label>
+            <input type="range" min="-26" max="40" step="2" value="0"
+                  id="simOffsetSlider" oninput="Sim.setOffset(this.value)" />
+          </div>
+
+          <!-- Opciones -->
+          <div class="sim-prop-group">
+            <label class="sim-prop-label"><i class="fa-solid fa-toggle-on"></i> Opciones</label>
+            <label class="sim-check-label" id="simActiveToggle">
+              <input type="checkbox" id="simActiveCheck" checked onchange="Sim.toggleActive(this.checked)" />
+              Dispositivo activo
+            </label>
+            <label class="sim-check-label" id="simFovToggle" style="display:none;">
+              <input type="checkbox" id="simFovCheck" onchange="Sim.toggleFovCone(this.checked)" />
+              Mostrar campo de visión
+            </label>
+            <label class="sim-check-label" id="simAlertToggle" style="display:none;">
+              <input type="checkbox" id="simAlertCheck" onchange="Sim.toggleAlert(this.checked)" />
+              En estado de alerta
+            </label>
+          </div>
+
+          <button class="sim-btn sim-btn--danger sim-btn--full" onclick="Sim.deleteSelected()" style="margin-top:.5rem;">
+            <i class="fa-solid fa-trash"></i> Eliminar del plano
+          </button>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ MODAL: Subir imagen del plano ══════════════════════════════ -->
+<div class="simfloor-overlay" id="simFloorUploadModal" aria-modal="true" role="dialog" style="display:none;">
+  <div class="simfloor-modal">
+    <div class="simfloor-modal__header">
+      <span class="simfloor-modal__icon"><i class="fa-solid fa-image"></i></span>
+      <div>
+        <p class="simfloor-modal__title">Subir imagen del plano</p>
+        <p class="simfloor-modal__sub">La imagen reemplazará el plano predeterminado de forma temporal</p>
+      </div>
+      <button class="simfloor-modal__close" onclick="SimFloor.closeUpload()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="simfloor-dropzone" id="simFloorDropzone"
+         ondragover="SimFloor.onDragOver(event)"
+         ondragleave="SimFloor.onDragLeave(event)"
+         ondrop="SimFloor.onDrop(event)"
+         onclick="document.getElementById('simFloorFileInput').click()">
+      <div class="simfloor-dropzone__inner" id="simFloorDropInner">
+        <i class="fa-solid fa-cloud-arrow-up simfloor-dropzone__icon"></i>
+        <p class="simfloor-dropzone__text">Arrastra tu imagen aquí</p>
+        <p class="simfloor-dropzone__hint">o haz clic para seleccionar</p>
+        <p class="simfloor-dropzone__formats">PNG · JPG · JPEG · SVG</p>
+      </div>
+      <div class="simfloor-preview" id="simFloorPreview" style="display:none;">
+        <img id="simFloorPreviewImg" alt="Vista previa del plano" />
+        <div class="simfloor-preview__info">
+          <i class="fa-solid fa-file-image"></i>
+          <span id="simFloorFileName">archivo.png</span>
+          <button class="simfloor-preview__remove" onclick="SimFloor.clearPreview(event)">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <input type="file" id="simFloorFileInput" accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml"
+           style="display:none;" onchange="SimFloor.onFileSelected(this)" />
+
+    <div class="simfloor-modal__footer">
+      <button class="simfloor-btn simfloor-btn--ghost" onclick="SimFloor.closeUpload()">Cancelar</button>
+      <button class="simfloor-btn simfloor-btn--primary" id="simFloorApplyBtn" onclick="SimFloor.applyImage()" disabled>
+        <i class="fa-solid fa-check"></i> Aplicar plano
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: Generar plano desde video ═══════════════════════════ -->
+<div class="simfloor-overlay" id="simFloorVideoModal" aria-modal="true" role="dialog" style="display:none;">
+  <div class="simfloor-modal simfloor-modal--wide">
+    <div class="simfloor-modal__header">
+      <span class="simfloor-modal__icon simfloor-modal__icon--purple"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+      <div>
+        <p class="simfloor-modal__title">Generar plano desde video</p>
+        <p class="simfloor-modal__sub">Sube un video del recorrido de tu hogar y la IA generará el plano</p>
+      </div>
+      <button class="simfloor-modal__close" onclick="SimFloor.closeVideoGen()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Paso 1: Subir video -->
+    <div class="simfloor-step" id="simVideoStep1">
+      <div class="simfloor-video-dropzone" id="simVideoDropzone"
+           ondragover="SimFloor.onVideoDragOver(event)"
+           ondragleave="SimFloor.onVideoDragLeave(event)"
+           ondrop="SimFloor.onVideoDrop(event)"
+           onclick="document.getElementById('simVideoFileInput').click()">
+        <div class="simfloor-video-dropzone__inner" id="simVideoDropInner">
+          <div class="simfloor-video-icon-wrap">
+            <i class="fa-solid fa-film simfloor-video-dropzone__icon"></i>
+            <div class="simfloor-video-sparkles">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <p class="simfloor-dropzone__text">Arrastra tu video aquí</p>
+          <p class="simfloor-dropzone__hint">o haz clic para seleccionar</p>
+          <p class="simfloor-dropzone__formats">MP4 · MOV · AVI · WEBM — Máx. 500 MB</p>
+        </div>
+        <div class="simfloor-video-preview" id="simVideoPreview" style="display:none;">
+          <video id="simVideoPreviewEl" controls></video>
+          <div class="simfloor-preview__info">
+            <i class="fa-solid fa-file-video"></i>
+            <span id="simVideoFileName">video.mp4</span>
+            <span class="simfloor-preview__size" id="simVideoFileSize"></span>
+            <button class="simfloor-preview__remove" onclick="SimFloor.clearVideo(event)">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <input type="file" id="simVideoFileInput" accept=".mp4,.mov,.avi,.webm,video/*"
+             style="display:none;" onchange="SimFloor.onVideoSelected(this)" />
+
+      <div class="simfloor-video-tips">
+        <p class="simfloor-video-tips__title"><i class="fa-solid fa-circle-info"></i> Consejos para mejores resultados</p>
+        <ul>
+          <li><i class="fa-solid fa-check"></i> Graba un recorrido continuo y lento de cada habitación</li>
+          <li><i class="fa-solid fa-check"></i> Mantén la cámara a altura de cintura apuntando hacia adelante</li>
+          <li><i class="fa-solid fa-check"></i> Asegúrate de buena iluminación en todos los espacios</li>
+          <li><i class="fa-solid fa-check"></i> Muestra las puertas y ventanas de cada habitación</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="simfloor-modal__footer">
+      <button class="simfloor-btn simfloor-btn--ghost" onclick="SimFloor.closeVideoGen()">Cancelar</button>
+      <button class="simfloor-btn simfloor-btn--ai" id="simVideoGenerateBtn" onclick="SimFloor.generateFromVideo()" disabled>
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Generar plano con IA
+      </button>
+    </div>
+  </div>
+</div>

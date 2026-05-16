@@ -1,0 +1,143 @@
+<!-- =============================================
+  VIEW: views/home.html
+  Vista principal / Inicio
+============================================= -->
+<div id="view-home" class="view active">
+  <main class="container" style="padding-block: 1.5rem 3rem;">
+
+    <!-- Hero ──────────────────────────────────── -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__content">
+        <p class="hero__eyebrow">
+          <i class="fa-solid fa-location-dot"></i>
+          Cd. del Carmen, Campeche &nbsp;·&nbsp; Desde 2001
+        </p>
+        <h1 class="hero__title" id="hero-title">
+          Seguridad y Tecnología para tu Hogar y Empresa
+        </h1>
+        <p class="hero__desc">
+          Cámaras CCTV, sistemas de alarma, redes y mucho más.
+          Instalación profesional incluida en toda la región del sureste.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="#" onclick="showView('catalogo'); return false;">
+            <i class="fa-solid fa-box-open"></i> Ver Catálogo
+          </a>
+          <a class="btn btn--outline btn--lg" href="#" onclick="showView('contacto'); return false;">
+            <i class="fa-solid fa-file-invoice"></i> Solicitar Cotización
+          </a>
+        </div>
+      </div>
+      <span class="hero__deco" aria-hidden="true">&#xf030;</span>
+    </section>
+
+    <!-- Productos Nuevos / Populares ──────────── -->
+    <section aria-labelledby="new-title">
+      <div class="section-heading">
+        <div style="display:flex;">
+          <h2 class="section-heading__title new" id="new-title">Nuevo</h2>
+          <div class="division"></div>
+          <h2 class="section-heading__title pop">Popular</h2>
+        </div>
+        <p class="section-heading__subtitle">Los últimos artículos en nuestro catálogo</p>
+      </div>
+      <!-- Renderizado dinámico desde app.js: renderProducts('home-products', ...) -->
+      <div class="products-grid" id="home-products"></div>
+    </section>
+
+    <!-- Nuestros Servicios ─────────────────────── -->
+    <section class="services-section" aria-labelledby="srv-title">
+      <div class="section-heading">
+        <h2 class="section-heading__title" id="srv-title">Nuestros Servicios</h2>
+        <p class="section-heading__subtitle">Soluciones tecnológicas integrales</p>
+      </div>
+      <div class="services-grid">
+        <article class="service-card">
+          <i class="fa-solid fa-camera service-card__icon"></i>
+          <h3 class="service-card__name">Instalación de Cámaras CCTV</h3>
+          <p class="service-card__desc">Analógicas, IP, HD, PTZ. Marcas Hikvision, Dahua, Epcom.</p>
+        </article>
+        <article class="service-card">
+          <i class="fa-solid fa-network-wired service-card__icon"></i>
+          <h3 class="service-card__name">Redes e Infraestructura</h3>
+          <p class="service-card__desc">Cableado estructurado, fibra óptica, access points, torres.</p>
+        </article>
+        <article class="service-card">
+          <i class="fa-solid fa-bell service-card__icon"></i>
+          <h3 class="service-card__name">Alarmas y Control de Acceso</h3>
+          <p class="service-card__desc">Paneles Honeywell, cercas eléctricas, sensores.</p>
+        </article>
+        <article class="service-card">
+          <i class="fa-solid fa-laptop service-card__icon"></i>
+          <h3 class="service-card__name">Mantenimiento de Cómputo</h3>
+          <p class="service-card__desc">Correctivo y preventivo, software, antivirus y paquetería.</p>
+        </article>
+        <article class="service-card">
+          <i class="fa-solid fa-globe service-card__icon"></i>
+          <h3 class="service-card__name">Diseño Web y Marketing</h3>
+          <p class="service-card__desc">Sitios web, alojamiento, email marketing y software a medida.</p>
+        </article>
+        <article class="service-card">
+          <i class="fa-solid fa-lightbulb service-card__icon"></i>
+          <h3 class="service-card__name">Asesoría en TIC</h3>
+          <p class="service-card__desc">Soluciones tecnológicas para hogar, negocio y empresa.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Marcas ──────────────────────────────────
+    <section class="brands-section" aria-labelledby="brands-title">
+      <div class="section-heading">
+        <h2 class="section-heading__title" id="brands-title">Marcas que manejamos</h2>
+      </div>
+      <div class="brands-strip" role="list">
+        <span class="brand-tag" role="listitem">Hikvision</span>
+        <span class="brand-tag" role="listitem">Dahua</span>
+        <span class="brand-tag" role="listitem">Epcom</span>
+        <span class="brand-tag" role="listitem">Ubiquiti</span>
+        <span class="brand-tag" role="listitem">Cisco</span>
+        <span class="brand-tag" role="listitem">TP-Link</span>
+        <span class="brand-tag" role="listitem">Honeywell</span>
+        <span class="brand-tag" role="listitem">Samsung</span>
+        <span class="brand-tag" role="listitem">Saxxon</span>
+        <span class="brand-tag" role="listitem">CNB</span>
+        <span class="brand-tag" role="listitem">Vivotek</span>
+      </div>
+    </section>
+-->
+    <section class="brands-section" aria-labelledby="brands-title">
+      <div class="section-heading">
+        <h2 class="section-heading__title" id="brands-title">Marcas que manejamos</h2>
+      </div>
+      <div class="marcas">
+        <div class="wrapper">
+          <a href="https://www.hikvision.com/mx/" target="_blank"><img src="img/marcas/hikvision.png" alt="Image"></a>
+          <a href="https://www.dahuasecurity.com/mx" target="_blank"><img src="img/marcas/dahua.webp" alt="Image"></a>
+          <a href="https://export.epcom.net/" target="_blank"><img src="img/marcas/epcom.png" alt="Image"></a>
+          <a href="https://www.ui.com/mx/es-mx" target="_blank"><img src="img/marcas/Ubiquiti.png" alt="Image"></a>
+          <a href="https://www.netacad.com/es/" target="_blank"><img src="img/marcas/cisco.png" alt="Image"></a>
+          <a href="https://www.tp-link.com/mx/" target="_blank"><img src="img/marcas/tplink.png" alt="Image"></a>
+          <a href="https://www.rsimexico.com/honeywell/" target="_blank"><img src="img/marcas/honeywell.png" alt="Image"></a>
+          <a href="https://www.samsung.com/es/" target="_blank"><img src="img/marcas/samsung.png" alt="Image"></a>
+          <a href="http://saxxon.mx/demo/demos/index.html" target="_blank"><img src="img/marcas/saxxon.webp" alt="Image"></a>
+          <a href="" target="_blank"><img src="img/marcas/cnb.png" alt="Image"></a>
+          <a href="https://www.vivotek.com/es" target="_blank"><img src="img/marcas/vivotek.png" alt="Image"></a>
+
+          <a href="https://www.hikvision.com/mx/" target="_blank"><img src="img/marcas/hikvision.png" alt="Image"></a>
+          <a href="https://www.dahuasecurity.com/mx" target="_blank"><img src="img/marcas/dahua.webp" alt="Image"></a>
+          <a href="https://export.epcom.net/" target="_blank"><img src="img/marcas/epcom.png" alt="Image"></a>
+          <a href="https://www.ui.com/mx/es-mx" target="_blank"><img src="img/marcas/Ubiquiti.png" alt="Image"></a>
+          <a href="https://www.netacad.com/es/" target="_blank"><img src="img/marcas/cisco.png" alt="Image"></a>
+          <a href="https://www.tp-link.com/mx/" target="_blank"><img src="img/marcas/tplink.png" alt="Image"></a>
+          <a href="https://www.rsimexico.com/honeywell/" target="_blank"><img src="img/marcas/honeywell.png" alt="Image"></a>
+          <a href="https://www.samsung.com/es/" target="_blank"><img src="img/marcas/samsung.png" alt="Image"></a>
+          <a href="http://saxxon.mx/demo/demos/index.html" target="_blank"><img src="img/marcas/saxxon.webp" alt="Image"></a>
+          <a href="" target="_blank"><img src="img/marcas/cnb.png" alt="Image"></a>
+          <a href="https://www.vivotek.com/es" target="_blank"><img src="img/marcas/vivotek.png" alt="Image"></a>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

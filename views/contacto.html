@@ -1,0 +1,102 @@
+<!-- VIEW: views/contacto.html v3 — formulario funcional -->
+<div id="view-contacto" class="view">
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home');return false;">Inicio</a></li>
+      <li class="breadcrumb__item">Contacto</li>
+    </ol>
+  </nav>
+  <main class="container" style="padding-block:1.5rem 3rem;padding-bottom:0px;">
+    <div class="section-heading">
+      <h1 class="section-heading__title">Contáctenos</h1>
+      <p class="section-heading__subtitle">Estamos para ayudarte — escríbenos o llámanos</p>
+    </div>
+    <div class="contact-layout">
+      <!-- Información de contacto -->
+      <div>
+        <div class="contact-block">
+          <p class="contact-block__label"><i class="fa-solid fa-location-dot"></i> Dirección</p>
+          <address>
+            <a href="https://www.google.com.mx/maps/place/Sertecsur" target="_blank">
+              Calle 55 #50, Col. Electricistas<br/>
+              Cd. del Carmen, Campeche, México
+            </a>
+          </address>
+        </div>
+        <div class="contact-block">
+          <p class="contact-block__label"><i class="fa-solid fa-phone"></i> Teléfonos</p>
+          <p>Oficina: <a href="tel:9381532506">938 153 2506</a><br/>
+          Celular: <a href="https://api.whatsapp.com/send/?phone=529381329935" target="_blank">938 132 9935</a></p>
+        </div>
+        <div class="contact-block">
+          <p class="contact-block__label"><i class="fa-solid fa-envelope"></i> Correo electrónico</p>
+          <p><a href="mailto:ventas@sertecsur.net">ventas@sertecsur.net</a></p>
+        </div>
+        <div class="contact-block">
+          <p class="contact-block__label"><i class="fa-solid fa-share-nodes"></i> Redes sociales</p>
+          <div class="social-links">
+            <a class="social-link" href="http://www.facebook.com/sertecsur" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i> Facebook</a>
+            <a class="social-link" href="https://www.youtube.com/channel/UC3ySKWrvegfAHm_H0f1DYGQ" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> YouTube</a>
+          </div>
+        </div>
+        <div class="map-container">
+          <div id="map-placeholder" class="map-placeholder">
+            <i class="fa-solid fa-map-marker-alt"></i>
+            <span>Cargando mapa...</span>
+            <small>Cd. del Carmen, Campeche</small>
+          </div>
+          <div id="map" style="display:none;height:350px;width:100%;"></div>
+        </div>
+      </div>
+
+      <!-- Formulario de contacto -->
+      <div>
+        <form id="contactForm"
+          style="background:var(--clr-white);border:1px solid var(--clr-border);border-radius:var(--radius-md);padding:1.5rem;"
+          onsubmit="enviarContacto(event)" novalidate>
+
+          <div class="section-heading">
+            <h2 class="section-heading__title" style="font-size:1rem;">
+              <i class="fa-solid fa-paper-plane"></i> Envíenos un mensaje
+            </h2>
+          </div>
+
+          <!-- Alerta resultado -->
+          <div id="contactAlert" style="display:none;"></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="c-name">Nombre *</label>
+              <input class="form-input" type="text" id="c-name" name="nombre" required autocomplete="name"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="c-email">Correo electrónico *</label>
+              <input class="form-input" type="email" id="c-email" name="email" required autocomplete="email"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="c-phone"><i class="fa-solid fa-phone"></i> Teléfono</label>
+            <input class="form-input" type="tel" id="c-phone" name="telefono" autocomplete="tel"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="c-subject">Asunto *</label>
+            <select class="form-select" id="c-subject" name="asunto">
+              <option value="">Seleccione un asunto…</option>
+              <option>Cotización de producto</option>
+              <option>Información sobre instalación</option>
+              <option>Soporte técnico</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="c-message">Mensaje *</label>
+            <textarea class="form-textarea" id="c-message" name="mensaje" required></textarea>
+          </div>
+          <button class="btn btn--primary btn--md btn--full" type="submit" id="contactSendBtn">
+            <i class="fa-solid fa-paper-plane"></i> Enviar mensaje
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
