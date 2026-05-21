@@ -13,8 +13,6 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:var(--font-base);background:var(--clr-bg);color:var(--clr-text);min-height:100vh;display:flex}
     a{color:inherit;text-decoration:none} button{cursor:pointer;border:none;background:none;font:inherit;color:inherit} input,textarea,select{font:inherit} img{max-width:100%;display:block}
-
-    /* SIDEBAR */
     .adm-sidebar{width:var(--sidebar-w);background:var(--clr-primary);min-height:100vh;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:200;transition:transform var(--transition)}
     .adm-sidebar__logo{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:.75rem}
     .adm-sidebar__logo img{height:40px}
@@ -34,12 +32,8 @@
     .adm-sidebar__logout{padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.1)}
     .adm-sidebar__logout button{display:flex;align-items:center;gap:.5rem;width:100%;color:rgba(255,255,255,.6);font-size:.84rem;padding:.5rem .75rem;border-radius:6px;transition:background var(--transition),color var(--transition)}
     .adm-sidebar__logout button:hover{background:rgba(255,255,255,.08);color:#fff}
-
-    /* OVERLAY MÓVIL SIDEBAR */
     .adm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
     .adm-overlay.open{display:block}
-
-    /* MAIN */
     .adm-main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
     .adm-topbar{background:#fff;border-bottom:1px solid var(--clr-border);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(0,0,0,.06)}
     .adm-topbar__hamburger{display:none;flex-direction:column;gap:5px;padding:.3rem;cursor:pointer;background:none;border:none}
@@ -48,8 +42,6 @@
     .adm-topbar__breadcrumb{font-size:.78rem;color:var(--clr-muted);margin-top:.1rem}
     .adm-section{display:none;padding:1.5rem}
     .adm-section.active{display:block}
-
-    /* STATS */
     .adm-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
     .adm-stat{background:#fff;border:1px solid var(--clr-border);border-radius:var(--radius);padding:1.25rem 1.1rem;display:flex;align-items:flex-start;gap:.85rem}
     .adm-stat__icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
@@ -59,8 +51,6 @@
     .adm-stat__icon--yellow{background:#fef3c7;color:#92400e}
     .adm-stat__num{font-size:1.8rem;font-weight:700;color:var(--clr-dark);line-height:1}
     .adm-stat__label{font-size:.78rem;color:var(--clr-muted);margin-top:.2rem}
-
-    /* CARD */
     .adm-card{background:#fff;border:1px solid var(--clr-border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem;box-shadow:var(--shadow)}
     .adm-card__header{padding:.85rem 1.25rem;border-bottom:1px solid var(--clr-border);display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
     .adm-card__title{font-size:.93rem;font-weight:700;color:var(--clr-primary);display:flex;align-items:center;gap:.5rem}
@@ -71,23 +61,19 @@
     .adm-table th{background:var(--clr-bg);padding:.6rem .85rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--clr-muted);border-bottom:1px solid var(--clr-border);white-space:nowrap}
     .adm-table td{padding:.65rem .85rem;border-bottom:1px solid #f3f4f6;vertical-align:middle}
     .adm-table tr:last-child td{border-bottom:none}.adm-table tr:hover td{background:#fafbfc}
-
-    /* BOTONES */
     .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:7px;font-size:.82rem;font-weight:500;cursor:pointer;transition:background var(--transition),opacity var(--transition);border:none;white-space:nowrap}
     .btn i{font-size:.78rem}
     .btn--primary{background:var(--clr-primary);color:#fff}.btn--primary:hover{background:var(--clr-primary-dark)}
     .btn--accent{background:var(--clr-accent);color:#fff}.btn--accent:hover{opacity:.9}
     .btn--danger{background:var(--clr-danger);color:#fff}.btn--danger:hover{opacity:.85}
     .btn--ghost{background:transparent;color:var(--clr-primary);border:1px solid var(--clr-border)}.btn--ghost:hover{border-color:var(--clr-primary)}
+    .btn--teal{background:#0f766e;color:#fff}.btn--teal:hover{opacity:.88}
     .btn--sm{padding:.3rem .65rem;font-size:.76rem}.btn--icon{width:30px;height:30px;padding:0;justify-content:center;border-radius:6px}
-
-    /* BADGE */
     .badge{display:inline-block;padding:.2rem .55rem;border-radius:20px;font-size:.7rem;font-weight:700}
     .badge--green{background:#dcfce7;color:#15803d}.badge--yellow{background:#fef3c7;color:#92400e}
     .badge--red{background:#fee2e2;color:#b91c1c}.badge--blue{background:#dbeafe;color:#1e40af}
     .badge--gray{background:#f3f4f6;color:#4b5563}.badge--purple{background:#ede9fe;color:#6d28d9}
-
-    /* FORMS */
+    .badge--teal{background:#ccfbf1;color:#0f766e}.badge--orange{background:#ffedd5;color:#c2410c}
     .adm-form-group{margin-bottom:.9rem}
     .adm-form-label{display:block;font-size:.8rem;font-weight:700;color:var(--clr-primary);margin-bottom:.3rem}
     .adm-form-input,.adm-form-select,.adm-form-textarea{width:100%;border:1px solid var(--clr-border);border-radius:7px;padding:.5rem .75rem;font-size:.87rem;color:var(--clr-text);background:#fff;outline:none;transition:border-color var(--transition)}
@@ -95,31 +81,23 @@
     .adm-form-textarea{resize:vertical;min-height:80px}
     .adm-form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
     .adm-form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem}
-
-    /* MODAL */
     .adm-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center}
     .adm-modal-overlay.open{display:flex}
     .adm-modal{background:#fff;border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:modalIn .2s ease}
     @keyframes modalIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-    .adm-modal--wide{max-width:720px}
+    .adm-modal--wide{max-width:720px}.adm-modal--xl{max-width:860px}
     .adm-modal__header{padding:1rem 1.25rem;border-bottom:1px solid var(--clr-border);display:flex;align-items:center;justify-content:space-between}
     .adm-modal__title{font-size:.95rem;font-weight:700;color:var(--clr-primary)}
     .adm-modal__close{color:var(--clr-muted);font-size:1rem;padding:.25rem;border-radius:4px}.adm-modal__close:hover{background:var(--clr-bg)}
     .adm-modal__body{padding:1.25rem}
     .adm-modal__footer{padding:.85rem 1.25rem;border-top:1px solid var(--clr-border);display:flex;justify-content:flex-end;gap:.5rem}
-
-    /* ALERT */
     .adm-alert{padding:.65rem 1rem;border-radius:7px;font-size:.84rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
     .adm-alert--success{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
     .adm-alert--error{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
-
-    /* TOOLBAR */
     .adm-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
     .adm-search{display:flex;align-items:center;gap:.35rem;border:1px solid var(--clr-border);border-radius:7px;padding:.35rem .75rem;background:#fff}
     .adm-search input{border:none;outline:none;font-size:.84rem;width:180px;background:transparent}
     .adm-search i{color:var(--clr-muted);font-size:.8rem}
-
-    /* Características */
     .caract-row{display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem;margin-bottom:.4rem;align-items:center}
     .caract-row input{padding:.35rem .6rem;font-size:.82rem;border:1px solid var(--clr-border);border-radius:6px;outline:none}
     .caract-row input:focus{border-color:var(--clr-primary)}
@@ -127,8 +105,14 @@
     .caract-rm:hover{background:#fee2e2}
     .sim-fields{background:#f0f5fb;border:1px solid #bbd0e8;border-radius:8px;padding:1rem;margin-top:.5rem}
     .sim-fields-title{font-size:.78rem;font-weight:700;color:var(--clr-primary);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
-
-    /* BUZÓN */
+    /* Cotización admin */
+    .admin-cot-item{display:flex;align-items:center;gap:.65rem;padding:.45rem 0;border-bottom:1px solid #f3f4f6;}
+    .admin-cot-item:last-child{border-bottom:none;}
+    .admin-cot-item__qty{display:flex;align-items:center;gap:.3rem;}
+    .admin-cot-item__qty button{width:22px;height:22px;border-radius:4px;border:1px solid var(--clr-border);background:var(--clr-bg);color:var(--clr-primary);font-size:.8rem;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .admin-cot-item__qty button:hover{background:var(--clr-primary);color:#fff;}
+    .admin-cot-item__qty span{font-size:.85rem;font-weight:700;min-width:24px;text-align:center;}
+    /* Mensaje buzón */
     .msg-card{background:#fff;border:1px solid var(--clr-border);border-radius:8px;margin-bottom:.75rem;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
     .msg-card.unread{border-left:3px solid var(--clr-accent)}
     .msg-card__header{padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;cursor:pointer;transition:background var(--transition)}
@@ -142,8 +126,7 @@
     .msg-card__body.open{display:block}
     .msg-card__text{font-size:.85rem;line-height:1.6;color:var(--clr-text)}
     .msg-card__contact{font-size:.78rem;color:var(--clr-muted);margin-top:.5rem;display:flex;gap:1rem;flex-wrap:wrap}
-
-    /* COTIZACIÓN PRINT — solo el modal */
+    /* Print */
     .cot-print-wrap{font-family:'Segoe UI',sans-serif;}
     .cot-ph{background:var(--clr-primary);color:#fff;padding:1rem 1.25rem;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
     .cot-ph h3{font-size:1rem;font-weight:700;margin:0}
@@ -153,18 +136,21 @@
     .cot-tbl th{background:var(--clr-bg);padding:.5rem .75rem;border:1px solid var(--clr-border);font-size:.72rem;text-transform:uppercase}
     .cot-tbl td{padding:.5rem .75rem;border:1px solid var(--clr-border)}
     .cot-tbl tfoot td{font-weight:700;background:#f9fafb}
-
-    /* EMPTY */
     .adm-empty{text-align:center;padding:2.5rem 1rem;color:var(--clr-muted);font-size:.88rem}
     .adm-empty i{font-size:2.5rem;margin-bottom:.75rem;opacity:.3;display:block}
-
-    /* TOAST */
     #admToast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:500;transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
     #admToast.show{transform:translateY(0);opacity:1}
     .adm-toast{background:#0f2440;color:#fff;padding:.7rem 1.1rem;border-radius:8px;font-size:.85rem;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 16px rgba(0,0,0,.25)}
     .adm-toast.success{background:#166534}.adm-toast.error{background:#991b1b}
-
-    /* RESPONSIVE */
+    /* Selector productos en cotización admin */
+    .prod-selector{border:1px solid var(--clr-border);border-radius:8px;max-height:260px;overflow-y:auto;}
+    .prod-selector-item{display:flex;align-items:center;gap:.65rem;padding:.5rem .85rem;cursor:pointer;border-bottom:1px solid #f3f4f6;transition:background .15s;}
+    .prod-selector-item:last-child{border-bottom:none;}
+    .prod-selector-item:hover{background:var(--clr-bg);}
+    .prod-selector-item.selected{background:#eef3f8;border-left:3px solid var(--clr-primary);}
+    .prod-selector-item img{width:36px;height:36px;object-fit:cover;border-radius:4px;border:1px solid var(--clr-border);flex-shrink:0;}
+    .prod-selector-item__name{font-size:.83rem;font-weight:500;color:var(--clr-dark);}
+    .prod-selector-item__price{font-size:.75rem;color:var(--clr-muted);}
     @media(max-width:768px){
       .adm-sidebar{transform:translateX(-100%)}
       .adm-sidebar.open{transform:translateX(0)}
@@ -175,8 +161,6 @@
       .adm-section{padding:1rem}
     }
     @media(max-width:480px){.adm-stats{grid-template-columns:1fr}}
-
-    /* PRINT — solo el contenido del modal de cotización */
     @media print{
       body>*:not(#printArea){display:none!important}
       #printArea{display:block!important;position:fixed;inset:0;background:#fff;padding:2rem;z-index:9999}
@@ -185,10 +169,8 @@
 </head>
 <body>
 
-<!-- Overlay móvil -->
 <div class="adm-overlay" id="admOverlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside class="adm-sidebar" id="admSidebar">
   <div class="adm-sidebar__logo">
     <img src="img/SVG/logo.svg" alt="SERTECSUR" onerror="this.style.display='none'"/>
@@ -223,19 +205,14 @@
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="adm-main">
   <div class="adm-topbar">
-    <button class="adm-topbar__hamburger" onclick="openSidebar()" aria-label="Abrir menú">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="adm-topbar__hamburger" onclick="openSidebar()" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     <div style="flex:1;">
       <div class="adm-topbar__title" id="topbarTitle">Dashboard</div>
       <div class="adm-topbar__breadcrumb" id="topbarBreadcrumb">Panel principal</div>
     </div>
-    <span style="font-size:.82rem;color:var(--clr-muted);white-space:nowrap;">
-      <i class="fa-regular fa-clock"></i> <span id="admClock"></span>
-    </span>
+    <span style="font-size:.82rem;color:var(--clr-muted);white-space:nowrap;"><i class="fa-regular fa-clock"></i> <span id="admClock"></span></span>
   </div>
 
   <!-- DASHBOARD -->
@@ -253,7 +230,8 @@
       <div class="adm-card__header"><div class="adm-card__title"><i class="fa-solid fa-bolt"></i> Acciones rápidas</div></div>
       <div class="adm-card__body" style="display:flex;gap:.75rem;flex-wrap:wrap;">
         <button class="btn btn--primary" onclick="showSection('productos');openProductModal()"><i class="fa-solid fa-plus"></i> Nuevo producto</button>
-        <button class="btn btn--accent" onclick="showSection('cotizaciones')"><i class="fa-solid fa-file-invoice-dollar"></i> Ver cotizaciones</button>
+        <button class="btn btn--teal" onclick="showSection('cotizaciones');openAdminCotModal()"><i class="fa-solid fa-file-invoice-dollar"></i> Cotización admin</button>
+        <button class="btn btn--accent" onclick="showSection('cotizaciones')"><i class="fa-solid fa-list"></i> Ver cotizaciones</button>
         <button class="btn btn--ghost" onclick="showSection('usuarios');openUserModal()"><i class="fa-solid fa-user-plus"></i> Crear usuario</button>
         <button class="btn btn--ghost" onclick="showSection('buzon')"><i class="fa-solid fa-envelope"></i> Ver buzón</button>
       </div>
@@ -281,20 +259,28 @@
   <!-- COTIZACIONES -->
   <section class="adm-section" id="sec-cotizaciones">
     <div class="adm-toolbar">
-      <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar cotización…" id="searchCotizaciones" oninput="filterCotizaciones()"/></div>
-      <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterEstado" onchange="filterCotizaciones()">
-        <option value="">Todos los estados</option>
-        <option value="pendiente">Pendiente</option>
-        <option value="aprobada">Aprobada</option>
-        <option value="rechazada">Rechazada</option>
-      </select>
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+        <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar cotización…" id="searchCotizaciones" oninput="filterCotizaciones()"/></div>
+        <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterEstado" onchange="filterCotizaciones()">
+          <option value="">Todos los estados</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="aprobada">Aprobada</option>
+          <option value="rechazada">Rechazada</option>
+        </select>
+        <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterTipo" onchange="filterCotizaciones()">
+          <option value="">Todos los tipos</option>
+          <option value="cliente">De clientes</option>
+          <option value="admin">Generadas por admin</option>
+        </select>
+      </div>
+      <button class="btn btn--teal" onclick="openAdminCotModal()"><i class="fa-solid fa-plus"></i> Nueva cotización admin</button>
     </div>
     <div class="adm-card">
       <div class="adm-card__body" style="padding:0;">
         <div class="adm-table-wrap">
           <table class="adm-table">
-            <thead><tr><th>#</th><th>Cliente</th><th>Correo</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tbCotizaciones"><tr><td colspan="7" class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando…</td></tr></tbody>
+            <thead><tr><th>#</th><th>Tipo</th><th>Usuario / Destinatario</th><th>Correo</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tbCotizaciones"><tr><td colspan="8" class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando…</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -323,17 +309,11 @@
   <section class="adm-section" id="sec-buzon">
     <div class="adm-toolbar">
       <div class="adm-search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Buscar mensaje…" id="searchBuzon" oninput="filterBuzon()"/></div>
-      <div style="display:flex;gap:.5rem;align-items:center;">
-        <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterLeido" onchange="filterBuzon()">
-          <option value="">Todos</option>
-          <option value="0">No leídos</option>
-          <option value="1">Leídos</option>
-        </select>
-      </div>
+      <select class="adm-form-select" style="width:auto;font-size:.82rem;" id="filterLeido" onchange="filterBuzon()">
+        <option value="">Todos</option><option value="0">No leídos</option><option value="1">Leídos</option>
+      </select>
     </div>
-    <div id="buzonContainer">
-      <div class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando mensajes…</div>
-    </div>
+    <div id="buzonContainer"><div class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i> Cargando mensajes…</div></div>
   </section>
 </main>
 
@@ -386,13 +366,6 @@
             <div class="adm-form-group"><label class="adm-form-label">Alcance (u)</label><input class="adm-form-input" id="sAlcance" type="number" min="10" max="600" placeholder="70"/></div>
             <div class="adm-form-group"><label class="adm-form-label">Ángulo visión (°)</label><input class="adm-form-input" id="sAngulo" type="number" min="10" max="360" placeholder="90"/></div>
           </div>
-          <div class="adm-form-row">
-            <div class="adm-form-group"><label class="adm-form-label">Distancia al objeto</label><input class="adm-form-input" id="sDist" type="number" min="-26" max="40" placeholder="0"/></div>
-            <div class="adm-form-group" style="display:flex;align-items:center;gap:.5rem;padding-top:1.6rem;">
-              <input type="checkbox" id="sActivo" checked style="width:16px;height:16px;accent-color:var(--clr-primary);">
-              <label for="sActivo" style="font-size:.87rem;cursor:pointer;">Activo por defecto</label>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -403,7 +376,7 @@
   </div>
 </div>
 
-<!-- MODAL: USUARIO (crear / editar) -->
+<!-- MODAL: USUARIO -->
 <div class="adm-modal-overlay" id="modalUsuario">
   <div class="adm-modal">
     <div class="adm-modal__header">
@@ -436,7 +409,7 @@
   </div>
 </div>
 
-<!-- MODAL: DETALLE COTIZACIÓN -->
+<!-- MODAL: DETALLE COTIZACIÓN (cliente) -->
 <div class="adm-modal-overlay" id="modalCotizacion">
   <div class="adm-modal adm-modal--wide">
     <div class="adm-modal__header">
@@ -451,48 +424,123 @@
   </div>
 </div>
 
-<!-- MODAL: MENSAJE BUZÓN -->
-<div class="adm-modal-overlay" id="modalMensaje">
-  <div class="adm-modal">
+<!-- MODAL: NUEVA COTIZACIÓN ADMIN ═══════════════════ -->
+<div class="adm-modal-overlay" id="modalAdminCot">
+  <div class="adm-modal adm-modal--xl">
     <div class="adm-modal__header">
-      <div class="adm-modal__title">Mensaje de contacto</div>
-      <button class="adm-modal__close" onclick="closeModal('modalMensaje')"><i class="fa-solid fa-xmark"></i></button>
+      <div class="adm-modal__title"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--clr-accent);"></i> Nueva cotización — SERTECSUR</div>
+      <button class="adm-modal__close" onclick="closeModal('modalAdminCot')"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="adm-modal__body" id="mensajeDetailBody"></div>
+    <div class="adm-modal__body">
+      <div id="modalAdminCotAlert"></div>
+
+      <!-- Datos del destinatario -->
+      <div style="background:#eef3f8;border:1px solid #bbd0e8;border-radius:8px;padding:.85rem 1rem;margin-bottom:1rem;">
+        <p style="font-size:.78rem;font-weight:700;color:var(--clr-primary);margin-bottom:.65rem;"><i class="fa-solid fa-building"></i> Datos del remitente (fijos)</p>
+        <div class="adm-form-row" style="margin-bottom:0;">
+          <div style="font-size:.82rem;"><span style="color:var(--clr-muted);">Empresa:</span> <strong>SERTECSUR</strong></div>
+          <div style="font-size:.82rem;"><span style="color:var(--clr-muted);">Correo:</span> ventas@sertecsur.net</div>
+          <div style="font-size:.82rem;"><span style="color:var(--clr-muted);">Tel:</span> 938 153 2506</div>
+        </div>
+      </div>
+
+      <div class="adm-form-row" style="margin-bottom:.9rem;">
+        <div class="adm-form-group">
+          <label class="adm-form-label">Destinatario (nombre del cliente / empresa)</label>
+          <input class="adm-form-input" id="acDestinatario" placeholder="Nombre de la empresa o persona…"/>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Notas</label>
+          <input class="adm-form-input" id="acNotas" placeholder="Observaciones opcionales…"/>
+        </div>
+      </div>
+
+      <!-- Buscador de productos -->
+      <div class="adm-form-group">
+        <label class="adm-form-label" style="display:flex;align-items:center;justify-content:space-between;">
+          Seleccionar productos
+          <span id="acProdCount" style="font-size:.72rem;color:var(--clr-muted);font-weight:400;">0 seleccionados</span>
+        </label>
+        <div class="adm-search" style="margin-bottom:.5rem;width:100%;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="acSearch" placeholder="Buscar producto…" oninput="filterAdminCotProds(this.value)"/>
+        </div>
+        <div class="prod-selector" id="acProdList">
+          <div class="adm-empty"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        </div>
+      </div>
+
+      <!-- Items seleccionados -->
+      <div id="acSelectedWrap" style="display:none;">
+        <label class="adm-form-label" style="margin-top:.75rem;">Productos en la cotización</label>
+        <div id="acSelectedList" style="border:1px solid var(--clr-border);border-radius:8px;padding:.5rem .85rem;"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+          <span style="font-size:.9rem;font-weight:700;color:var(--clr-primary);">Total: <span id="acTotal" style="color:var(--clr-accent);">$0.00</span></span>
+        </div>
+      </div>
+    </div>
     <div class="adm-modal__footer">
-      <button class="btn btn--ghost" onclick="closeModal('modalMensaje')">Cerrar</button>
+      <button class="btn btn--ghost" onclick="closeModal('modalAdminCot')">Cancelar</button>
+      <button class="btn btn--teal" onclick="saveAdminCotizacion()"><i class="fa-solid fa-file-invoice-dollar"></i> Generar cotización</button>
     </div>
   </div>
 </div>
 
-<!-- Área de impresión (solo visible en print) -->
+<!-- Área de impresión -->
 <div id="printArea" style="display:none;"></div>
-
 <div id="admToast"></div>
 
 <script>
 'use strict';
 const API='db.php?action=';
-async function api(action,method='GET',body=null){const o={method,headers:{'Content-Type':'application/json'}};if(body)o.body=JSON.stringify(body);const r=await fetch(API+action,o);return r.json();}
+async function api(action,method='GET',body=null){
+  const o={method,headers:{'Content-Type':'application/json'}};
+  if(body) o.body=JSON.stringify(body);
+  const r=await fetch(API+action,o);
+  return r.json();
+}
 
 let _tt;
-function toast(msg,type='success'){const el=document.getElementById('admToast');el.innerHTML=`<div class="adm-toast ${type}"><i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-xmark'}"></i>${msg}</div>`;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),3000);}
+function toast(msg,type='success'){
+  const el=document.getElementById('admToast');
+  el.innerHTML=`<div class="adm-toast ${type}"><i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-xmark'}"></i>${msg}</div>`;
+  el.classList.add('show');
+  clearTimeout(_tt);
+  _tt=setTimeout(()=>el.classList.remove('show'),3000);
+}
 
-(function clock(){const el=document.getElementById('admClock');const tick=()=>{if(el)el.textContent=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})};tick();setInterval(tick,60000);})();
+(function clock(){
+  const el=document.getElementById('admClock');
+  const tick=()=>{ if(el) el.textContent=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); };
+  tick(); setInterval(tick,60000);
+})();
 
-/* SIDEBAR RESPONSIVE */
 function openSidebar(){document.getElementById('admSidebar').classList.add('open');document.getElementById('admOverlay').classList.add('open');}
 function closeSidebar(){document.getElementById('admSidebar').classList.remove('open');document.getElementById('admOverlay').classList.remove('open');}
 
-async function checkSession(){const r=await api('me');if(!r.ok||!r.data||r.data.rol!=='admin'){window.location.href='index.html';return false;}document.getElementById('sidebarUserName').textContent=r.data.nombre;return true;}
+async function checkSession(){
+  const r=await api('me');
+  if(!r.ok||!r.data||r.data.rol!=='admin'){window.location.href='index.html';return false;}
+  document.getElementById('sidebarUserName').textContent=r.data.nombre;
+  return true;
+}
 async function doLogout(){await api('logout','POST');window.location.href='index.html';}
 
 function showSection(id){
   document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.adm-nav__link').forEach(l=>l.classList.remove('active'));
   document.getElementById('sec-'+id)?.classList.add('active');
-  document.querySelectorAll('.adm-nav__link').forEach(l=>{if(l.textContent.trim().toLowerCase().includes(id==='buzon'?'buz':id))l.classList.add('active');});
-  const titles={dashboard:['Dashboard','Resumen general'],productos:['Productos','Gestión de catálogo'],cotizaciones:['Cotizaciones','Gestión de solicitudes'],usuarios:['Usuarios','Gestión de usuarios'],buzon:['Buzón de contacto','Mensajes recibidos']};
+  document.querySelectorAll('.adm-nav__link').forEach(l=>{
+    if(l.textContent.trim().toLowerCase().includes(id==='buzon'?'buz':id==='cotizaciones'?'cotiz':id))
+      l.classList.add('active');
+  });
+  const titles={
+    dashboard:['Dashboard','Resumen general'],
+    productos:['Productos','Gestión de catálogo'],
+    cotizaciones:['Cotizaciones','Gestión de solicitudes y cotizaciones'],
+    usuarios:['Usuarios','Gestión de usuarios'],
+    buzon:['Buzón de contacto','Mensajes recibidos']
+  };
   const t=titles[id]||[id,''];
   document.getElementById('topbarTitle').textContent=t[0];
   document.getElementById('topbarBreadcrumb').textContent=t[1];
@@ -506,11 +554,16 @@ function showSection(id){
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.adm-modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.adm-modal-overlay.open').forEach(o=>o.classList.remove('open'));closeSidebar();}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.adm-modal-overlay.open').forEach(o=>o.classList.remove('open'));
+    closeSidebar();
+  }
+});
 
-/* STATS */
+/* ── STATS ── */
 async function loadStats(){
-  const r=await api('stats');if(!r.ok)return;const d=r.data;
+  const r=await api('stats'); if(!r.ok) return; const d=r.data;
   document.getElementById('st-productos').textContent=d.total_productos;
   document.getElementById('st-clientes').textContent=d.total_clientes;
   document.getElementById('st-cotizaciones').textContent=d.total_cotizaciones;
@@ -524,7 +577,7 @@ async function loadStats(){
   if(d.buzon_no_leidos>0){bb.textContent=d.buzon_no_leidos;bb.style.display='inline-block';}else bb.style.display='none';
 }
 
-/* PRODUCTOS */
+/* ── PRODUCTOS ── */
 let allProductos=[];
 async function loadProductos(){const r=await api('productos');if(!r.ok)return;allProductos=r.data;renderProductos(allProductos);}
 function renderProductos(list){
@@ -581,7 +634,6 @@ async function saveProducto(){
   if(!nombre||!precio){document.getElementById('modalProductoAlert').innerHTML='<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i> Nombre y precio son requeridos.</div>';return;}
   const simulable=document.getElementById('pSimulable').checked;
   const body={id_producto:id?parseInt(id):undefined,nombre,tipo:document.getElementById('pTipo').value.trim(),precio:parseFloat(precio),stock:parseInt(document.getElementById('pStock').value)||0,certificacion:document.getElementById('pCert').value.trim()||null,descripcion:document.getElementById('pDesc').value.trim(),img_url:document.getElementById('pImg').value.trim(),simulable:simulable?1:0,caracteristicas:getCaracteristicas()};
-  if(simulable)body.sim={pos_x:parseFloat(document.getElementById('sX').value)||50,pos_y:parseFloat(document.getElementById('sY').value)||50,rotacion:parseInt(document.getElementById('sRot').value)||0,escala:parseInt(document.getElementById('sEscala').value)||100,alcance:parseFloat(document.getElementById('sAlcance').value)||70,angulo_vision:parseFloat(document.getElementById('sAngulo').value)||90,distancia_objeto:parseFloat(document.getElementById('sDist').value)||0,activo:document.getElementById('sActivo').checked?1:0};
   const r=await api('productos',id?'PUT':'POST',body);
   if(r.ok){closeModal('modalProducto');toast(id?'Producto actualizado':'Producto creado');loadProductos();}
   else document.getElementById('modalProductoAlert').innerHTML=`<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i>${r.error}</div>`;
@@ -592,15 +644,29 @@ async function deleteProducto(id,nombre){
   if(r.ok){toast('Producto eliminado');loadProductos();}else toast(r.error,'error');
 }
 
-/* COTIZACIONES */
+/* ══════════════════════════════════════════════
+   COTIZACIONES
+══════════════════════════════════════════════ */
 let allCotizaciones=[];
-async function loadCotizaciones(){const r=await api('cotizaciones');if(!r.ok)return;allCotizaciones=r.data;renderCotizaciones(allCotizaciones);}
+async function loadCotizaciones(){
+  const r=await api('cotizaciones');
+  if(!r.ok)return;
+  allCotizaciones=r.data;
+  renderCotizaciones(allCotizaciones);
+}
 function renderCotizaciones(list){
   const tb=document.getElementById('tbCotizaciones');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="adm-empty"><i class="fa-solid fa-file-invoice"></i><br>Sin cotizaciones</div></td></tr>`;return;}
-  tb.innerHTML=list.map(c=>`<tr>
+  if(!list.length){tb.innerHTML=`<tr><td colspan="8"><div class="adm-empty"><i class="fa-solid fa-file-invoice"></i><br>Sin cotizaciones</div></td></tr>`;return;}
+  tb.innerHTML=list.map(c=>{
+    const esAdmin=(c.tipo_cot||c.tipo)==='admin';
+    const tipoBadge=esAdmin
+      ?`<span class="badge badge--teal"><i class="fa-solid fa-building"></i> Admin</span>`
+      :`<span class="badge badge--blue"><i class="fa-solid fa-user"></i> Cliente</span>`;
+    const nombreMostrado=esAdmin?(c.destinatario?`<span style="font-size:.72rem;color:var(--clr-muted);">${escHtml(c.destinatario)}</span>`:'-'):`${escHtml(c.cliente_nombre)}`;
+    return `<tr>
     <td style="color:var(--clr-muted);font-size:.75rem;">#${c.id_cotizacion}</td>
-    <td style="font-weight:500;">${escHtml(c.cliente_nombre)}</td>
+    <td>${tipoBadge}</td>
+    <td style="font-weight:500;">${nombreMostrado}</td>
     <td style="font-size:.78rem;color:var(--clr-muted);">${escHtml(c.cliente_correo)}</td>
     <td style="font-size:.78rem;">${formatDate(c.fecha)}</td>
     <td><strong>$${parseFloat(c.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</strong></td>
@@ -613,22 +679,40 @@ function renderCotizaciones(list){
       <button class="btn btn--ghost btn--icon btn--sm" title="Ver" onclick="verCotizacion(${c.id_cotizacion})"><i class="fa-solid fa-eye"></i></button>
       <button class="btn btn--primary btn--icon btn--sm" title="Imprimir" onclick="verCotizacion(${c.id_cotizacion},true)"><i class="fa-solid fa-print"></i></button>
     </td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 }
-function filterCotizaciones(){const q=document.getElementById('searchCotizaciones').value.toLowerCase();const est=document.getElementById('filterEstado').value;renderCotizaciones(allCotizaciones.filter(c=>(c.cliente_nombre.toLowerCase().includes(q)||c.cliente_correo.toLowerCase().includes(q))&&(!est||c.estado===est)));}
+function filterCotizaciones(){
+  const q=document.getElementById('searchCotizaciones').value.toLowerCase();
+  const est=document.getElementById('filterEstado').value;
+  const tipo=document.getElementById('filterTipo').value;
+  renderCotizaciones(allCotizaciones.filter(c=>{
+    const matchQ=c.cliente_nombre.toLowerCase().includes(q)||c.cliente_correo.toLowerCase().includes(q)||(c.destinatario||'').toLowerCase().includes(q);
+    const matchEst=!est||c.estado===est;
+    const matchTipo=!tipo||(c.tipo_cot||c.tipo||'cliente')===tipo;
+    return matchQ&&matchEst&&matchTipo;
+  }));
+}
 async function updateEstado(id,estado){const r=await api('cotizaciones','PUT',{id_cotizacion:id,estado});if(r.ok){toast('Estado actualizado');loadStats();}else toast(r.error,'error');}
 
 function verCotizacion(id,autoPrint=false){
   const c=allCotizaciones.find(x=>x.id_cotizacion==id);if(!c)return;
   const bMap={pendiente:'badge--yellow',aprobada:'badge--green',rechazada:'badge--red'};
-  const detalle=(c.detalle||[]).map(d=>`<tr><td>${escHtml(d.producto_nombre)}</td><td style="text-align:center;">${d.cantidad}</td><td style="text-align:right;">$${parseFloat(d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td><td style="text-align:right;font-weight:700;">$${(d.cantidad*d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>`).join('');
+  const estadoLabel=c.estado?(c.estado.charAt(0).toUpperCase()+c.estado.slice(1)):'Pendiente';
+  const esAdmin=(c.tipo_cot||c.tipo)==='admin';
+  const detalle=(c.detalle||[]).map(d=>`<tr>
+    <td>${escHtml(d.producto_nombre)}</td>
+    <td style="text-align:center;">${d.cantidad}</td>
+    <td style="text-align:right;">$${parseFloat(d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td>
+    <td style="text-align:right;font-weight:700;">$${(d.cantidad*d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td>
+  </tr>`).join('');
   const html=`<div class="cot-print-wrap">
     <div class="cot-ph"><div><h3>SERTECSUR</h3><p style="font-size:.75rem;opacity:.75;">Servicios Tecnológicos del Sureste</p></div><div style="text-align:right;"><p style="font-size:1rem;font-weight:700;margin:0;">COTIZACIÓN #${c.id_cotizacion}</p><p style="font-size:.75rem;opacity:.75;">Fecha: ${formatDate(c.fecha)}</p></div></div>
     <div class="cot-info">
-      <span style="color:var(--clr-muted);">Cliente:</span><strong>${escHtml(c.cliente_nombre)}</strong>
-      <span style="color:var(--clr-muted);">Correo:</span><span>${escHtml(c.cliente_correo)}</span>
+      ${esAdmin?`<span style="color:var(--clr-muted);">Generada por:</span><strong>SERTECSUR</strong>`:`<span style="color:var(--clr-muted);">Cliente:</span><strong>${escHtml(c.cliente_nombre)}</strong>`}
+      ${esAdmin?`<span style="color:var(--clr-muted);">Destinatario:</span><span>${escHtml(c.destinatario||'—')}</span>`:`<span style="color:var(--clr-muted);">Correo:</span><span>${escHtml(c.cliente_correo)}</span>`}
       <span style="color:var(--clr-muted);">Teléfono:</span><span>${escHtml(c.cliente_telefono||'—')}</span>
-      <span style="color:var(--clr-muted);">Estado:</span><span class="badge ${bMap[c.estado]||'badge--gray'}">${c.estado}</span>
+      <span style="color:var(--clr-muted);">Estado:</span><span class="badge ${bMap[c.estado]||'badge--gray'}">${estadoLabel}</span>
       <span style="color:var(--clr-muted);">Vigencia:</span><span>30 días</span>
     </div>
     <table class="cot-tbl">
@@ -642,10 +726,9 @@ function verCotizacion(id,autoPrint=false){
     <p style="font-size:.75rem;color:var(--clr-muted);margin-top:.75rem;">Tel: 938 153 2506 · ventas@sertecsur.net · Calle 55 #50, Col. Electricistas, Cd. del Carmen, Cam.</p>
   </div>`;
   document.getElementById('cotizacionDetailBody').innerHTML=html;
-  // Área de impresión separada para no imprimir toda la página
   document.getElementById('printArea').innerHTML=html;
   openModal('modalCotizacion');
-  if(autoPrint)setTimeout(printCotizacion,400);
+  if(autoPrint) setTimeout(printCotizacion,400);
 }
 
 function printCotizacion(){
@@ -654,7 +737,146 @@ function printCotizacion(){
   setTimeout(()=>document.getElementById('printArea').style.display='none',1000);
 }
 
-/* USUARIOS */
+/* ══════════════════════════════════════════════
+   COTIZACIÓN ADMIN
+══════════════════════════════════════════════ */
+let acSelectedItems={}; // { producto_id: { producto, cantidad } }
+
+function openAdminCotModal(){
+  acSelectedItems={};
+  document.getElementById('acDestinatario').value='';
+  document.getElementById('acNotas').value='';
+  document.getElementById('acSearch').value='';
+  document.getElementById('modalAdminCotAlert').innerHTML='';
+  renderAdminCotProds(allProductos);
+  renderAcSelected();
+  openModal('modalAdminCot');
+}
+
+function filterAdminCotProds(q){
+  q=(q||'').toLowerCase();
+  const filtered=q?allProductos.filter(p=>p.nombre.toLowerCase().includes(q)||(p.tipo||'').toLowerCase().includes(q)):allProductos;
+  renderAdminCotProds(filtered);
+}
+
+function renderAdminCotProds(list){
+  const el=document.getElementById('acProdList');
+  if(!list.length){el.innerHTML='<div class="adm-empty" style="padding:1rem;">No se encontraron productos.</div>';return;}
+  el.innerHTML=list.map(p=>{
+    const sel=!!acSelectedItems[p.id_producto];
+    return `<div class="prod-selector-item ${sel?'selected':''}" id="acprod_${p.id_producto}" onclick="toggleAcProd(${p.id_producto})">
+      <img src="${escHtml(p.img_url||'')}" onerror="this.style.display='none'" alt=""/>
+      <div style="flex:1;min-width:0;">
+        <p class="prod-selector-item__name">${escHtml(p.nombre)}</p>
+        <p class="prod-selector-item__price">$${parseFloat(p.precio).toLocaleString('es-MX',{minimumFractionDigits:2})} · ${escHtml(p.tipo||'—')}</p>
+      </div>
+      ${sel?'<i class="fa-solid fa-circle-check" style="color:var(--clr-primary);font-size:1rem;"></i>':'<i class="fa-solid fa-plus" style="color:var(--clr-muted);font-size:.9rem;"></i>'}
+    </div>`;
+  }).join('');
+}
+
+function toggleAcProd(id){
+  const p=allProductos.find(x=>x.id_producto==id);
+  if(!p)return;
+  if(acSelectedItems[id]) delete acSelectedItems[id];
+  else acSelectedItems[id]={producto:p,cantidad:1};
+  // Refrescar solo el ítem clickeado en el selector
+  const itemEl=document.getElementById('acprod_'+id);
+  if(itemEl){
+    const sel=!!acSelectedItems[id];
+    itemEl.classList.toggle('selected',sel);
+    const ico=itemEl.querySelector('i');
+    if(ico) ico.className=sel?'fa-solid fa-circle-check':'fa-solid fa-plus';
+    if(ico) ico.style.color=sel?'var(--clr-primary)':'var(--clr-muted)';
+  }
+  document.getElementById('acProdCount').textContent=`${Object.keys(acSelectedItems).length} seleccionado(s)`;
+  renderAcSelected();
+}
+
+function changeAcQty(id,delta){
+  if(!acSelectedItems[id])return;
+  acSelectedItems[id].cantidad=Math.max(1,acSelectedItems[id].cantidad+delta);
+  renderAcSelected();
+}
+
+function renderAcSelected(){
+  const wrap=document.getElementById('acSelectedWrap');
+  const list=document.getElementById('acSelectedList');
+  const items=Object.values(acSelectedItems);
+  if(!items.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  let total=0;
+  list.innerHTML=items.map(({producto,cantidad})=>{
+    const sub=producto.precio*cantidad; total+=sub;
+    return `<div class="admin-cot-item">
+      <img src="${escHtml(producto.img_url||'')}" style="width:36px;height:36px;object-fit:cover;border-radius:4px;border:1px solid var(--clr-border);flex-shrink:0;" onerror="this.style.display='none'"/>
+      <div style="flex:1;min-width:0;"><p style="font-size:.83rem;font-weight:500;">${escHtml(producto.nombre)}</p><p style="font-size:.72rem;color:var(--clr-muted);">$${producto.precio.toLocaleString('es-MX',{minimumFractionDigits:2})} c/u</p></div>
+      <div class="admin-cot-item__qty">
+        <button onclick="changeAcQty(${producto.id_producto},-1)"><i class="fa-solid fa-minus"></i></button>
+        <span>${cantidad}</span>
+        <button onclick="changeAcQty(${producto.id_producto},1)"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <div style="text-align:right;min-width:80px;">
+        <p style="font-size:.85rem;font-weight:700;color:var(--clr-primary);">$${sub.toLocaleString('es-MX',{minimumFractionDigits:2})}</p>
+        <button onclick="toggleAcProd(${producto.id_producto})" style="font-size:.7rem;color:var(--clr-accent);background:none;border:none;cursor:pointer;"><i class="fa-solid fa-trash"></i> Quitar</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('acTotal').textContent='$'+total.toLocaleString('es-MX',{minimumFractionDigits:2});
+}
+
+async function saveAdminCotizacion(){
+  const items=Object.values(acSelectedItems).map(({producto,cantidad})=>({producto_id:producto.id_producto,cantidad}));
+  if(!items.length){
+    document.getElementById('modalAdminCotAlert').innerHTML='<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i> Selecciona al menos un producto.</div>';
+    return;
+  }
+  const destinatario=document.getElementById('acDestinatario').value.trim();
+  const notas=document.getElementById('acNotas').value.trim();
+  const r=await api('cotizaciones-admin','POST',{items,destinatario,notas});
+  if(r.ok){
+    closeModal('modalAdminCot');
+    toast('Cotización generada correctamente','success');
+    loadCotizaciones();
+    loadStats();
+    // Abrir PDF
+    const cot=r.data;
+    _printAdminCotPDF(cot);
+  } else {
+    document.getElementById('modalAdminCotAlert').innerHTML=`<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i>${r.error}</div>`;
+  }
+}
+
+function _printAdminCotPDF(cot){
+  const detalle=(cot.detalle||[]).map(d=>`<tr>
+    <td style="padding:.5rem .75rem;border:1px solid #dde1e7;">${d.producto_nombre}</td>
+    <td style="padding:.5rem .75rem;border:1px solid #dde1e7;text-align:center;">${d.cantidad}</td>
+    <td style="padding:.5rem .75rem;border:1px solid #dde1e7;text-align:right;">$${parseFloat(d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td>
+    <td style="padding:.5rem .75rem;border:1px solid #dde1e7;text-align:right;font-weight:700;">$${(d.cantidad*d.precio_unitario).toLocaleString('es-MX',{minimumFractionDigits:2})}</td>
+  </tr>`).join('');
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><title>Cotización Admin #${cot.id_cotizacion}</title>
+  <style>body{font-family:'Segoe UI',sans-serif;color:#1f2937;padding:2rem;max-width:800px;margin:auto;}.header{background:#1a3a5c;color:#fff;padding:1.25rem 1.5rem;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:flex-start;}h1{margin:0;font-size:1.4rem;}.sub{font-size:.8rem;opacity:.75;margin-top:.2rem;}.info{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;padding:1rem 0;font-size:.88rem;border-bottom:1px solid #dde1e7;margin-bottom:1rem;}.lbl{color:#6b7280;}table{width:100%;border-collapse:collapse;font-size:.85rem;}th{background:#f0f4f8;padding:.5rem .75rem;border:1px solid #dde1e7;text-align:left;font-size:.75rem;text-transform:uppercase;}tfoot td{font-weight:700;background:#f9fafb;padding:.6rem .75rem;border:1px solid #dde1e7;}.footer{margin-top:1.5rem;font-size:.75rem;color:#6b7280;border-top:1px solid #dde1e7;padding-top:.75rem;}</style></head><body>
+  <div class="header"><div><h1>SERTECSUR</h1><p class="sub">Servicios Tecnológicos del Sureste</p></div><div style="text-align:right;"><p style="font-size:1.1rem;font-weight:700;margin:0;">COTIZACIÓN #${cot.id_cotizacion}</p><p class="sub">Fecha: ${new Date(cot.fecha||Date.now()).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div>
+  <div style="border:1px solid #dde1e7;border-top:none;border-radius:0 0 8px 8px;padding:1.25rem;">
+  <div class="info">
+    <span class="lbl">Generada por:</span><strong>SERTECSUR</strong>
+    <span class="lbl">Correo:</span><span>ventas@sertecsur.net</span>
+    <span class="lbl">Teléfono:</span><span>938 153 2506</span>
+    <span class="lbl">Destinatario:</span><span>${cot.destinatario||'—'}</span>
+    <span class="lbl">Estado:</span><span>Pendiente</span>
+    <span class="lbl">Vigencia:</span><span>30 días</span>
+  </div>
+  <table><thead><tr><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">Precio u.</th><th style="text-align:right;">Subtotal</th></tr></thead><tbody>${detalle}</tbody><tfoot><tr><td colspan="3" style="text-align:right;">Subtotal</td><td style="text-align:right;">$${parseFloat(cot.subtotal||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr><tr><td colspan="3" style="text-align:right;font-size:1rem;">TOTAL</td><td style="text-align:right;font-size:1rem;">$${parseFloat(cot.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr></tfoot></table>
+  <div class="footer">Tel: 938 153 2506 · ventas@sertecsur.net · Calle 55 #50, Col. Electricistas, Cd. del Carmen, Campeche</div></div>
+  <script>window.onload=()=>window.print();<\/script></body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const win=window.open(url,'_blank');
+  if(!win){const a=document.createElement('a');a.href=url;a.download=`cotizacion_admin_${cot.id_cotizacion}.html`;a.click();}
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+
+/* ── USUARIOS ── */
 let allUsuarios=[];
 async function loadUsuarios(){const r=await api('usuarios');if(!r.ok)return;allUsuarios=r.data;renderUsuarios(allUsuarios);}
 function renderUsuarios(list){
@@ -699,7 +921,7 @@ async function saveUsuario(){
   const pass=document.getElementById('uPass').value.trim();
   if(!nombre||!correo||(!id&&!pass)){document.getElementById('modalUsuarioAlert').innerHTML='<div class="adm-alert adm-alert--error"><i class="fa-solid fa-circle-xmark"></i> Nombre, correo y contraseña son requeridos.</div>';return;}
   const payload={nombre,correo,telefono:document.getElementById('uTel').value.trim(),direccion:document.getElementById('uDir').value.trim(),rol:document.getElementById('uRol').value};
-  if(pass)payload.contrasena=pass;
+  if(pass) payload.contrasena=pass;
   let r;
   if(id){payload.id_usuario=parseInt(id);r=await api('usuarios','PUT',payload);}
   else r=await api('usuarios','POST',payload);
@@ -712,20 +934,18 @@ async function deleteUsuario(id,nombre){
   if(r.ok){toast('Usuario eliminado');loadUsuarios();loadStats();}else toast(r.error,'error');
 }
 
-/* BUZÓN */
+/* ── BUZÓN ── */
 let allMensajes=[];
 async function loadBuzon(){
   const r=await api('buzon');if(!r.ok)return;
   allMensajes=r.data.mensajes||[];
-  renderBuzon(allMensajes);
-  loadStats();
+  renderBuzon(allMensajes); loadStats();
 }
 function renderBuzon(list){
   const c=document.getElementById('buzonContainer');
   if(!list.length){c.innerHTML=`<div class="adm-empty"><i class="fa-solid fa-envelope-open"></i><br>No hay mensajes en el buzón</div>`;return;}
   c.innerHTML=list.map(m=>{
     const inicial=(m.nombre||'?')[0].toUpperCase();
-    const fechaStr=formatDate(m.fecha);
     return `<div class="msg-card ${m.leido?'':'unread'}" id="msg-${m.id_mensaje}">
       <div class="msg-card__header" onclick="toggleMsgCard(${m.id_mensaje},${m.leido})">
         <div class="msg-card__avatar">${inicial}</div>
@@ -734,7 +954,7 @@ function renderBuzon(list){
           <p class="msg-card__subject">${escHtml(m.asunto||'Sin asunto')}</p>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;">
-          <p class="msg-card__meta">${fechaStr}</p>
+          <p class="msg-card__meta">${formatDate(m.fecha)}</p>
           <button onclick="event.stopPropagation();deleteMensaje(${m.id_mensaje})" class="btn btn--danger btn--sm btn--icon" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
@@ -764,7 +984,6 @@ async function toggleMsgCard(id,yaLeido){
     await api('buzon','PUT',{id_mensaje:id});
     const card=document.getElementById('msg-'+id);
     if(card){card.classList.remove('unread');const badge=card.querySelector('.msg-card__name span');if(badge)badge.remove();}
-    // Actualizar en array local
     const m=allMensajes.find(x=>x.id_mensaje==id);if(m)m.leido=1;
     loadStats();
   }
@@ -776,12 +995,17 @@ async function deleteMensaje(id){
   else toast(r.error,'error');
 }
 
-/* HELPERS */
+/* ── HELPERS ── */
 function escHtml(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function formatDate(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});}catch{return d;}}
 
-/* INIT */
-(async function init(){const ok=await checkSession();if(!ok)return;loadStats();})();
+/* ── INIT ── */
+(async function init(){
+  const ok=await checkSession();
+  if(!ok)return;
+  loadStats();
+  await loadProductos(); // necesario para cotización admin
+})();
 </script>
 </body>
 </html>

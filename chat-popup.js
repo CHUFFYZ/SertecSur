@@ -1,5 +1,5 @@
 'use strict';
-
+let chatHistory = [];
 /* ================================================
    CHAT POPUP WIDGET
    chat-popup.js — incluir ANTES del cierre </body>
@@ -274,38 +274,52 @@ const ChatPopup = (() => {
       popup.classList.contains('open') ? this.close() : this.open();
     },
 
-    sendMessage(forcedText) {
-      const input  = document.getElementById('chatInput');
-      const sendBtn = document.getElementById('chatSendBtn');
-      const text   = forcedText || (input ? input.value.trim() : '');
+    async sendMessage(forcedText) {
+  const input  = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSendBtn');
+  const text   = forcedText || (input ? input.value.trim() : '');
 
-      if (!text) return;
+  if (!text) return;
 
-      // Mostrar mensaje del usuario
-      addMessage({ text, type: 'user' });
+  // 1. Mostrar mensaje del usuario y guardar en historial
+  addMessage({ text, type: 'user' });
+  chatHistory.push({ role: 'user', content: text });
 
-      // Limpiar input
-      if (input && !forcedText) {
-        input.value = '';
-        input.style.height = 'auto';
-        if (sendBtn) sendBtn.disabled = true;
-      }
+  if (input && !forcedText) {
+    input.value = '';
+    input.style.height = 'auto';
+    if (sendBtn) sendBtn.disabled = true;
+  }
 
-      // Quitar sugerencias si existen
-      const sug = document.getElementById('chatSuggestions');
-      if (sug) sug.remove();
+  const sug = document.getElementById('chatSuggestions');
+  if (sug) sug.remove();
 
-      // Simulación: "escribiendo..." → respuesta placeholder
-      // (aquí se conectará el chatbot real en el futuro)
-      const typing = showTyping();
-      setTimeout(() => {
-        hideTyping();
-        addMessage({
-          text: 'Gracias por tu mensaje. Un asesor de <strong>SERTECSUR</strong> te responderá en breve. También puedes llamarnos al <a href="tel:9381532506" style="color:var(--clr-primary);font-weight:600;">938 153 2506</a>.',
-          type: 'bot'
-        });
-      }, 1200);
-    },
+  // 2. Mostrar "escribiendo..."
+  const typing = showTyping();
+
+  try {
+    // Dentro de sendMessage()
+  const response = await fetch('api-chat.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory })
+  });
+    const data = await response.json();
+    hideTyping();
+
+    if (data.reply) {
+      addMessage({ text: data.reply, type: 'bot' });
+      // Guardar respuesta del bot para mantener el contexto
+      chatHistory.push({ role: 'assistant', content: data.reply });
+    } else {
+      addMessage({ text: 'No pude obtener respuesta del asistente.', type: 'bot' });
+    }
+  } catch (error) {
+    hideTyping();
+    console.error(error);
+    addMessage({ text: 'Error de conexión con el servidor.', type: 'bot' });
+  }
+},
 
     init
   };

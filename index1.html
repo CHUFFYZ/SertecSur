@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
 
@@ -20,12 +20,12 @@
 </head>
 <body>
 
-  <!-- Partials globales -->
+  <!-- Partials globales (header, sidebar, topbar) -->
   <div id="partial-topbar"></div>
   <div id="partial-header"></div>
   <div id="partial-sidebar"></div>
 
-  <!-- Vistas inyectadas por loader.js -->
+  <!-- Aquí se inyectan todas las vistas -->
   <div id="app">
     <div class="app-loading" id="appLoading">
       <div class="app-loading__spinner"></div>
@@ -48,12 +48,7 @@
     <span>Necesitas Ayuda</span>
   </a>
 
-  <!-- ═══════════════════════════════════════════
-       PANEL CARRITO
-       IMPORTANTE: el footer NO tiene el botón
-       de WhatsApp hardcodeado — lo inyecta app.js
-       a través de id="cartFooterBtns"
-  ════════════════════════════════════════════ -->
+  <!-- ── Panel Carrito ─────────────────── -->
   <div id="cartOverlay" style="
     display:none; position:fixed; inset:0; background:rgba(0,0,0,.35);
     z-index:650; cursor:pointer;
@@ -65,7 +60,6 @@
     box-shadow:-4px 0 30px rgba(0,0,0,.12);
     transition:right .3s cubic-bezier(.34,1.1,.64,1);
   ">
-    <!-- Cabecera del carrito -->
     <div style="background:var(--clr-primary);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
       <div style="display:flex;align-items:center;gap:.6rem;color:#fff;">
         <i class="fa-solid fa-cart-shopping" style="font-size:1.05rem;"></i>
@@ -75,24 +69,25 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-
-    <!-- Cuerpo del carrito (se llena desde JS) -->
     <div id="cartBody" style="flex:1;overflow-y:auto;padding:1rem;"></div>
-
-    <!-- Footer del carrito — app.js inyecta aquí el desplegable Cotizar + Limpiar -->
     <div style="border-top:1px solid var(--clr-border);padding:1rem 1.25rem;flex-shrink:0;background:#fff;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;">
         <span style="font-weight:700;color:var(--clr-primary);">Total</span>
         <span id="cartTotal" style="font-size:1.1rem;font-weight:700;color:var(--clr-accent);">$0.00</span>
       </div>
-      <!-- ↓ app.js renderPanel() inyecta aquí el botón desplegable Cotizar + botón Limpiar -->
-      <div id="cartFooterBtns"></div>
+      <a href="https://wa.me/529381329935?text=Hola!%20Quiero%20cotizar%20los%20productos%20de%20mi%20carrito"
+         target="_blank" rel="noopener noreferrer"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;
+                background:var(--clr-accent);color:#fff;padding:.65rem;border-radius:8px;
+                font-size:.88rem;font-weight:700;text-decoration:none;font-family:var(--font-base);">
+        <i class="fa-brands fa-whatsapp"></i> Solicitar cotización por WhatsApp
+      </a>
     </div>
   </div>
 
   <style>
-    #cartPanel.open  { right: 0 !important; }
-    #cartOverlay.open{ display: block !important; }
+    #cartPanel.open { right: 0 !important; }
+    #cartOverlay.open { display: block !important; }
   </style>
 
   <!-- Scripts -->

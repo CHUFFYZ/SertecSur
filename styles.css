@@ -711,7 +711,7 @@ margin-left: 10px;
 
 .product-card {
   background: var(--clr-white);
-  border: 1px solid var(--clr-border);
+  border: 2px solid var(--clr-border);
   border-radius: var(--radius-md);
   overflow: hidden;
   display: flex;
@@ -1599,5 +1599,241 @@ transition: transform 0.2s ease-in-out;
   .topbar__right   { display: none; }
   .topbar__inner {
     font-size: 10px;
+  }
+}
+
+
+/* ================================================
+  · Animación de entrada al detalle de producto
+  · Estilos hover mejorados en tarjeta (sin botón "ver más")
+  · Footer del carrito con botón "Limpiar"
+  · Animación general de vistas
+================================================ */
+
+/* ── Animación de entrada a la vista detalle ─── */
+#view-detalle {
+  transition: opacity .38s cubic-bezier(.25,.8,.25,1),
+              transform .38s cubic-bezier(.25,.8,.25,1);
+}
+
+/* ── Tarjeta de producto — click completo ──────
+   El cursor pointer se inyecta desde JS,
+   aquí mejoramos el hover visual                */
+.product-card--clickable {
+  transition: box-shadow .22s ease, transform .22s ease, border-color .22s ease;
+}
+
+.product-card--clickable:hover {
+  box-shadow: 0 8px 28px rgba(26,58,92,.14);
+  transform: translateY(-4px);
+  border-color: var(--clr-primary);
+}
+
+.product-card--clickable:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 3px;
+}
+
+/* Efecto de zoom en la imagen al hacer hover */
+.product-card--clickable .product-card__img img {
+  transition: transform .35s cubic-bezier(.25,.8,.25,1);
+}
+
+.product-card--clickable:hover .product-card__img img {
+  transform: scale(1.07);
+}
+
+/* Línea inferior animada en el nombre del producto */
+.product-card--clickable .product-card__name {
+  position: relative;
+  display: inline-block;
+}
+
+/* ── Animación shimmer en imagen cargando ──── */
+.product-card__img {
+  position: relative;
+  overflow: hidden;
+  background: var(--clr-bg);
+}
+
+/* ── Galería detalle — animación fade-in ──── */
+.product-detail__gallery {
+  transition: opacity .3s ease;
+}
+
+.product-detail__gallery img {
+  animation: imgFadeIn .4s ease forwards;
+}
+
+@keyframes imgFadeIn {
+  from { opacity: 0; transform: scale(.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Especificaciones — filas con hover suave ─ */
+.product-detail__specs tr {
+  transition: background .15s ease;
+}
+
+.product-detail__specs tr:hover td {
+  background: var(--clr-info-bg);
+}
+
+/* ── Footer del carrito — layout mejorado ──── */
+#cartFooterBtns {
+  margin-bottom: .5rem;
+}
+
+/* ── Botón limpiar carrito ─────────────────── */
+.cart-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .65rem .85rem;
+  border-radius: 8px;
+  font-size: .82rem;
+  font-weight: 600;
+  background: transparent;
+  border: 1.5px solid #fca5a5;
+  color: #dc2626;
+  cursor: pointer;
+  font-family: var(--font-base);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .15s, border-color .15s;
+}
+
+.cart-clear-btn:hover {
+  background: #fef2f2;
+  border-color: #f87171;
+}
+
+/* ── Modal "Ver cotización" — tabla responsiva ─ */
+#modalVerCot table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#modalVerCot tbody tr {
+  transition: background .12s;
+}
+
+#modalVerCot tbody tr:hover {
+  background: var(--clr-bg);
+}
+
+/* ── Mis cotizaciones — botones Ver/Descargar ── */
+.cot-action{
+   transition: opacity .35s, transform 10s;
+}
+.cot-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .3rem .65rem;
+  border-radius: 6px;
+  font-size: .75rem;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-base);
+  font-weight: 600;
+  transition: opacity .35s, transform .38s;;
+}
+
+
+.cot-action-btn:hover { opacity: .85; transform: scale(1.07);}
+.cot-action-btn--view { background: var(--clr-primary); color: #fff; }
+.cot-action-btn--dl   { background: var(--clr-accent);  color: #fff; }
+
+/* ── Animación de aparición de las tarjetas ──
+   Se aplica al renderizar la grilla de productos */
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.products-grid .product-card {
+  animation: cardAppear .5s ease both;
+}
+
+/* Retraso escalonado para los primeros 8 cards */
+.products-grid .product-card:nth-child(1)  { animation-delay: .04s; }
+.products-grid .product-card:nth-child(2)  { animation-delay: .08s; }
+.products-grid .product-card:nth-child(3)  { animation-delay: .12s; }
+.products-grid .product-card:nth-child(4)  { animation-delay: .16s; }
+.products-grid .product-card:nth-child(5)  { animation-delay: .20s; }
+.products-grid .product-card:nth-child(6)  { animation-delay: .24s; }
+.products-grid .product-card:nth-child(7)  { animation-delay: .28s; }
+.products-grid .product-card:nth-child(8)  { animation-delay: .32s; }
+
+/* ── Transición suave al cambiar de vista ─── */
+.view.active {
+  animation: viewSlideIn .48s cubic-bezier(.25,.8,.25,1) both;
+}
+
+@keyframes viewSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Excluir animación de vista en el simulador
+   (tiene su propio layout interno) */
+#view-simulador.active {
+  animation: none;
+}
+
+/* ── Información del producto en detalle ─────
+   Animación suave de entrada                  */
+.product-detail__info {
+  animation: fadeSlideRight .40s cubic-bezier(.25,.8,.25,1) both;
+  animation-delay: .15s;
+}
+
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.product-detail__gallery {
+  animation: fadeSlideLeft .35s cubic-bezier(.25,.8,.25,1) both;
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Responsive: ajustes del footer del carrito ─ */
+@media (max-width: 480px) {
+  #cartFooterBtns > div {
+    flex-direction: column;
+  }
+  .cart-clear-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
