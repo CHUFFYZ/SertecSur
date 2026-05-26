@@ -1,12 +1,11 @@
 'use strict';
 /* ================================================
-   APP.JS v4 — SERTECSUR
-   Cambios:
-   · cotizarAhora corregido (datos cliente reales)
-   · Carrito: botón desplegable cotizar + limpiar carrito
-   · Mis cotizaciones: datos cliente + estado real al imprimir + botón "ver"
-   · Animación de entrada al detalle de producto
-   · Click en tarjeta abre detalle (sin botón "ver más")
+   APP.JS v5 — SERTECSUR
+   Cambios v5:
+   · Precio visible en cada tarjeta de producto
+   · Precio en detalle de producto desde DB
+   · Persistencia: al recargar en #detalle restaura el producto
+   · Animaciones profesionales en vistas, sidebar, carrito, cards
 ================================================ */
 
 const $ = (sel,ctx=document)=>ctx.querySelector(sel);
@@ -97,20 +96,20 @@ const Session = {
     menu.id='userMenu';
     menu.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:800;';
     menu.innerHTML=`
-      <div style="position:absolute;top:110px;right:1rem;background:#fff;border:1px solid var(--clr-border);border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);width:230px;overflow:hidden;z-index:801;animation:menuIn .15s ease;">
-        <style>@keyframes menuIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}</style>
+      <div style="position:absolute;top:110px;right:1rem;background:#fff;border:1px solid var(--clr-border);border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);width:230px;overflow:hidden;z-index:801;animation:menuSlideIn .2s cubic-bezier(.34,1.56,.64,1);">
+        <style>@keyframes menuSlideIn{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}</style>
         <div style="padding:.85rem 1rem;background:var(--clr-primary);color:#fff;">
           <div style="font-weight:700;font-size:.9rem;">${this.user.nombre}</div>
           <div style="font-size:.72rem;opacity:.7;">${this.user.correo}</div>
           <span style="background:rgba(255,255,255,.2);color:#fff;padding:.1rem .45rem;border-radius:10px;font-size:.65rem;font-weight:700;display:inline-block;margin-top:.3rem;">${this.user.rol.toUpperCase()}</span>
         </div>
         <div style="padding:.4rem 0;">
-          ${this.user.rol==='admin'?`<button onclick="window.location.href='admin.html'" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:var(--clr-primary);background:none;border:none;cursor:pointer;font-family:var(--font-base);"><i class="fa-solid fa-gauge" style="color:var(--clr-accent);width:16px;"></i> Panel de admin</button>`:''}
+          ${this.user.rol==='admin'?`<button onclick="window.location.href='admin.html'" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:var(--clr-primary);background:none;border:none;cursor:pointer;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'"><i class="fa-solid fa-gauge" style="color:var(--clr-accent);width:16px;"></i> Panel de admin</button>`:''}
           ${this.user.rol==='cliente'?`
-            <button onclick="document.getElementById('userMenu')?.remove();Cart.open()" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:var(--clr-primary);background:none;border:none;cursor:pointer;font-family:var(--font-base);"><i class="fa-solid fa-cart-shopping" style="color:var(--clr-accent);width:16px;"></i> Mi carrito <span style="margin-left:auto;background:var(--clr-accent);color:#fff;font-size:.62rem;padding:.1rem .4rem;border-radius:10px;">${Cart.items.length}</span></button>
-            <button onclick="document.getElementById('userMenu')?.remove();showView('mis-cotizaciones')" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:var(--clr-primary);background:none;border:none;cursor:pointer;font-family:var(--font-base);"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--clr-accent);width:16px;"></i> Mis cotizaciones</button>
+            <button onclick="document.getElementById('userMenu')?.remove();Cart.open()" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:var(--clr-primary);background:none;border:none;cursor:pointer;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'"><i class="fa-solid fa-cart-shopping" style="color:var(--clr-accent);width:16px;"></i> Mi carrito <span style="margin-left:auto;background:var(--clr-accent);color:#fff;font-size:.62rem;padding:.1rem .4rem;border-radius:10px;">${Cart.items.length}</span></button>
+            <button onclick="document.getElementById('userMenu')?.remove();showView('mis-cotizaciones')" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:var(--clr-primary);background:none;border:none;cursor:pointer;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'"><i class="fa-solid fa-file-invoice-dollar" style="color:var(--clr-accent);width:16px;"></i> Mis cotizaciones</button>
           `:''}
-          <button onclick="Session.logout()" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:#dc2626;background:none;border:none;cursor:pointer;font-family:var(--font-base);"><i class="fa-solid fa-right-from-bracket" style="width:16px;"></i> Cerrar sesión</button>
+          <button onclick="Session.logout()" style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem 1rem;font-size:.85rem;color:#dc2626;background:none;border:none;cursor:pointer;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='#fef2f2'" onmouseleave="this.style.background='none'"><i class="fa-solid fa-right-from-bracket" style="width:16px;"></i> Cerrar sesión</button>
         </div>
       </div>`;
     document.body.appendChild(menu);
@@ -162,7 +161,7 @@ function showToast(msg,type='success') {
   if(!t){
     t=document.createElement('div');
     t.id='appToast';
-    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);z-index:900;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;pointer-events:none;';
+    t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);z-index:900;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;pointer-events:none;';
     document.body.appendChild(t);
   }
   const colors={success:'#166534',error:'#991b1b',info:'#1a3a5c'};
@@ -218,15 +217,34 @@ const Cart = {
     $$('[data-cart-count]').forEach(el=>{ el.textContent=count; el.style.display=count>0?'inline-flex':'none'; });
   },
 
-  open()  { document.getElementById('userMenu')?.remove(); this.renderPanel(); document.getElementById('cartPanel')?.classList.add('open'); document.getElementById('cartOverlay')?.classList.add('open'); },
-  close() { document.getElementById('cartPanel')?.classList.remove('open'); document.getElementById('cartOverlay')?.classList.remove('open'); },
+  open() {
+    document.getElementById('userMenu')?.remove();
+    this.renderPanel();
+    const panel=document.getElementById('cartPanel');
+    const overlay=document.getElementById('cartOverlay');
+    if(panel) { panel.classList.add('open'); panel.style.animation='cartSlideIn .3s cubic-bezier(.34,1.1,.64,1)'; }
+    if(overlay) { overlay.classList.add('open'); overlay.style.animation='fadeInOverlay .25s ease'; }
+  },
+
+  close() {
+    const panel=document.getElementById('cartPanel');
+    const overlay=document.getElementById('cartOverlay');
+    if(panel) {
+      panel.style.animation='cartSlideOut .25s cubic-bezier(.4,0,.6,1) forwards';
+      setTimeout(()=>{ panel.classList.remove('open'); panel.style.animation=''; },240);
+    }
+    if(overlay) {
+      overlay.style.animation='fadeOutOverlay .25s ease forwards';
+      setTimeout(()=>{ overlay.classList.remove('open'); overlay.style.animation=''; },240);
+    }
+  },
 
   renderPanel() {
     const body=document.getElementById('cartBody');
     if(!body) return;
 
     if(!this.items.length){
-      body.innerHTML=`<div style="text-align:center;padding:2rem 1rem;color:var(--clr-muted);"><i class="fa-solid fa-cart-shopping" style="font-size:2.5rem;opacity:.2;display:block;margin-bottom:.75rem;"></i><p style="font-size:.88rem;">Tu carrito está vacío</p></div>`;
+      body.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem;color:var(--clr-muted);animation:fadeInUp .3s ease;"><i class="fa-solid fa-cart-shopping" style="font-size:2.5rem;opacity:.2;display:block;margin-bottom:.75rem;"></i><p style="font-size:.88rem;">Tu carrito está vacío</p></div>`;
       document.getElementById('cartTotal').textContent='$0.00';
       const footer=document.getElementById('cartFooterBtns');
       if(footer) footer.innerHTML='';
@@ -234,49 +252,49 @@ const Cart = {
     }
 
     let total=0;
-    body.innerHTML=this.items.map(item=>{
+    body.innerHTML=this.items.map((item,i)=>{
       const sub=(item.precio||0)*(item.cantidad||1); total+=sub;
-      return `<div style="display:flex;gap:.75rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--clr-border);">
-        <img src="${item.img_url||''}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--clr-border);flex-shrink:0;cursor:pointer;" onclick="Cart.close();showDetailById(${item.producto_id})" onerror="this.style.display='none'"/>
+      return `<div style="display:flex;gap:.75rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--clr-border);animation:fadeInUp .3s ease ${i*0.05}s both;">
+        <img src="${item.img_url||''}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--clr-border);flex-shrink:0;cursor:pointer;transition:transform .2s;" onclick="Cart.close();showDetailById(${item.producto_id})" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform='scale(1)'" onerror="this.style.display='none'"/>
         <div style="flex:1;min-width:0;">
           <p style="font-size:.84rem;font-weight:500;color:var(--clr-dark);line-height:1.3;cursor:pointer;" onclick="Cart.close();showDetailById(${item.producto_id})">${item.nombre}</p>
           <p style="font-size:.75rem;color:var(--clr-muted);">Cant: ${item.cantidad} · $${parseFloat(item.precio).toLocaleString('es-MX',{minimumFractionDigits:2})}</p>
         </div>
         <div style="text-align:right;flex-shrink:0;">
           <p style="font-size:.88rem;font-weight:700;color:var(--clr-primary);">$${sub.toLocaleString('es-MX',{minimumFractionDigits:2})}</p>
-          <button onclick="Cart.remove(${item.id_item})" style="color:var(--clr-accent);font-size:.72rem;margin-top:.2rem;background:none;border:none;cursor:pointer;font-family:var(--font-base);"><i class="fa-solid fa-trash"></i> Quitar</button>
+          <button onclick="Cart.remove(${item.id_item})" style="color:var(--clr-accent);font-size:.72rem;margin-top:.2rem;background:none;border:none;cursor:pointer;font-family:var(--font-base);transition:opacity .15s;" onmouseenter="this.style.opacity='.7'" onmouseleave="this.style.opacity='1'"><i class="fa-solid fa-trash"></i> Quitar</button>
         </div>
       </div>`;
     }).join('');
     document.getElementById('cartTotal').textContent='$'+total.toLocaleString('es-MX',{minimumFractionDigits:2});
 
-    // Footer con botón desplegable cotizar + limpiar carrito
     const footer=document.getElementById('cartFooterBtns');
     if(footer){
       footer.innerHTML=`
         <div style="display:flex;gap:.5rem;margin-bottom:.5rem;">
           <div style="position:relative;flex:1;" id="cartCotDropWrap">
             <button onclick="toggleCotDrop('cartCotDrop')"
-              style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--clr-accent);color:#fff;padding:.65rem;border-radius:8px;font-size:.88rem;font-weight:700;border:none;cursor:pointer;font-family:var(--font-base);">
+              style="width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--clr-accent);color:#fff;padding:.65rem;border-radius:8px;font-size:.88rem;font-weight:700;border:none;cursor:pointer;font-family:var(--font-base);transition:background .2s,transform .15s;" onmouseenter="this.style.background='var(--clr-accent-hover)'" onmouseleave="this.style.background='var(--clr-accent)'" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'">
               <i class="fa-solid fa-file-invoice-dollar"></i> Cotizar <i class="fa-solid fa-chevron-down" style="font-size:.7rem;margin-left:auto;"></i>
             </button>
-            <div id="cartCotDrop" style="display:none;position:absolute;bottom:110%;left:0;right:0;background:#fff;border:1px solid var(--clr-border);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);overflow:hidden;z-index:10;">
+            <div id="cartCotDrop" style="display:none;position:absolute;bottom:110%;left:0;right:0;background:#fff;border:1px solid var(--clr-border);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);overflow:hidden;z-index:10;animation:dropDown .18s cubic-bezier(.34,1.2,.64,1);">
+              <style>@keyframes dropDown{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}</style>
               <a href="${buildWaCart()}" target="_blank" rel="noopener noreferrer"
-                style="display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;font-size:.84rem;color:var(--clr-text);text-decoration:none;border-bottom:1px solid var(--clr-border);">
+                style="display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;font-size:.84rem;color:var(--clr-text);text-decoration:none;border-bottom:1px solid var(--clr-border);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'">
                 <i class="fa-brands fa-whatsapp" style="color:#22c55e;font-size:1rem;"></i> Cotizar por WhatsApp
               </a>
               <button onclick="showToast('El chat estará disponible próximamente.','info');document.getElementById('cartCotDrop').style.display='none';"
-                style="display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;font-size:.84rem;color:var(--clr-text);background:none;border:none;border-bottom:1px solid var(--clr-border);cursor:pointer;width:100%;font-family:var(--font-base);">
+                style="display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;font-size:.84rem;color:var(--clr-text);background:none;border:none;border-bottom:1px solid var(--clr-border);cursor:pointer;width:100%;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'">
                 <i class="fa-solid fa-comments" style="color:var(--clr-primary);font-size:1rem;"></i> Cotizar por chat
               </button>
               <button onclick="cotizarAhora();document.getElementById('cartCotDrop').style.display='none';"
-                style="display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;font-size:.84rem;color:var(--clr-text);background:none;border:none;cursor:pointer;width:100%;font-family:var(--font-base);">
+                style="display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;font-size:.84rem;color:var(--clr-text);background:none;border:none;cursor:pointer;width:100%;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'">
                 <i class="fa-solid fa-file-arrow-down" style="color:#0f766e;font-size:1rem;"></i> Cotizar ahora (PDF)
               </button>
             </div>
           </div>
           <button onclick="Cart.clearAll()"
-            style="display:flex;align-items:center;gap:.35rem;padding:.65rem .85rem;border-radius:8px;font-size:.82rem;font-weight:600;background:transparent;border:1.5px solid #fca5a5;color:#dc2626;cursor:pointer;font-family:var(--font-base);white-space:nowrap;flex-shrink:0;"
+            style="display:flex;align-items:center;gap:.35rem;padding:.65rem .85rem;border-radius:8px;font-size:.82rem;font-weight:600;background:transparent;border:1.5px solid #fca5a5;color:#dc2626;cursor:pointer;font-family:var(--font-base);white-space:nowrap;flex-shrink:0;transition:background .15s,border-color .15s;" onmouseenter="this.style.background='#fef2f2'" onmouseleave="this.style.background='transparent'"
             title="Limpiar carrito">
             <i class="fa-solid fa-trash"></i> Limpiar
           </button>
@@ -295,7 +313,7 @@ function toggleCotDrop(id) {
   if(!el) return;
   const isOpen=el.style.display!=='none';
   $$('[id$="CotDrop"]').forEach(d=>d.style.display='none');
-  if(!isOpen) el.style.display='block';
+  if(!isOpen) { el.style.display='block'; el.style.animation='dropDown .18s cubic-bezier(.34,1.2,.64,1)'; }
 }
 
 document.addEventListener('click',e=>{
@@ -333,10 +351,12 @@ function buildSpecs(p) {
 }
 
 /* ══════════════════════════════════════════════
-   TARJETAS DE PRODUCTO — sin botón "ver más"
-   clic en toda la tarjeta abre el detalle
+   TARJETAS DE PRODUCTO — con precio visible
 ══════════════════════════════════════════════ */
 function productCardHTML(p) {
+  const precio = p.precio!=null
+    ? `$${p.precio.toLocaleString('es-MX',{minimumFractionDigits:2})}`
+    : '';
   return `<article class="product-card product-card--clickable" onclick="showDetailById(${p.id})" style="cursor:pointer;" tabindex="0" role="button" aria-label="Ver ${p.name}">
     <div class="product-card__img">
       <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentNode.innerHTML='<i class=\\'fa-solid fa-camera product-card__img-placeholder\\'></i>'"/>
@@ -347,6 +367,7 @@ function productCardHTML(p) {
       <h3 class="product-card__name">${p.name}</h3>
       <p class="product-card__desc">${p.desc}</p>
     </div>
+    ${precio ? `<div class="product-card__price"><span class="product-card__price-amount">${precio}</span></div>` : ''}
     <div class="product-card__footer" style="display:flex;gap:.5rem;justify-content:flex-end;" onclick="event.stopPropagation()">
       <button class="btn btn--primary btn--sm" onclick="Cart.add(${p.id})" style="background:var(--clr-accent);border-color:var(--clr-accent);" title="Agregar al carrito"><i class="fa-solid fa-cart-plus"></i></button>
     </div>
@@ -357,7 +378,6 @@ function renderProducts(containerID,items){
   const el=document.getElementById(containerID);
   if(!el) return;
   el.innerHTML=items.length?items.map(productCardHTML).join(''):'<p style="color:var(--clr-muted);font-size:.9rem;">No hay productos.</p>';
-  // Accesibilidad: Enter abre detalle
   el.querySelectorAll('.product-card--clickable').forEach(card=>{
     card.addEventListener('keydown',e=>{ if(e.key==='Enter') card.click(); });
   });
@@ -373,14 +393,37 @@ function showView(viewID) {
 
 function _activateView(viewID) {
   _currentView=viewID;
-  $$('.view').forEach(v=>v.classList.remove('active'));
-  const el=document.getElementById('view-'+viewID);
-  if(el){ el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+
+  const prev = document.querySelector('.view.active');
+  const next = document.getElementById('view-'+viewID);
+
+  if(prev && prev !== next) {
+    prev.style.animation='viewFadeOut .18s ease forwards';
+    setTimeout(()=>{ prev.classList.remove('active'); prev.style.animation=''; },160);
+  }
+
+  if(next) {
+    next.classList.add('active');
+    next.style.animation='none';
+    requestAnimationFrame(()=>{
+      next.style.animation='viewSlideIn .38s cubic-bezier(.25,.8,.25,1) both';
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
   switch(viewID){
     case 'home':             renderProducts('home-products',PRODUCTS.slice(0,8)); break;
     case 'catalogo':         renderProducts('catalog-products',PRODUCTS); break;
     case 'simulador':        if(typeof Sim!=='undefined'&&Sim.init) setTimeout(()=>Sim.init(),50); break;
     case 'mis-cotizaciones': loadMisCotizaciones(); break;
+    case 'detalle':
+      /* Restaurar producto guardado al recargar */
+      const savedId = sessionStorage.getItem('lastProductId');
+      if(savedId && PRODUCTS.length) {
+        const p = PRODUCTS.find(x=>x.id==savedId);
+        if(p) { _fillDetail(p); return; }
+      }
+      break;
   }
 }
 
@@ -395,43 +438,71 @@ function showCatalog(category){
   setTimeout(()=>renderProducts('catalog-products',filtered.length?filtered:PRODUCTS),50);
 }
 
+/* ── Rellena la vista de detalle con los datos del producto ── */
+function _fillDetail(p) {
+  /* Guardar en sesión para persistencia en recarga */
+  sessionStorage.setItem('lastProductId', p.id);
+
+  const bcProduct=document.getElementById('bc-product');
+  if(bcProduct) bcProduct.textContent=p.name;
+
+  const gallery=document.querySelector('.product-detail__gallery');
+  if(gallery) gallery.innerHTML=`<img src="${p.img}" alt="${p.name}" onerror="this.parentNode.innerHTML='<i class=\\'fa-solid fa-camera\\' style=\\'font-size:4rem;color:#c0c0b8;\\'></i>'"/>`;
+
+  const setCont=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  setCont('detail-cat',p.cat);
+  setCont('detail-name',p.name);
+  setCont('detail-desc',p.desc);
+
+  /* Precio en detalle */
+  let priceEl=document.getElementById('detail-price');
+  if(!priceEl){
+    priceEl=document.createElement('p');
+    priceEl.id='detail-price';
+    priceEl.style.cssText='font-size:1.6rem;font-weight:700;color:var(--clr-accent);margin:.5rem 0 1rem;letter-spacing:-.02em;';
+    const nameEl=document.getElementById('detail-name');
+    if(nameEl&&nameEl.parentNode) nameEl.parentNode.insertBefore(priceEl, nameEl.nextSibling);
+  }
+  priceEl.textContent = p.precio!=null ? `$${p.precio.toLocaleString('es-MX',{minimumFractionDigits:2})} MXN` : '';
+
+  const tbody=document.querySelector('#view-detalle .product-detail__specs tbody');
+  if(tbody) tbody.innerHTML=Object.entries(p.specs).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+
+  const cartBtn=document.getElementById('detailCartBtn');
+  if(cartBtn){ cartBtn.style.display=Session.user?.rol==='cliente'?'inline-flex':'none'; cartBtn.onclick=()=>Cart.add(p.id); }
+
+  _setupDetailCotDrop(p);
+
+  const related=PRODUCTS.filter(x=>x.id!==p.id&&x.cat===p.cat).slice(0,4);
+  renderProducts('related-products',related.length?related:PRODUCTS.filter(x=>x.id!==p.id).slice(0,4));
+}
+
 /* ── Animación de entrada al detalle ── */
 function _animateDetailEntry() {
   const view=document.getElementById('view-detalle');
   if(!view) return;
-  view.style.opacity='0';
-  view.style.transform='translateY(18px)';
-  view.style.transition='opacity .38s cubic-bezier(.25,.8,.25,1), transform .38s cubic-bezier(.25,.8,.25,1)';
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      view.style.opacity='1';
-      view.style.transform='translateY(0)';
-    });
-  });
+  view.style.animation='detailFadeIn .4s cubic-bezier(.25,.8,.25,1) both';
 }
 
 function showDetailById(productId){
   const p=PRODUCTS.find(x=>x.id==productId);
   if(!p) return;
   pushView('detalle');
-  const bcProduct=document.getElementById('bc-product');
-  if(bcProduct) bcProduct.textContent=p.name;
-  const gallery=document.querySelector('.product-detail__gallery');
-  if(gallery) gallery.innerHTML=`<img src="${p.img}" alt="${p.name}" onerror="this.parentNode.innerHTML='<i class=\\'fa-solid fa-camera\\' style=\\'font-size:4rem;color:#c0c0b8;\\'></i>'"/>`;
-  const setCont=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
-  setCont('detail-cat',p.cat);
-  setCont('detail-name',p.name);
-  setCont('detail-desc',p.desc);
-  const tbody=document.querySelector('#view-detalle .product-detail__specs tbody');
-  if(tbody) tbody.innerHTML=Object.entries(p.specs).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
-  const cartBtn=document.getElementById('detailCartBtn');
-  if(cartBtn){ cartBtn.style.display=Session.user?.rol==='cliente'?'inline-flex':'none'; cartBtn.onclick=()=>Cart.add(p.id); }
-  _setupDetailCotDrop(p);
-  const related=PRODUCTS.filter(x=>x.id!==productId&&x.cat===p.cat).slice(0,4);
-  renderProducts('related-products',related.length?related:PRODUCTS.filter(x=>x.id!==productId).slice(0,4));
-  _activateView('detalle');
-  _animateDetailEntry();
+  _fillDetail(p);
+  const prev = document.querySelector('.view.active');
+  if(prev&&prev.id!=='view-detalle'){
+    prev.style.animation='viewFadeOut .18s ease forwards';
+    setTimeout(()=>{ prev.classList.remove('active'); prev.style.animation=''; },160);
+  }
+  const next=document.getElementById('view-detalle');
+  if(next){
+    next.classList.add('active');
+    next.style.animation='detailFadeIn .42s cubic-bezier(.25,.8,.25,1) both';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 }
+
+function showDetail(id){ showDetailById(id); }
 
 function _setupDetailCotDrop(p) {
   const wrap=document.getElementById('detailCotDropWrap');
@@ -441,31 +512,29 @@ function _setupDetailCotDrop(p) {
     <div style="position:relative;display:inline-block;" id="detailCotDropInner">
       <button onclick="toggleCotDrop('detailCotDrop')"
         class="btn btn--lg"
-        style="background:#0f766e;color:#fff;border:2px solid #0f766e;gap:.5rem;">
+        style="background:#0f766e;color:#fff;border:2px solid #0f766e;gap:.5rem;transition:background .2s,transform .15s;" onmouseenter="this.style.background='#0d5e4a'" onmouseleave="this.style.background='#0f766e'" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'">
         <i class="fa-solid fa-file-invoice-dollar"></i> Cotizar
         <i class="fa-solid fa-chevron-down" style="font-size:.7rem;"></i>
       </button>
       <div id="detailCotDrop" style="display:none;position:absolute;top:110%;left:0;min-width:220px;background:#fff;border:1px solid var(--clr-border);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);overflow:hidden;z-index:50;">
         <a href="${waUrl}" target="_blank" rel="noopener noreferrer"
-          style="display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;font-size:.85rem;color:var(--clr-text);text-decoration:none;border-bottom:1px solid var(--clr-border);">
+          style="display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;font-size:.85rem;color:var(--clr-text);text-decoration:none;border-bottom:1px solid var(--clr-border);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'">
           <i class="fa-brands fa-whatsapp" style="color:#22c55e;font-size:1.1rem;"></i> Por WhatsApp
         </a>
         <button onclick="showToast('El chat estará disponible próximamente.','info');document.getElementById('detailCotDrop').style.display='none';"
-          style="display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;font-size:.85rem;color:var(--clr-text);background:none;border:none;border-bottom:1px solid var(--clr-border);cursor:pointer;width:100%;font-family:var(--font-base);">
+          style="display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;font-size:.85rem;color:var(--clr-text);background:none;border:none;border-bottom:1px solid var(--clr-border);cursor:pointer;width:100%;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'">
           <i class="fa-solid fa-comments" style="color:var(--clr-primary);font-size:1.1rem;"></i> Por chat
         </button>
         <button onclick="cotizarAhora([{producto_id:${p.id},cantidad:1}]);document.getElementById('detailCotDrop').style.display='none';"
-          style="display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;font-size:.85rem;color:var(--clr-text);background:none;border:none;cursor:pointer;width:100%;font-family:var(--font-base);">
+          style="display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;font-size:.85rem;color:var(--clr-text);background:none;border:none;cursor:pointer;width:100%;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='var(--clr-bg)'" onmouseleave="this.style.background='none'">
           <i class="fa-solid fa-file-arrow-down" style="color:#0f766e;font-size:1.1rem;"></i> Cotizar ahora (PDF)
         </button>
       </div>
     </div>`;
 }
 
-function showDetail(id){ showDetailById(id); }
-
 /* ══════════════════════════════════════════════
-   COTIZAR AHORA — datos reales del cliente
+   COTIZAR AHORA
 ══════════════════════════════════════════════ */
 async function cotizarAhora(items) {
   if(!Session.user){ showToast('Inicia sesión para cotizar','info'); showView('login'); return; }
@@ -484,13 +553,12 @@ async function cotizarAhora(items) {
     const d=await r.json();
     if(!d.ok){ showToast(d.error||'Error al cotizar','error'); return; }
     showToast('¡Cotización registrada! Generando PDF…','success');
-    // d.data ya incluye cliente_nombre, cliente_correo, cliente_telefono reales
     descargarCotizacionPDF(d.data);
   } catch { showToast('Error de conexión','error'); }
 }
 
 /* ══════════════════════════════════════════════
-   GENERAR PDF COTIZACIÓN — estado real
+   GENERAR PDF COTIZACIÓN
 ══════════════════════════════════════════════ */
 function descargarCotizacionPDF(cot){
   const estadoLabel = cot.estado ? (cot.estado.charAt(0).toUpperCase()+cot.estado.slice(1)) : 'Pendiente';
@@ -505,44 +573,11 @@ function descargarCotizacionPDF(cot){
   </tr>`).join('');
 
   const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><title>Cotización #${cot.id_cotizacion}</title>
-  <style>
-    body{font-family:'Segoe UI',sans-serif;color:#1f2937;padding:2rem;max-width:800px;margin:auto;}
-    .header{background:#1a3a5c;color:#fff;padding:1.25rem 1.5rem;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:flex-start;}
-    h1{margin:0;font-size:1.4rem;}
-    .sub{font-size:.8rem;opacity:.75;margin-top:.2rem;}
-    .info{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;padding:1rem 0;font-size:.88rem;border-bottom:1px solid #dde1e7;margin-bottom:1rem;}
-    .lbl{color:#6b7280;}
-    .badge-estado{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.78rem;font-weight:700;background:${estadoBg};color:${estadoColor};}
-    table{width:100%;border-collapse:collapse;font-size:.85rem;}
-    th{background:#f0f4f8;padding:.5rem .75rem;border:1px solid #dde1e7;text-align:left;font-size:.75rem;text-transform:uppercase;}
-    tfoot td{font-weight:700;background:#f9fafb;padding:.6rem .75rem;border:1px solid #dde1e7;}
-    .footer{margin-top:1.5rem;font-size:.75rem;color:#6b7280;border-top:1px solid #dde1e7;padding-top:.75rem;}
-  </style></head><body>
-  <div class="header">
-    <div><h1>SERTECSUR</h1><p class="sub">Servicios Tecnológicos del Sureste</p></div>
-    <div style="text-align:right;">
-      <p style="font-size:1.1rem;font-weight:700;margin:0;">COTIZACIÓN #${cot.id_cotizacion}</p>
-      <p class="sub">Fecha: ${new Date(cot.fecha||Date.now()).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</p>
-    </div>
-  </div>
-  <div style="border:1px solid #dde1e7;border-top:none;border-radius:0 0 8px 8px;padding:1.25rem;">
-    <div class="info">
-      <span class="lbl">Cliente:</span><strong>${cot.cliente_nombre||'—'}</strong>
-      <span class="lbl">Correo:</span><span>${cot.cliente_correo||'—'}</span>
-      <span class="lbl">Teléfono:</span><span>${cot.cliente_telefono||'—'}</span>
-      <span class="lbl">Estado:</span><span class="badge-estado">${estadoLabel}</span>
-      <span class="lbl">Vigencia:</span><span>30 días</span>
-    </div>
-    <table>
-      <thead><tr><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">Precio u.</th><th style="text-align:right;">Subtotal</th></tr></thead>
-      <tbody>${detalle}</tbody>
-      <tfoot>
-        <tr><td colspan="3" style="text-align:right;">Subtotal</td><td style="text-align:right;">$${parseFloat(cot.subtotal||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>
-        <tr><td colspan="3" style="text-align:right;font-size:1rem;">TOTAL</td><td style="text-align:right;font-size:1rem;">$${parseFloat(cot.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>
-      </tfoot>
-    </table>
-    <div class="footer">Tel: 938 153 2506 · ventas@sertecsur.net · Calle 55 #50, Col. Electricistas, Cd. del Carmen, Campeche</div>
-  </div>
+  <style>body{font-family:'Segoe UI',sans-serif;color:#1f2937;padding:2rem;max-width:800px;margin:auto;}.header{background:#1a3a5c;color:#fff;padding:1.25rem 1.5rem;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:flex-start;}h1{margin:0;font-size:1.4rem;}.sub{font-size:.8rem;opacity:.75;margin-top:.2rem;}.info{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;padding:1rem 0;font-size:.88rem;border-bottom:1px solid #dde1e7;margin-bottom:1rem;}.lbl{color:#6b7280;}.badge-estado{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.78rem;font-weight:700;background:${estadoBg};color:${estadoColor};}table{width:100%;border-collapse:collapse;font-size:.85rem;}th{background:#f0f4f8;padding:.5rem .75rem;border:1px solid #dde1e7;text-align:left;font-size:.75rem;text-transform:uppercase;}tfoot td{font-weight:700;background:#f9fafb;padding:.6rem .75rem;border:1px solid #dde1e7;}.footer{margin-top:1.5rem;font-size:.75rem;color:#6b7280;border-top:1px solid #dde1e7;padding-top:.75rem;}</style></head><body>
+  <div class="header"><div><h1>SERTECSUR</h1><p class="sub">Servicios Tecnológicos del Sureste</p></div><div style="text-align:right;"><p style="font-size:1.1rem;font-weight:700;margin:0;">COTIZACIÓN #${cot.id_cotizacion}</p><p class="sub">Fecha: ${new Date(cot.fecha||Date.now()).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div>
+  <div style="border:1px solid #dde1e7;border-top:none;border-radius:0 0 8px 8px;padding:1.25rem;"><div class="info"><span class="lbl">Cliente:</span><strong>${cot.cliente_nombre||'—'}</strong><span class="lbl">Correo:</span><span>${cot.cliente_correo||'—'}</span><span class="lbl">Teléfono:</span><span>${cot.cliente_telefono||'—'}</span><span class="lbl">Estado:</span><span class="badge-estado">${estadoLabel}</span><span class="lbl">Vigencia:</span><span>30 días</span></div>
+  <table><thead><tr><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">Precio u.</th><th style="text-align:right;">Subtotal</th></tr></thead><tbody>${detalle}</tbody><tfoot><tr><td colspan="3" style="text-align:right;">Subtotal</td><td style="text-align:right;">$${parseFloat(cot.subtotal||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr><tr><td colspan="3" style="text-align:right;font-size:1rem;">TOTAL</td><td style="text-align:right;font-size:1rem;">$${parseFloat(cot.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr></tfoot></table>
+  <div class="footer">Tel: 938 153 2506 · ventas@sertecsur.net · Calle 55 #50, Col. Electricistas, Cd. del Carmen, Campeche</div></div>
   <script>window.onload=()=>window.print();<\/script></body></html>`;
 
   const blob=new Blob([html],{type:'text/html'});
@@ -552,7 +587,7 @@ function descargarCotizacionPDF(cot){
   setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 
-/* ── Modal "ver" cotización ── */
+/* ── Modal ver cotización ── */
 function verCotizacionModal(cot) {
   document.getElementById('modalVerCot')?.remove();
   const estadoLabel=cot.estado?(cot.estado.charAt(0).toUpperCase()+cot.estado.slice(1)):'Pendiente';
@@ -566,16 +601,12 @@ function verCotizacionModal(cot) {
     </tr>`).join('');
   const modal=document.createElement('div');
   modal.id='modalVerCot';
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:800;display:flex;align-items:center;justify-content:center;padding:1rem;';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:800;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeInOverlay .2s ease;';
   modal.innerHTML=`
-    <div style="background:#fff;border-radius:12px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeInM .2s ease;">
-      <style>@keyframes fadeInM{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}</style>
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:modalSlideIn .28s cubic-bezier(.34,1.2,.64,1);">
       <div style="background:var(--clr-primary);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1;">
-        <div>
-          <p style="color:#fff;font-weight:700;font-size:.95rem;">Cotización #${cot.id_cotizacion}</p>
-          <p style="color:rgba(255,255,255,.65);font-size:.75rem;">${new Date(cot.fecha).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</p>
-        </div>
-        <button onclick="document.getElementById('modalVerCot').remove()" style="color:rgba(255,255,255,.75);font-size:1.1rem;background:none;border:none;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        <div><p style="color:#fff;font-weight:700;font-size:.95rem;">Cotización #${cot.id_cotizacion}</p><p style="color:rgba(255,255,255,.65);font-size:.75rem;">${new Date(cot.fecha).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</p></div>
+        <button onclick="document.getElementById('modalVerCot').remove()" style="color:rgba(255,255,255,.75);font-size:1.1rem;background:none;border:none;cursor:pointer;transition:color .15s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,.75)'"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div style="padding:1.25rem;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1rem;font-size:.85rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid #e5e7eb;">
@@ -584,13 +615,8 @@ function verCotizacionModal(cot) {
           <div><span style="color:#6b7280;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;">Correo</span><p>${cot.cliente_correo||'—'}</p></div>
           <div><span style="color:#6b7280;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;">Teléfono</span><p>${cot.cliente_telefono||'—'}</p></div>
         </div>
-        <table style="width:100%;border-collapse:collapse;">
-          <thead><tr style="background:#f8f9fa;"><th style="padding:.5rem;text-align:left;font-size:.72rem;color:#6b7280;text-transform:uppercase;"></th><th style="padding:.5rem;text-align:left;font-size:.72rem;color:#6b7280;text-transform:uppercase;">Producto</th><th style="padding:.5rem;text-align:center;font-size:.72rem;color:#6b7280;">Cant.</th><th style="padding:.5rem;text-align:right;font-size:.72rem;color:#6b7280;">Subtotal</th></tr></thead>
-          <tbody>${productos}</tbody>
-          <tfoot>
-            <tr style="border-top:2px solid #e5e7eb;"><td colspan="3" style="padding:.6rem .5rem;text-align:right;font-weight:700;font-size:.95rem;">TOTAL</td><td style="padding:.6rem .5rem;text-align:right;font-weight:700;font-size:1rem;color:var(--clr-accent);">$${parseFloat(cot.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr>
-          </tfoot>
-        </table>
+        <table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f8f9fa;"><th style="padding:.5rem;text-align:left;font-size:.72rem;color:#6b7280;text-transform:uppercase;"></th><th style="padding:.5rem;text-align:left;font-size:.72rem;color:#6b7280;text-transform:uppercase;">Producto</th><th style="padding:.5rem;text-align:center;font-size:.72rem;color:#6b7280;">Cant.</th><th style="padding:.5rem;text-align:right;font-size:.72rem;color:#6b7280;">Subtotal</th></tr></thead><tbody>${productos}</tbody>
+        <tfoot><tr style="border-top:2px solid #e5e7eb;"><td colspan="3" style="padding:.6rem .5rem;text-align:right;font-weight:700;font-size:.95rem;">TOTAL</td><td style="padding:.6rem .5rem;text-align:right;font-weight:700;font-size:1rem;color:var(--clr-accent);">$${parseFloat(cot.total||0).toLocaleString('es-MX',{minimumFractionDigits:2})}</td></tr></tfoot></table>
       </div>
       <div style="padding:.85rem 1.25rem;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:.5rem;">
         <button onclick="document.getElementById('modalVerCot').remove()" style="padding:.45rem 1rem;border-radius:7px;border:1px solid #e5e7eb;background:transparent;font-size:.82rem;cursor:pointer;font-family:var(--font-base);">Cerrar</button>
@@ -602,7 +628,7 @@ function verCotizacionModal(cot) {
 }
 
 /* ══════════════════════════════════════════════
-   MIS COTIZACIONES — datos reales del cliente
+   MIS COTIZACIONES
 ══════════════════════════════════════════════ */
 async function loadMisCotizaciones(){
   if(!Session.user||Session.user.rol!=='cliente'){ showView('login'); return; }
@@ -630,47 +656,27 @@ function renderMisCotizaciones(cots){
     const total=parseFloat(c.total||0).toLocaleString('es-MX',{minimumFractionDigits:2});
     const fecha=new Date(c.fecha).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
     const bMap={pendiente:'background:#fef3c7;color:#92400e;',aprobada:'background:#dcfce7;color:#15803d;',rechazada:'background:#fee2e2;color:#b91c1c;'};
-
     const productos=(c.detalle||[]).map(d=>`
       <li style="display:flex;align-items:center;gap:.65rem;font-size:.82rem;padding:.4rem 0;border-bottom:1px solid #f0f0f0;">
-        <img src="${d.img_url||''}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--clr-border);flex-shrink:0;cursor:pointer;" onclick="showDetailById(${d.producto_id})" onerror="this.style.display='none'"/>
+        <img src="${d.img_url||''}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--clr-border);flex-shrink:0;cursor:pointer;transition:transform .2s;" onclick="showDetailById(${d.producto_id})" onmouseenter="this.style.transform='scale(1.07)'" onmouseleave="this.style.transform='scale(1)'" onerror="this.style.display='none'"/>
         <span style="flex:1;cursor:pointer;" onclick="showDetailById(${d.producto_id})">${d.producto_nombre}</span>
         <span style="color:var(--clr-muted);white-space:nowrap;">x${d.cantidad}</span>
       </li>`).join('');
-
     const resenaBtns=c.estado==='aprobada'?(c.detalle||[]).map(d=>`
       <button onclick="abrirModalResena(${d.producto_id},'${(d.producto_nombre||'').replace(/'/g,"\\'")}',${c.id_cotizacion})"
-        style="display:inline-flex;align-items:center;gap:.35rem;margin:.2rem .2rem 0 0;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;background:#ede9fe;color:#6d28d9;border:none;cursor:pointer;font-family:var(--font-base);">
+        style="display:inline-flex;align-items:center;gap:.35rem;margin:.2rem .2rem 0 0;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;background:#ede9fe;color:#6d28d9;border:none;cursor:pointer;font-family:var(--font-base);transition:background .15s;" onmouseenter="this.style.background='#ddd6fe'" onmouseleave="this.style.background='#ede9fe'">
         <i class="fa-solid fa-star"></i> Reseñar: ${d.producto_nombre}
       </button>`).join(''):'';
-
-    // Serializar objeto para pasar al modal
-    const cotJSON=JSON.stringify(c).replace(/\\/g,'\\\\').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-
-    return `<div style="background:#fff;border:1px solid var(--clr-border);border-radius:10px;overflow:hidden;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);">
+    return `<div style="background:#fff;border:1px solid var(--clr-border);border-radius:10px;overflow:hidden;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.07);animation:fadeInUp .35s ease both;">
       <div style="padding:.85rem 1.1rem;background:var(--clr-bg);border-bottom:1px solid var(--clr-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
-        <div style="display:flex;align-items:center;gap:.6rem;">
-          <span style="font-size:.78rem;color:var(--clr-muted);">#${c.id_cotizacion}</span>
-          <span style="font-weight:700;font-size:.9rem;color:var(--clr-primary);">${fecha}</span>
-          <span style="padding:.15rem .5rem;border-radius:20px;font-size:.7rem;font-weight:700;${bMap[c.estado]||'background:#f3f4f6;color:#4b5563;'}">${c.estado}</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;"><span style="font-size:.78rem;color:var(--clr-muted);">#${c.id_cotizacion}</span><span style="font-weight:700;font-size:.9rem;color:var(--clr-primary);">${fecha}</span><span style="padding:.15rem .5rem;border-radius:20px;font-size:.7rem;font-weight:700;${bMap[c.estado]||'background:#f3f4f6;color:#4b5563;'}">${c.estado}</span></div>
         <div class="cot-action" style="display:flex;gap:.4rem;flex-wrap:wrap;">
-          <button class="cot-action-btn" onclick="verCotizacionModal(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(c))}')))"
-            style="display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;background:var(--clr-primary);color:#fff;border:none;cursor:pointer;font-family:var(--font-base);">
-            <i class="fa-solid fa-eye"></i> Ver
-          </button>
-          <button class="cot-action-btn" onclick="descargarCotizacionPDF(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(c))}')))"
-            style="display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;background:var(--clr-accent);color:#fff;border:none;cursor:pointer;font-family:var(--font-base);">
-            <i class="fa-solid fa-download"></i> Descargar
-          </button>
+          <button class="cot-action-btn" onclick="verCotizacionModal(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(c))}')))" style="display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;background:var(--clr-primary);color:#fff;border:none;cursor:pointer;font-family:var(--font-base);transition:opacity .15s,transform .15s;" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'"><i class="fa-solid fa-eye"></i> Ver</button>
+          <button class="cot-action-btn" onclick="descargarCotizacionPDF(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(c))}')))" style="display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;background:var(--clr-accent);color:#fff;border:none;cursor:pointer;font-family:var(--font-base);transition:opacity .15s,transform .15s;" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'"><i class="fa-solid fa-download"></i> Descargar</button>
         </div>
       </div>
-      <div style="padding:.85rem 1.1rem;">
-        <ul style="list-style:none;margin-bottom:.6rem;">${productos}</ul>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.5rem;">
-          <span style="font-size:.82rem;color:var(--clr-muted);">Total:</span>
-          <strong style="font-size:1rem;color:var(--clr-accent);">$${total}</strong>
-        </div>
+      <div style="padding:.85rem 1.1rem;"><ul style="list-style:none;margin-bottom:.6rem;">${productos}</ul>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.5rem;"><span style="font-size:.82rem;color:var(--clr-muted);">Total:</span><strong style="font-size:1rem;color:var(--clr-accent);">$${total}</strong></div>
         ${resenaBtns?`<div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--clr-border);"><p style="font-size:.76rem;color:#6d28d9;font-weight:700;margin-bottom:.3rem;"><i class="fa-solid fa-star"></i> Cotización aprobada — puedes reseñar:</p>${resenaBtns}</div>`:''}
       </div>
     </div>`;
@@ -691,8 +697,8 @@ function abrirModalResena(productoId,productoNombre,cotizacionId){
   document.getElementById('modalResena')?.remove();
   const modal=document.createElement('div');
   modal.id='modalResena';
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:800;display:flex;align-items:center;justify-content:center;padding:1rem;';
-  modal.innerHTML=`<div style="background:#fff;border-radius:12px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);overflow:hidden;animation:fadeIn .2s ease;"><style>@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}</style>
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:800;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeInOverlay .2s ease;';
+  modal.innerHTML=`<div style="background:#fff;border-radius:12px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);overflow:hidden;animation:modalSlideIn .28s cubic-bezier(.34,1.2,.64,1);">
     <div style="background:var(--clr-primary);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;">
       <div><p style="color:#fff;font-weight:700;font-size:.9rem;"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Reseñar producto</p><p style="color:rgba(255,255,255,.65);font-size:.75rem;">${productoNombre}</p></div>
       <button onclick="document.getElementById('modalResena').remove()" style="color:rgba(255,255,255,.75);font-size:1.1rem;background:none;border:none;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
@@ -700,10 +706,10 @@ function abrirModalResena(productoId,productoNombre,cotizacionId){
     <div id="resenaAlertWrap" style="padding:0 1.25rem;"></div>
     <div style="padding:1rem 1.25rem 1.25rem;">
       <p style="font-size:.82rem;font-weight:700;color:var(--clr-primary);margin-bottom:.5rem;">Calificación *</p>
-      <div id="starRating" style="display:flex;gap:.3rem;margin-bottom:.85rem;">${[1,2,3,4,5].map(n=>`<button data-val="${n}" onclick="setStarRating(${n})" style="font-size:1.5rem;color:#d1d5db;background:none;border:none;cursor:pointer;" class="star-btn">★</button>`).join('')}</div>
+      <div id="starRating" style="display:flex;gap:.3rem;margin-bottom:.85rem;">${[1,2,3,4,5].map(n=>`<button data-val="${n}" onclick="setStarRating(${n})" style="font-size:1.5rem;color:#d1d5db;background:none;border:none;cursor:pointer;transition:transform .15s,color .15s;" onmouseenter="highlightStars(${n})" onmouseleave="resetStarPreview()" class="star-btn">★</button>`).join('')}</div>
       <input type="hidden" id="resenaCalif" value="0"/>
       <p style="font-size:.82rem;font-weight:700;color:var(--clr-primary);margin-bottom:.35rem;">Comentario</p>
-      <textarea id="resenaComentario" style="width:100%;border:1px solid var(--clr-border);border-radius:8px;padding:.55rem .75rem;font-family:var(--font-base);font-size:.87rem;resize:vertical;min-height:80px;outline:none;" placeholder="Comparte tu experiencia…"></textarea>
+      <textarea id="resenaComentario" style="width:100%;border:1px solid var(--clr-border);border-radius:8px;padding:.55rem .75rem;font-family:var(--font-base);font-size:.87rem;resize:vertical;min-height:80px;outline:none;transition:border-color .2s;" placeholder="Comparte tu experiencia…" onfocus="this.style.borderColor='var(--clr-primary)'" onblur="this.style.borderColor='var(--clr-border)'"></textarea>
       <div style="display:flex;justify-content:flex-end;gap:.5rem;margin-top:.85rem;">
         <button onclick="document.getElementById('modalResena').remove()" style="padding:.45rem 1rem;border-radius:7px;border:1px solid var(--clr-border);background:transparent;font-size:.82rem;cursor:pointer;font-family:var(--font-base);">Cancelar</button>
         <button onclick="enviarResena(${productoId},${cotizacionId})" style="padding:.45rem 1rem;border-radius:7px;background:var(--clr-primary);color:#fff;border:none;font-size:.82rem;cursor:pointer;font-family:var(--font-base);"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
@@ -717,6 +723,8 @@ function setStarRating(val){
   document.getElementById('resenaCalif').value=val;
   document.querySelectorAll('.star-btn').forEach((btn,i)=>{ btn.style.color=i<val?'#f59e0b':'#d1d5db'; });
 }
+function highlightStars(val){ document.querySelectorAll('.star-btn').forEach((btn,i)=>{ btn.style.color=i<val?'#fbbf24':'#d1d5db'; }); }
+function resetStarPreview(){ const val=parseInt(document.getElementById('resenaCalif')?.value||0); document.querySelectorAll('.star-btn').forEach((btn,i)=>{ btn.style.color=i<val?'#f59e0b':'#d1d5db'; }); }
 
 async function enviarResena(productoId,cotizacionId){
   const calif=parseFloat(document.getElementById('resenaCalif').value);
@@ -756,7 +764,7 @@ async function enviarContacto(e){
 }
 
 /* ══════════════════════════════════════════════
-   SIDEBAR MÓVIL
+   SIDEBAR MÓVIL — con animación
 ══════════════════════════════════════════════ */
 function toggleSidebar(){
   const sidebar=document.getElementById('sidebar');

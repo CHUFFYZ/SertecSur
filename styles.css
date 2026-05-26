@@ -1837,3 +1837,477 @@ transition: transform 0.2s ease-in-out;
     justify-content: center;
   }
 }
+
+/* ── Pantalla de carga inicial ─────────────────
+   Agregar al final de styles.css
+──────────────────────────────────────────────── */
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: var(--clr-muted);
+  font-size: .88rem;
+}
+
+.app-loading__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--clr-border);
+  border-top-color: var(--clr-primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ================================================
+   ANIMACIONES PROFESIONALES + PRECIO EN TARJETAS
+   SERTECSUR — animations.css
+   Agregar al final de styles.css o como hoja separada
+================================================ */
+
+/* ──────────────────────────────────────────────
+   KEYFRAMES GLOBALES
+────────────────────────────────────────────── */
+@keyframes viewSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes viewFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes detailFadeIn {
+  from { opacity: 0; transform: translateY(20px) scale(.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeOutOverlay {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes cartSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes cartSlideOut {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes sidebarSlideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(18px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardAppear {
+  from { opacity: 0; transform: translateY(18px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dropDown {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes priceFlicker {
+  0%   { opacity: 0; transform: translateX(-6px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroSlideIn {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ──────────────────────────────────────────────
+   VISTA ACTIVA
+────────────────────────────────────────────── */
+.view.active {
+  animation: viewSlideIn .4s cubic-bezier(.25,.8,.25,1) both;
+}
+
+#view-simulador.active {
+  animation: none;
+}
+
+/* ──────────────────────────────────────────────
+   HERO — animación de entrada escalonada
+────────────────────────────────────────────── */
+.hero__eyebrow {
+  animation: heroSlideIn .5s ease both;
+  animation-delay: .1s;
+}
+
+.hero__title {
+  animation: heroSlideIn .5s ease both;
+  animation-delay: .2s;
+}
+
+.hero__desc {
+  animation: heroSlideIn .5s ease both;
+  animation-delay: .3s;
+}
+
+.hero__actions {
+  animation: fadeInUp .5s ease both;
+  animation-delay: .4s;
+}
+
+/* ──────────────────────────────────────────────
+   TARJETAS DE PRODUCTO — precio + animación
+────────────────────────────────────────────── */
+.products-grid .product-card {
+  animation: cardAppear .45s ease both;
+}
+
+.products-grid .product-card:nth-child(1)  { animation-delay: .04s; }
+.products-grid .product-card:nth-child(2)  { animation-delay: .08s; }
+.products-grid .product-card:nth-child(3)  { animation-delay: .12s; }
+.products-grid .product-card:nth-child(4)  { animation-delay: .16s; }
+.products-grid .product-card:nth-child(5)  { animation-delay: .20s; }
+.products-grid .product-card:nth-child(6)  { animation-delay: .24s; }
+.products-grid .product-card:nth-child(7)  { animation-delay: .28s; }
+.products-grid .product-card:nth-child(8)  { animation-delay: .32s; }
+
+/* Precio en tarjeta */
+.product-card__price {
+  padding: .5rem .75rem .35rem;
+  border-top: 1px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--clr-info-bg);
+  animation: priceFlicker .35s ease both;
+}
+
+.product-card__price-amount {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-accent);
+  letter-spacing: -.02em;
+}
+
+/* Hover mejorado */
+.product-card--clickable {
+  transition: box-shadow .22s ease, transform .22s ease, border-color .22s ease;
+}
+
+.product-card--clickable:hover {
+  box-shadow: 0 10px 32px rgba(26,58,92,.14);
+  transform: translateY(-5px);
+  border-color: var(--clr-primary);
+}
+
+.product-card--clickable:active {
+  transform: translateY(-2px);
+}
+
+.product-card--clickable:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 3px;
+}
+
+.product-card--clickable .product-card__img img {
+  transition: transform .38s cubic-bezier(.25,.8,.25,1);
+}
+
+.product-card--clickable:hover .product-card__img img {
+  transform: scale(1.07);
+}
+
+/* ──────────────────────────────────────────────
+   DETALLE DE PRODUCTO — entradas escalonadas
+────────────────────────────────────────────── */
+.product-detail__gallery {
+  animation: fadeInUp .38s cubic-bezier(.25,.8,.25,1) both;
+  transition: opacity .3s ease;
+}
+
+.product-detail__gallery img {
+  animation: detailFadeIn .4s ease forwards;
+}
+
+.product-detail__info {
+  animation: fadeInUp .42s cubic-bezier(.25,.8,.25,1) both;
+  animation-delay: .1s;
+}
+
+.product-detail__specs tr {
+  transition: background .15s ease;
+}
+
+.product-detail__specs tr:hover td {
+  background: var(--clr-info-bg);
+}
+
+/* ──────────────────────────────────────────────
+   CARRITO LATERAL
+────────────────────────────────────────────── */
+#cartPanel {
+  transition: right .3s cubic-bezier(.34,1.1,.64,1);
+}
+
+#cartPanel.open {
+  right: 0 !important;
+}
+
+#cartOverlay {
+  transition: opacity .25s ease;
+}
+
+#cartOverlay.open {
+  display: block !important;
+  opacity: 1;
+}
+
+/* ──────────────────────────────────────────────
+   SIDEBAR MÓVIL
+────────────────────────────────────────────── */
+.sidebar {
+  transition: transform .28s cubic-bezier(.34,1.1,.64,1);
+}
+
+.sidebar.open {
+  transform: translateX(0) !important;
+  animation: sidebarSlideIn .28s cubic-bezier(.34,1.1,.64,1);
+}
+
+.sidebar-overlay {
+  transition: opacity .25s ease;
+}
+
+.sidebar-overlay.open {
+  opacity: 1;
+}
+
+/* Ítems del sidebar con delay escalonado */
+.sidebar.open .sidebar__nav-item {
+  animation: fadeInUp .3s ease both;
+}
+
+.sidebar.open .sidebar__nav-item:nth-child(1) { animation-delay: .05s; }
+.sidebar.open .sidebar__nav-item:nth-child(2) { animation-delay: .09s; }
+.sidebar.open .sidebar__nav-item:nth-child(3) { animation-delay: .13s; }
+.sidebar.open .sidebar__nav-item:nth-child(4) { animation-delay: .17s; }
+.sidebar.open .sidebar__nav-item:nth-child(5) { animation-delay: .21s; }
+.sidebar.open .sidebar__nav-item:nth-child(6) { animation-delay: .25s; }
+.sidebar.open .sidebar__nav-item:nth-child(7) { animation-delay: .29s; }
+.sidebar.open .sidebar__nav-item:nth-child(8) { animation-delay: .33s; }
+
+/* ──────────────────────────────────────────────
+   NAVEGACIÓN PRINCIPAL — hover animado
+────────────────────────────────────────────── */
+.main-nav__link,
+.main-nav__toggle {
+  position: relative;
+  overflow: hidden;
+}
+
+.main-nav__link::after,
+.main-nav__toggle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--clr-accent);
+  transition: width .25s ease, left .25s ease;
+}
+
+.main-nav__link:hover::after,
+.main-nav__toggle:hover::after,
+.main-nav__item.active > .main-nav__link::after,
+.main-nav__item.active > .main-nav__toggle::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Dropdown con animación */
+.dropdown,
+.dropdown--mega {
+  transform-origin: top left;
+  animation: none;
+}
+
+.main-nav__item:hover > .dropdown,
+.main-nav__item:hover > .dropdown--mega {
+  display: block;
+  animation: dropDown .2s cubic-bezier(.34,1.2,.64,1);
+}
+
+/* ──────────────────────────────────────────────
+   BOTONES GLOBALES — micro-interacciones
+────────────────────────────────────────────── */
+.btn {
+  transition: background var(--transition), opacity var(--transition),
+              border-color var(--transition), transform .15s ease,
+              box-shadow .15s ease !important;
+}
+
+.btn:active {
+  transform: scale(.96) !important;
+}
+
+.btn--primary:hover {
+  box-shadow: 0 4px 12px rgba(230,51,55,.3);
+}
+
+.btn--secondary:hover {
+  box-shadow: 0 4px 12px rgba(26,58,92,.25);
+}
+
+/* ──────────────────────────────────────────────
+   CARDS DE SERVICIOS — hover animado
+────────────────────────────────────────────── */
+.service-card {
+  transition: background var(--transition), transform .2s ease, box-shadow .2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+
+/* ──────────────────────────────────────────────
+   TARJETAS VMO
+────────────────────────────────────────────── */
+.vmo-card {
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.vmo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+
+/* ──────────────────────────────────────────────
+   LOADING SPINNER
+────────────────────────────────────────────── */
+.app-loading__spinner {
+  animation: spin .7s linear infinite;
+}
+
+/* ──────────────────────────────────────────────
+   FOOTER LINKS — hover suave
+────────────────────────────────────────────── */
+.footer-col__link {
+  transition: color var(--transition), transform .15s ease;
+}
+
+.footer-col__link:hover {
+  transform: translateX(3px);
+}
+
+/* ──────────────────────────────────────────────
+   STAT CARDS (clientes)
+────────────────────────────────────────────── */
+.stat-card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.1);
+}
+
+/* ──────────────────────────────────────────────
+   BRANDS MARQUEE — pausa suave al hover
+────────────────────────────────────────────── */
+.wrapper {
+  animation: animate 25s linear infinite;
+}
+
+.wrapper:hover {
+  animation-play-state: paused;
+}
+
+/* ──────────────────────────────────────────────
+   TOPBAR — animación de entrada
+────────────────────────────────────────────── */
+.topbar {
+  animation: fadeInUp .35s ease both;
+}
+
+.site-header {
+  animation: fadeInUp .4s ease both;
+  animation-delay: .05s;
+}
+
+/* ──────────────────────────────────────────────
+   FILTROS CATALOGO
+────────────────────────────────────────────── */
+.filter-label {
+  transition: color var(--transition), transform .15s ease;
+}
+
+.filter-label:hover {
+  transform: translateX(2px);
+}
+
+/* ──────────────────────────────────────────────
+   PAGINACIÓN
+────────────────────────────────────────────── */
+.pagination__btn {
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), transform .15s ease;
+}
+
+.pagination__btn:hover {
+  transform: scale(1.08);
+}
+
+/* ──────────────────────────────────────────────
+   TOAST
+────────────────────────────────────────────── */
+#appToast {
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
+}
+
+/* ──────────────────────────────────────────────
+   SOCIAL LINKS
+────────────────────────────────────────────── */
+.social-link,
+.footer__social-link {
+  transition: border-color var(--transition), color var(--transition),
+              transform .2s ease;
+}
+
+.social-link:hover,
+.footer__social-link:hover {
+  transform: translateY(-2px);
+}
+
+/* ──────────────────────────────────────────────
+   RESPONSIVO — deshabilitar animaciones complejas
+   en dispositivos que prefieren movimiento reducido
+────────────────────────────────────────────── */
