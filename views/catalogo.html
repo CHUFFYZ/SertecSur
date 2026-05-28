@@ -1,6 +1,6 @@
 <!-- =============================================
   VIEW: views/catalogo.html
-  Vista de catálogo con filtros y listado.
+  Vista de catálogo con filtros, búsqueda, paginación y calificaciones.
 ============================================= -->
 <div id="view-catalogo" class="view">
 
@@ -17,34 +17,62 @@
       <!-- Panel de filtros ──────────────────── -->
       <aside aria-label="Filtros de productos">
         <div class="filters">
-          <div class="filters__header">
-            <i class="fa-solid fa-sliders"></i> Filtrar productos
+          <div class="filters__header" onclick="toggleFiltersPanel()" style="cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;">
+            <span><i class="fa-solid fa-sliders"></i> Filtrar productos</span>
+            <i class="fa-solid fa-chevron-up" id="filtersChevron" style="font-size:.75rem;transition:transform .25s;"></i>
           </div>
 
-          <div class="filter-group">
-            <p class="filter-group__title">Categoría</p>
-            <label class="filter-label"><input type="checkbox" checked /> Circuito Cerrado CCTV</label>
-            <label class="filter-label"><input type="checkbox" /> Redes</label>
-            <label class="filter-label"><input type="checkbox" /> Automatización e Intrusión</label>
-            <label class="filter-label"><input type="checkbox" /> Kits con Instalación</label>
-          </div>
+          <div id="filtersBody">
+            <!-- Búsqueda dentro del filtro -->
+            <div class="filter-group">
+              <p class="filter-group__title">Buscar</p>
+              <div style="position:relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.72rem;color:var(--clr-muted);pointer-events:none;"></i>
+                <input
+                  type="search"
+                  id="catalogSearch"
+                  placeholder="Nombre o categoría…"
+                  oninput="Catalog.onSearch(this.value)"
+                  style="width:100%;padding:.4rem .6rem .4rem 1.9rem;border:1px solid var(--clr-border);border-radius:var(--radius-md);font-family:var(--font-base);font-size:.83rem;outline:none;color:var(--clr-text);background:var(--clr-bg);transition:border-color var(--transition);"
+                  onfocus="this.style.borderColor='var(--clr-primary)';this.style.background='var(--clr-white)'"
+                  onblur="this.style.borderColor='var(--clr-border)';this.style.background='var(--clr-bg)'"
+                />
+              </div>
+            </div>
 
-          <div class="filter-group">
-            <p class="filter-group__title">Tipo de cámara</p>
-            <label class="filter-label"><input type="checkbox" checked /> Bullet</label>
-            <label class="filter-label"><input type="checkbox" /> Domo</label>
-            <label class="filter-label"><input type="checkbox" /> IP</label>
-            <label class="filter-label"><input type="checkbox" /> PTZ</label>
-            <label class="filter-label"><input type="checkbox" /> DVR / NVR</label>
-          </div>
+            <div class="filter-group">
+              <p class="filter-group__title">Categoría</p>
+              <div id="filterCategories">
+                <!-- Se rellena dinámicamente desde JS -->
+                <label class="filter-label"><input type="checkbox" value="all" onchange="Catalog.onCategoryFilter(this)" checked id="filterCatAll"/> Todas</label>
+              </div>
+            </div>
 
-          <div class="filter-group">
-            <p class="filter-group__title">Marca</p>
-            <label class="filter-label"><input type="checkbox" /> Hikvision</label>
-            <label class="filter-label"><input type="checkbox" /> Dahua</label>
-            <label class="filter-label"><input type="checkbox" /> Epcom</label>
-            <label class="filter-label"><input type="checkbox" /> Saxxon</label>
-            <label class="filter-label"><input type="checkbox" /> Samsung</label>
+            <div class="filter-group">
+              <p class="filter-group__title">Simulable</p>
+              <label class="filter-label"><input type="radio" name="filterSim" value="all" onchange="Catalog.onSimFilter(this)" checked /> Todos</label>
+              <label class="filter-label"><input type="radio" name="filterSim" value="1" onchange="Catalog.onSimFilter(this)" /> Simulables</label>
+              <label class="filter-label"><input type="radio" name="filterSim" value="0" onchange="Catalog.onSimFilter(this)" /> No simulables</label>
+            </div>
+
+            <div class="filter-group">
+              <p class="filter-group__title">Calificación mínima</p>
+              <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+                <span id="filterRatingVal" style="font-size:.78rem;font-weight:700;color:var(--clr-primary);min-width:2.5rem;">Todas</span>
+                <div style="display:flex;gap:.2rem;" id="filterStars">
+                  <button class="filter-star-btn active" data-val="0" onclick="Catalog.onRatingFilter(0)" title="Todas" style="background:none;border:1px solid var(--clr-border);border-radius:4px;padding:.2rem .45rem;font-size:.72rem;cursor:pointer;color:var(--clr-muted);transition:background .15s,border-color .15s;">Todas</button>
+                  <button class="filter-star-btn" data-val="3" onclick="Catalog.onRatingFilter(3)" title="3+ estrellas" style="background:none;border:1px solid var(--clr-border);border-radius:4px;padding:.2rem .45rem;font-size:.72rem;cursor:pointer;color:#f59e0b;transition:background .15s,border-color .15s;">★★★+</button>
+                  <button class="filter-star-btn" data-val="4" onclick="Catalog.onRatingFilter(4)" title="4+ estrellas" style="background:none;border:1px solid var(--clr-border);border-radius:4px;padding:.2rem .45rem;font-size:.72rem;cursor:pointer;color:#f59e0b;transition:background .15s,border-color .15s;">★★★★+</button>
+                  <button class="filter-star-btn" data-val="5" onclick="Catalog.onRatingFilter(5)" title="Solo 5 estrellas" style="background:none;border:1px solid var(--clr-border);border-radius:4px;padding:.2rem .45rem;font-size:.72rem;cursor:pointer;color:#f59e0b;transition:background .15s,border-color .15s;">★★★★★</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-group" style="border-bottom:none;">
+              <button onclick="Catalog.resetFilters()" style="display:flex;align-items:center;gap:.4rem;width:100%;padding:.4rem .6rem;border:1px solid var(--clr-border);border-radius:var(--radius-md);background:transparent;font-family:var(--font-base);font-size:.8rem;color:var(--clr-muted);cursor:pointer;transition:border-color .15s,color .15s;" onmouseenter="this.style.borderColor='var(--clr-accent)';this.style.color='var(--clr-accent)'" onmouseleave="this.style.borderColor='var(--clr-border)';this.style.color='var(--clr-muted)'">
+                <i class="fa-solid fa-rotate-left"></i> Limpiar filtros
+              </button>
+            </div>
           </div>
         </div>
       </aside>
@@ -56,44 +84,67 @@
         </div>
 
         <div class="catalog-toolbar">
-          <nav class="pagination" aria-label="Paginación de resultados">
-            <button class="pagination__btn pagination__btn--active" aria-current="page">1</button>
-            <button class="pagination__btn">2</button>
-            <button class="pagination__btn">3</button>
-            <button class="pagination__btn">4</button>
-            <button class="pagination__btn">5</button>
-            <button class="pagination__btn" aria-label="Página siguiente">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          </nav>
-          <p class="catalog-toolbar__count">
-            Mostrando <strong>1–12</strong> de <strong>576</strong> productos
+          <!-- Paginación superior -->
+          <nav id="paginationTop" class="pagination" aria-label="Paginación de resultados" style="margin-top:0;justify-content:flex-start;"></nav>
+
+          <p class="catalog-toolbar__count" id="catalogCount" style="white-space:nowrap;">
+            Mostrando <strong id="countFrom">0</strong>–<strong id="countTo">0</strong>
+            de <strong id="countTotal">0</strong> productos
           </p>
+
           <div class="catalog-toolbar__controls">
             <label for="sort-sel"><i class="fa-solid fa-arrow-up-a-z"></i> Ordenar:</label>
-            <select id="sort-sel" class="catalog-toolbar__select">
-              <option>Más recientes</option>
-              <option>Nombre A–Z</option>
-              <option>Nombre Z–A</option>
+            <select id="sort-sel" class="catalog-toolbar__select" onchange="Catalog.onSort(this.value)">
+              <option value="recent">Más recientes</option>
+              <option value="name-asc">Nombre A–Z</option>
+              <option value="name-desc">Nombre Z–A</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+              <option value="rating-desc">Mejor calificación</option>
             </select>
           </div>
         </div>
 
-        <!-- Renderizado dinámico desde app.js: renderProducts('catalog-products', ...) -->
+        <!-- Grid de productos -->
         <div class="products-grid" id="catalog-products"></div>
 
-        <nav class="pagination" aria-label="Paginación de resultados">
-          <button class="pagination__btn pagination__btn--active" aria-current="page">1</button>
-          <button class="pagination__btn">2</button>
-          <button class="pagination__btn">3</button>
-          <button class="pagination__btn">4</button>
-          <button class="pagination__btn">5</button>
-          <button class="pagination__btn" aria-label="Página siguiente">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-        </nav>
+        <!-- Paginación inferior -->
+        <nav id="paginationBottom" class="pagination" aria-label="Paginación de resultados"></nav>
       </section>
 
     </div>
   </main>
 </div>
+
+<style>
+.filter-star-btn.active {
+  border-color: var(--clr-primary) !important;
+  background: var(--clr-info-bg) !important;
+  color: var(--clr-primary) !important;
+}
+.filter-star-btn.active[data-val="3"],
+.filter-star-btn.active[data-val="4"],
+.filter-star-btn.active[data-val="5"] {
+  border-color: #f59e0b !important;
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+/* Estrellas en las tarjetas de producto */
+.product-stars {
+  display: flex;
+  align-items: center;
+  gap: .2rem;
+  font-size: .72rem;
+  color: #f59e0b;
+}
+.product-stars .star-count {
+  color: var(--clr-muted);
+  font-size: .68rem;
+  margin-left: .15rem;
+}
+.product-stars .no-rating {
+  color: var(--clr-muted);
+  font-size: .68rem;
+}
+</style>

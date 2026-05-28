@@ -12,6 +12,7 @@ const $ = (sel,ctx=document)=>ctx.querySelector(sel);
 const $$ = (sel,ctx=document)=>[...ctx.querySelectorAll(sel)];
 
 let PRODUCTS = [];
+let RATINGS = {};
 let _toastTimer;
 let _currentView = 'home';
 
@@ -96,7 +97,7 @@ const Session = {
     menu.id='userMenu';
     menu.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:800;';
     menu.innerHTML=`
-      <div style="position:absolute;top:110px;right:1rem;background:#fff;border:1px solid var(--clr-border);border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);width:230px;overflow:hidden;z-index:801;animation:menuSlideIn .2s cubic-bezier(.34,1.56,.64,1);">
+      <div style="position:absolute;top:110px;right:1rem;background:#fff;border:1px solid var(--clr-border);border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);width:230px;overflow:hidden;z-index:801;animation:menuSlideIn .4s cubic-bezier(0.25, 1, 0.5, 1);">
         <style>@keyframes menuSlideIn{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}</style>
         <div style="padding:.85rem 1rem;background:var(--clr-primary);color:#fff;">
           <div style="font-weight:700;font-size:.9rem;">${this.user.nombre}</div>
@@ -222,19 +223,19 @@ const Cart = {
     this.renderPanel();
     const panel=document.getElementById('cartPanel');
     const overlay=document.getElementById('cartOverlay');
-    if(panel) { panel.classList.add('open'); panel.style.animation='cartSlideIn .3s cubic-bezier(.34,1.1,.64,1)'; }
-    if(overlay) { overlay.classList.add('open'); overlay.style.animation='fadeInOverlay .25s ease'; }
+    if(panel) { panel.classList.add('open'); panel.style.animation='cartSlideIn .8s cubic-bezier(0.25, 1, 0.5, 1)'; }
+    if(overlay) { overlay.classList.add('open'); overlay.style.animation='fadeInOverlay 10.9s ease'; }
   },
 
   close() {
     const panel=document.getElementById('cartPanel');
     const overlay=document.getElementById('cartOverlay');
     if(panel) {
-      panel.style.animation='cartSlideOut .25s cubic-bezier(.4,0,.6,1) forwards';
+      panel.style.animation='cartSlideOut 10.25s cubic-bezier(.4,0,.6,1) forwards';
       setTimeout(()=>{ panel.classList.remove('open'); panel.style.animation=''; },240);
     }
     if(overlay) {
-      overlay.style.animation='fadeOutOverlay .25s ease forwards';
+      overlay.style.animation='fadeOutOverlay 10.25s ease forwards';
       setTimeout(()=>{ overlay.classList.remove('open'); overlay.style.animation=''; },240);
     }
   },
@@ -244,7 +245,7 @@ const Cart = {
     if(!body) return;
 
     if(!this.items.length){
-      body.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem;color:var(--clr-muted);animation:fadeInUp .3s ease;"><i class="fa-solid fa-cart-shopping" style="font-size:2.5rem;opacity:.2;display:block;margin-bottom:.75rem;"></i><p style="font-size:.88rem;">Tu carrito está vacío</p></div>`;
+      body.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem;color:var(--clr-muted);animation:fadeInUp .8s ease;"><i class="fa-solid fa-cart-shopping" style="font-size:2.5rem;opacity:.2;display:block;margin-bottom:.75rem;"></i><p style="font-size:.88rem;">Tu carrito está vacío</p></div>`;
       document.getElementById('cartTotal').textContent='$0.00';
       const footer=document.getElementById('cartFooterBtns');
       if(footer) footer.innerHTML='';
@@ -254,7 +255,7 @@ const Cart = {
     let total=0;
     body.innerHTML=this.items.map((item,i)=>{
       const sub=(item.precio||0)*(item.cantidad||1); total+=sub;
-      return `<div style="display:flex;gap:.75rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--clr-border);animation:fadeInUp .3s ease ${i*0.05}s both;">
+      return `<div style="display:flex;gap:.75rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--clr-border);animation:fadeInUp .8s ease ${i*0.15}s both;">
         <img src="${item.img_url||''}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--clr-border);flex-shrink:0;cursor:pointer;transition:transform .2s;" onclick="Cart.close();showDetailById(${item.producto_id})" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform='scale(1)'" onerror="this.style.display='none'"/>
         <div style="flex:1;min-width:0;">
           <p style="font-size:.84rem;font-weight:500;color:var(--clr-dark);line-height:1.3;cursor:pointer;" onclick="Cart.close();showDetailById(${item.producto_id})">${item.nombre}</p>
@@ -354,9 +355,10 @@ function buildSpecs(p) {
    TARJETAS DE PRODUCTO — con precio visible
 ══════════════════════════════════════════════ */
 function productCardHTML(p) {
-  const precio = p.precio!=null
-    ? `$${p.precio.toLocaleString('es-MX',{minimumFractionDigits:2})}`
+  const precio = p.precio != null
+    ? `$${p.precio.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`
     : '';
+  const stars = starsHTML(p.id);
   return `<article class="product-card product-card--clickable" onclick="showDetailById(${p.id})" style="cursor:pointer;" tabindex="0" role="button" aria-label="Ver ${p.name}">
     <div class="product-card__img">
       <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentNode.innerHTML='<i class=\\'fa-solid fa-camera product-card__img-placeholder\\'></i>'"/>
@@ -367,12 +369,16 @@ function productCardHTML(p) {
       <h3 class="product-card__name">${p.name}</h3>
       <p class="product-card__desc">${p.desc}</p>
     </div>
-    ${precio ? `<div class="product-card__price"><span class="product-card__price-amount">${precio}</span></div>` : ''}
+    <div style="padding:.35rem .75rem .1rem;display:flex;align-items:center;justify-content:space-between;">
+      ${stars}
+      ${precio ? `<span style="font-size:.85rem;font-weight:700;color:var(--clr-accent);">${precio}</span>` : ''}
+    </div>
     <div class="product-card__footer" style="display:flex;gap:.5rem;justify-content:flex-end;" onclick="event.stopPropagation()">
       <button class="btn btn--primary btn--sm" onclick="Cart.add(${p.id})" style="background:var(--clr-accent);border-color:var(--clr-accent);" title="Agregar al carrito"><i class="fa-solid fa-cart-plus"></i></button>
     </div>
   </article>`;
 }
+ 
 
 function renderProducts(containerID,items){
   const el=document.getElementById(containerID);
@@ -413,7 +419,7 @@ function _activateView(viewID) {
 
   switch(viewID){
     case 'home':             renderProducts('home-products',PRODUCTS.slice(0,8)); break;
-    case 'catalogo':         renderProducts('catalog-products',PRODUCTS); break;
+    case 'catalogo':         Catalog.init(); break;
     case 'simulador':        if(typeof Sim!=='undefined'&&Sim.init) setTimeout(()=>Sim.init(),50); break;
     case 'mis-cotizaciones': loadMisCotizaciones(); break;
     case 'detalle':
@@ -427,15 +433,10 @@ function _activateView(viewID) {
   }
 }
 
-function showCatalog(category){
+function showCatalog(category) {
   pushView('catalogo');
-  const bcEl=document.getElementById('bc-category');
-  const titleEl=document.getElementById('catalog-title');
-  if(bcEl) bcEl.textContent=category;
-  if(titleEl) titleEl.textContent=category;
   _activateView('catalogo');
-  const filtered=category?PRODUCTS.filter(p=>p.cat===category):PRODUCTS;
-  setTimeout(()=>renderProducts('catalog-products',filtered.length?filtered:PRODUCTS),50);
+  setTimeout(() => Catalog.filterByCategory(category), 80);
 }
 
 /* ── Rellena la vista de detalle con los datos del producto ── */
@@ -464,6 +465,8 @@ function _fillDetail(p) {
     if(nameEl&&nameEl.parentNode) nameEl.parentNode.insertBefore(priceEl, nameEl.nextSibling);
   }
   priceEl.textContent = p.precio!=null ? `$${p.precio.toLocaleString('es-MX',{minimumFractionDigits:2})} MXN` : '';
+
+  _injectDetailStars(p.id);
 
   const tbody=document.querySelector('#view-detalle .product-detail__specs tbody');
   if(tbody) tbody.innerHTML=Object.entries(p.specs).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
@@ -795,6 +798,327 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+
+/*----------------------------------------------------------------------------------*/
+async function loadRatings() {
+  /* Intenta cargar calificaciones de cada producto.
+     Si la BD no tiene endpoint /resenas masivo, usamos datos locales. */
+  try {
+    const ids = PRODUCTS.map(p => p.id);
+    await Promise.all(ids.map(async id => {
+      try {
+        const r = await fetch(`db.php?action=resenas&producto_id=${id}`);
+        const d = await r.json();
+        if (d.ok && d.data && d.data.length) {
+          const avg = d.data.reduce((s, r) => s + parseFloat(r.calificacion), 0) / d.data.length;
+          RATINGS[id] = { avg: Math.round(avg * 10) / 10, count: d.data.length };
+        }
+      } catch {}
+    }));
+  } catch {}
+}
+
+/* ── STARS HELPER ─────────────────────────────────────────────── */
+function starsHTML(productId, size = 'sm') {
+  const r = RATINGS[productId];
+  if (!r || !r.count) {
+    return `<div class="product-stars"><span class="no-rating">Sin reseñas</span></div>`;
+  }
+  const full = Math.floor(r.avg);
+  const half = r.avg - full >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  const fs = size === 'lg' ? '1rem' : '.72rem';
+  let s = `<div class="product-stars" style="font-size:${fs};">`;
+  for (let i = 0; i < full;  i++) s += `<i class="fa-solid fa-star"></i>`;
+  if (half)                        s += `<i class="fa-solid fa-star-half-stroke"></i>`;
+  for (let i = 0; i < empty; i++) s += `<i class="fa-regular fa-star" style="color:#d1d5db;"></i>`;
+  s += `<span class="star-count">(${r.count})</span>`;
+  s += `</div>`;
+  return s;
+}
+
+
+/* ══════════════════════════════════════════════
+   CATALOG CONTROLLER
+══════════════════════════════════════════════ */
+const Catalog = (() => {
+  const PER_PAGE = 12;
+
+  let _state = {
+    search:   '',
+    category: 'all',
+    sim:      'all',
+    rating:   0,
+    sort:     'recent',
+    page:     1,
+  };
+
+  /* Devuelve lista filtrada + ordenada */
+  function _filtered() {
+    let list = [...PRODUCTS];
+
+    /* Búsqueda */
+    if (_state.search) {
+      const q = _state.search.toLowerCase();
+      list = list.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.cat.toLowerCase().includes(q)  ||
+        (p.desc || '').toLowerCase().includes(q)
+      );
+    }
+
+    /* Categoría */
+    if (_state.category && _state.category !== 'all') {
+      list = list.filter(p => p.cat === _state.category);
+    }
+
+    /* Simulable */
+    if (_state.sim === '1') list = list.filter(p => p.simulable);
+    if (_state.sim === '0') list = list.filter(p => !p.simulable);
+
+    /* Calificación mínima */
+    if (_state.rating > 0) {
+      list = list.filter(p => {
+        const r = RATINGS[p.id];
+        return r && r.avg >= _state.rating;
+      });
+    }
+
+    /* Ordenar */
+    switch (_state.sort) {
+      case 'name-asc':
+        list.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case 'name-desc':
+        list.sort((a, b) => b.name.localeCompare(a.name)); break;
+      case 'price-asc':
+        list.sort((a, b) => (a.precio || 0) - (b.precio || 0)); break;
+      case 'price-desc':
+        list.sort((a, b) => (b.precio || 0) - (a.precio || 0)); break;
+      case 'rating-desc':
+        list.sort((a, b) => {
+          const ra = RATINGS[a.id] ? RATINGS[a.id].avg : 0;
+          const rb = RATINGS[b.id] ? RATINGS[b.id].avg : 0;
+          return rb - ra;
+        });
+        break;
+      /* 'recent' = orden por id desc (más reciente primero) */
+      default:
+        list.sort((a, b) => b.id - a.id);
+    }
+
+    return list;
+  }
+
+  function _page(list) {
+    const start = (_state.page - 1) * PER_PAGE;
+    return list.slice(start, start + PER_PAGE);
+  }
+
+  function _renderPagination(total, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const pages = Math.ceil(total / PER_PAGE);
+    if (pages <= 1) { el.innerHTML = ''; return; }
+
+    let html = '';
+    /* Prev */
+    html += `<button class="pagination__btn" ${_state.page === 1 ? 'disabled' : ''} onclick="Catalog.goPage(${_state.page - 1})" aria-label="Página anterior"><i class="fa-solid fa-chevron-left"></i></button>`;
+
+    /* Páginas: muestra máximo 7 botones con elipsis */
+    const range = [];
+    for (let i = 1; i <= pages; i++) {
+      if (i === 1 || i === pages || (i >= _state.page - 2 && i <= _state.page + 2)) range.push(i);
+      else if (range[range.length - 1] !== '…') range.push('…');
+    }
+
+    range.forEach(p => {
+      if (p === '…') {
+        html += `<button class="pagination__btn" disabled>…</button>`;
+      } else {
+        html += `<button class="pagination__btn ${p === _state.page ? 'pagination__btn--active' : ''}" onclick="Catalog.goPage(${p})" aria-label="Página ${p}" ${p === _state.page ? 'aria-current="page"' : ''}>${p}</button>`;
+      }
+    });
+
+    /* Next */
+    html += `<button class="pagination__btn" ${_state.page === pages ? 'disabled' : ''} onclick="Catalog.goPage(${_state.page + 1})" aria-label="Página siguiente"><i class="fa-solid fa-chevron-right"></i></button>`;
+
+    el.innerHTML = html;
+  }
+
+  function _renderCount(from, to, total) {
+    const el = id => document.getElementById(id);
+    if (el('countFrom'))  el('countFrom').textContent  = total ? from : 0;
+    if (el('countTo'))    el('countTo').textContent    = total ? to   : 0;
+    if (el('countTotal')) el('countTotal').textContent = total;
+  }
+
+  function _buildCategoryFilters() {
+    const el = document.getElementById('filterCategories');
+    if (!el || !PRODUCTS.length) return;
+
+    const cats = [...new Set(PRODUCTS.map(p => p.cat))].sort();
+    let html = `<label class="filter-label"><input type="checkbox" value="all" id="filterCatAll" onchange="Catalog.onCategoryFilter(this)" ${_state.category === 'all' ? 'checked' : ''}/> Todas</label>`;
+    cats.forEach(cat => {
+      const count = PRODUCTS.filter(p => p.cat === cat).length;
+      html += `<label class="filter-label"><input type="checkbox" value="${cat}" onchange="Catalog.onCategoryFilter(this)" ${_state.category === cat ? 'checked' : ''}/> ${cat} <span style="color:var(--clr-muted);font-size:.72rem;margin-left:.25rem;">(${count})</span></label>`;
+    });
+    el.innerHTML = html;
+  }
+
+  /* ── Render principal ───────────────────── */
+  function render() {
+    const all    = _filtered();
+    const total  = all.length;
+    const page   = _page(all);
+    const from   = total ? (_state.page - 1) * PER_PAGE + 1 : 0;
+    const to     = Math.min(_state.page * PER_PAGE, total);
+
+    renderProducts('catalog-products', page);
+    _renderCount(from, to, total);
+    _renderPagination(total, 'paginationTop');
+    _renderPagination(total, 'paginationBottom');
+  }
+
+  /* ── API pública ────────────────────────── */
+  return {
+    init() {
+      _buildCategoryFilters();
+      render();
+    },
+
+    onSearch(val) {
+      _state.search = val.trim();
+      _state.page   = 1;
+      render();
+    },
+
+    onCategoryFilter(checkbox) {
+      if (checkbox.value === 'all') {
+        /* Desmarcar todas las demás */
+        document.querySelectorAll('#filterCategories input[type="checkbox"]').forEach(cb => {
+          cb.checked = cb.value === 'all';
+        });
+        _state.category = 'all';
+      } else {
+        if (checkbox.checked) {
+          /* Desmarcar "Todas" */
+          const all = document.getElementById('filterCatAll');
+          if (all) all.checked = false;
+          _state.category = checkbox.value;
+        } else {
+          /* Si se desmarca, volver a "Todas" */
+          _state.category = 'all';
+          const all = document.getElementById('filterCatAll');
+          if (all) all.checked = true;
+        }
+        /* Desmarcar otras categorías */
+        document.querySelectorAll('#filterCategories input[type="checkbox"]').forEach(cb => {
+          if (cb.value !== 'all' && cb.value !== _state.category) cb.checked = false;
+        });
+      }
+      _state.page = 1;
+      render();
+    },
+
+    onSimFilter(radio) {
+      _state.sim  = radio.value;
+      _state.page = 1;
+      render();
+    },
+
+    onRatingFilter(val) {
+      _state.rating = val;
+      _state.page   = 1;
+      /* Actualizar botones */
+      document.querySelectorAll('.filter-star-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.val) === val);
+      });
+      const labelEl = document.getElementById('filterRatingVal');
+      if (labelEl) labelEl.textContent = val === 0 ? 'Todas' : `${val}★ +`;
+      render();
+    },
+
+    onSort(val) {
+      _state.sort = val;
+      _state.page = 1;
+      render();
+    },
+
+    goPage(page) {
+      _state.page = page;
+      render();
+      /* Scroll al tope de la sección */
+      const sec = document.getElementById('view-catalogo');
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+
+    /* Permite filtrar por categoría desde el menú de navegación */
+    filterByCategory(cat) {
+      _state.category = cat || 'all';
+      _state.search   = '';
+      _state.page     = 1;
+      const searchEl = document.getElementById('catalogSearch');
+      if (searchEl) searchEl.value = '';
+      /* Actualizar checkboxes visualmente */
+      document.querySelectorAll('#filterCategories input[type="checkbox"]').forEach(cb => {
+        cb.checked = cb.value === (_state.category);
+      });
+      const allCb = document.getElementById('filterCatAll');
+      if (allCb) allCb.checked = (_state.category === 'all');
+      render();
+      /* Actualizar breadcrumb y título */
+      const bcEl    = document.getElementById('bc-category');
+      const titleEl = document.getElementById('catalog-title');
+      if (bcEl)    bcEl.textContent    = cat || 'Catálogo';
+      if (titleEl) titleEl.textContent = cat || 'Catálogo de Productos';
+    },
+
+    resetFilters() {
+      _state = { search: '', category: 'all', sim: 'all', rating: 0, sort: 'recent', page: 1 };
+      const searchEl = document.getElementById('catalogSearch');
+      if (searchEl) searchEl.value = '';
+      const sortEl = document.getElementById('sort-sel');
+      if (sortEl) sortEl.value = 'recent';
+      document.querySelectorAll('input[name="filterSim"]').forEach(r => { r.checked = r.value === 'all'; });
+      document.querySelectorAll('.filter-star-btn').forEach(btn => { btn.classList.toggle('active', btn.dataset.val === '0'); });
+      const labelEl = document.getElementById('filterRatingVal');
+      if (labelEl) labelEl.textContent = 'Todas';
+      _buildCategoryFilters();
+      render();
+    },
+  };
+})();
+
+/* ══════════════════════════════════════════════
+   TOGGLE FILTROS (colapso)
+══════════════════════════════════════════════ */
+function toggleFiltersPanel() {
+  const body     = document.getElementById('filtersBody');
+  const chevron  = document.getElementById('filtersChevron');
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : '';
+  if (chevron) chevron.style.transform = isOpen ? 'rotate(180deg)' : '';
+}
+
+/* ══════════════════════════════════════════════
+   DETAIL VIEW — con estrellas grandes
+   Agregar dentro de _fillDetail(), después de
+   setear el precio, el bloque de estrellas.
+══════════════════════════════════════════════ */
+function _injectDetailStars(productId) {
+  let starsEl = document.getElementById('detail-stars');
+  if (!starsEl) {
+    starsEl = document.createElement('div');
+    starsEl.id = 'detail-stars';
+    starsEl.style.cssText = 'margin:.35rem 0 .75rem;display:flex;align-items:center;gap:.5rem;';
+    const priceEl = document.getElementById('detail-price');
+    if (priceEl && priceEl.parentNode) {
+      priceEl.parentNode.insertBefore(starsEl, priceEl);
+    }
+  }
+  starsEl.innerHTML = starsHTML(productId, 'lg');
+}
 /* ══════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════ */
@@ -804,4 +1128,5 @@ async function initSession(){
   if(Session.user?.rol==='cliente') await Cart.load();
   const initView=getHashView();
   history.replaceState({view:initView},'',window.location.hash||'#home');
+  await loadRatings();
 }

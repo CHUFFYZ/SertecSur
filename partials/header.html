@@ -37,13 +37,14 @@
       <form class="search-form" role="search" onsubmit="return false;">
         <label for="site-search" class="sr-only">Buscar productos</label>
         <input
-          id="site-search"
-          class="search-form__input"
           type="search"
+          id="catalogSearch"
+          oninput="Catalog.onSearch(this.value)"
+          class="search-form__input"
           placeholder="Buscar cámaras, redes, alarmas…"
           autocomplete="off"
         />
-        <button class="search-form__btn" type="submit" aria-label="Buscar">
+        <button class="search-form__btn" type="submit" aria-label="Buscar" href="#" onclick="showView('catalogo'); return false;">
           <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         </button>
       </form>
