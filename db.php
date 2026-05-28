@@ -92,7 +92,12 @@ case 'POST:login':
   $stmt=$pdo->prepare('SELECT u.*,e.id_empleado FROM Usuario u LEFT JOIN Empleado e ON e.usuario_id=u.id_usuario WHERE u.correo=?');
   $stmt->execute([$correo]);
   $user=$stmt->fetch();
-  if(!$user||$user['contrasena']!==$pass) jsonError('Credenciales incorrectas');
+  /*if(!$user||$user['contrasena']!==$pass) jsonError('Credenciales incorrectas');*/
+  $esValido = password_verify($pass, $user['contrasena'])
+            || $user['contrasena'] === $pass;
+  if(!(int)($user['verificado'] ?? 1)) jsonError('Verifica tu cuenta primero.');
+  /*------------------*/
+  if(!$user || !$esValido) jsonError('Credenciales incorrectas');
   $rol=$user['id_empleado']?'admin':'cliente';
   $cid=null;
   if($rol==='cliente'){

@@ -31,6 +31,7 @@ const VIEW_MAP = {
   '#login':            'login',
   '#contacto':         'contacto',
   '#mis-cotizaciones': 'mis-cotizaciones',
+  '#registro': 'registro',
 };
 
 function getHashView() {

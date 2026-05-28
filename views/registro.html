@@ -1,0 +1,192 @@
+<!-- VIEW: views/registro.html -->
+<div id="view-registro" class="view">
+
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol class="breadcrumb__list">
+      <li class="breadcrumb__item"><a class="breadcrumb__link" href="#" onclick="showView('home');return false;">Inicio</a></li>
+      <li class="breadcrumb__item">Crear cuenta</li>
+    </ol>
+  </nav>
+
+  <div class="reg-wrapper">
+
+    <!-- Panel izquierdo decorativo -->
+    <div class="reg-panel" aria-hidden="true">
+      <div class="reg-panel__noise"></div>
+      <div class="reg-panel__content">
+        <i class="fa-solid fa-shield-halved reg-panel__icon"></i>
+        <h2 class="reg-panel__title">Protege lo que más importa</h2>
+        <p class="reg-panel__sub">Accede a cotizaciones, historial y el simulador interactivo con tu cuenta SERTECSUR.</p>
+        <ul class="reg-panel__list">
+          <li><i class="fa-solid fa-circle-check"></i> Cotizaciones con PDF descargable</li>
+          <li><i class="fa-solid fa-circle-check"></i> Simulador de seguridad</li>
+          <li><i class="fa-solid fa-circle-check"></i> Historial de pedidos</li>
+          <li><i class="fa-solid fa-circle-check"></i> Reseñas de productos</li>
+        </ul>
+      </div>
+      <div class="reg-panel__rings" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Panel derecho: formularios -->
+    <div class="reg-box" id="regBox">
+
+      <!-- ── PASO 1: Registro ─────────────────── -->
+      <div id="stepRegistro" class="reg-step active">
+        <div class="reg-box__logo">
+          <img src="img/SVG/logo.svg" alt="SERTECSUR" onerror="this.style.display='none'"/>
+        </div>
+        <h1 class="reg-box__title"><i class="fa-solid fa-user-plus"></i> Crear cuenta</h1>
+        <p class="reg-box__sub">Completa tus datos para registrarte</p>
+
+        <div id="regAlert" class="reg-alert" style="display:none;"></div>
+
+        <div class="reg-form" id="formRegistro">
+
+          <div class="reg-field">
+            <label class="reg-label" for="reg-nombre">
+              <i class="fa-solid fa-user"></i> Nombre completo *
+            </label>
+            <input class="reg-input" type="text" id="reg-nombre" placeholder="Juan Pérez" autocomplete="name" required/>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label" for="reg-correo">
+              <i class="fa-solid fa-envelope"></i> Correo electrónico *
+            </label>
+            <input class="reg-input" type="email" id="reg-correo" placeholder="tu@correo.com" autocomplete="email" required/>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label" for="reg-telefono">
+              <i class="fa-solid fa-mobile-screen"></i> Teléfono <span class="reg-opt">(opcional)</span>
+            </label>
+            <input class="reg-input" type="tel" id="reg-telefono" placeholder="938 000 0000" autocomplete="tel"/>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label" for="reg-pass">
+              <i class="fa-solid fa-lock"></i> Contraseña *
+            </label>
+            <div class="reg-pass-wrap">
+              <input class="reg-input" type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password" required oninput="Registro.evalPass(this.value)"/>
+              <button type="button" class="reg-eye" onclick="Registro.togglePass('reg-pass',this)" aria-label="Mostrar contraseña">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <div class="reg-strength" id="regStrength">
+              <div class="reg-strength__bar"><div class="reg-strength__fill" id="regStrengthFill"></div></div>
+              <span class="reg-strength__label" id="regStrengthLabel"></span>
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label" for="reg-pass2">
+              <i class="fa-solid fa-lock"></i> Confirmar contraseña *
+            </label>
+            <div class="reg-pass-wrap">
+              <input class="reg-input" type="password" id="reg-pass2" placeholder="Repite tu contraseña" autocomplete="new-password" required/>
+              <button type="button" class="reg-eye" onclick="Registro.togglePass('reg-pass2',this)" aria-label="Mostrar contraseña">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label"><i class="fa-solid fa-paper-plane"></i> Verificar vía *</label>
+            <div class="reg-via-group">
+              <label class="reg-via-opt" id="viaEmail">
+                <input type="radio" name="reg-via" value="email" checked onchange="Registro.onViaChange(this)"/>
+                <i class="fa-solid fa-envelope"></i>
+                <span>Correo</span>
+              </label>
+              <label class="reg-via-opt" id="viaWa">
+                <input type="radio" name="reg-via" value="whatsapp" onchange="Registro.onViaChange(this)"/>
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>WhatsApp</span>
+              </label>
+            </div>
+            <p class="reg-via-hint" id="regViaHint" style="display:none;">
+              <i class="fa-solid fa-circle-info"></i> Se abrirá WhatsApp para enviar el código a tu número.
+            </p>
+          </div>
+
+          <button class="reg-btn reg-btn--primary" id="regSubmitBtn" onclick="Registro.enviar()">
+            <i class="fa-solid fa-user-plus"></i> Crear cuenta
+          </button>
+
+          <p class="reg-footer-link">
+            ¿Ya tienes cuenta?
+            <a href="#" onclick="showView('login');return false;">Iniciar sesión</a>
+          </p>
+
+        </div>
+      </div>
+
+      <!-- ── PASO 2: Verificación OTP ─────────── -->
+      <div id="stepOTP" class="reg-step">
+        <div class="otp-header">
+          <div class="otp-icon-wrap" id="otpIconWrap">
+            <i class="fa-solid fa-envelope otp-icon" id="otpIcon"></i>
+          </div>
+          <h2 class="reg-box__title" style="font-size:1.15rem;">Verificación en dos pasos</h2>
+          <p class="reg-box__sub" id="otpSubtitle">Ingresa el código de 6 dígitos enviado a tu correo</p>
+        </div>
+
+        <div id="otpAlert" class="reg-alert" style="display:none;"></div>
+
+        <div class="otp-inputs-wrap">
+          <div class="otp-inputs" id="otpInputs" role="group" aria-label="Código de verificación">
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d" aria-label="Dígito 1"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d" aria-label="Dígito 2"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d" aria-label="Dígito 3"/>
+            <div class="otp-sep" aria-hidden="true">—</div>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d" aria-label="Dígito 4"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d" aria-label="Dígito 5"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d" aria-label="Dígito 6"/>
+          </div>
+        </div>
+
+        <div class="otp-timer" id="otpTimerWrap">
+          <i class="fa-regular fa-clock"></i>
+          Expira en <strong id="otpTimer">15:00</strong>
+        </div>
+
+        <button class="reg-btn reg-btn--primary" id="otpVerifyBtn" onclick="Registro.verificar()" disabled>
+          <i class="fa-solid fa-shield-check"></i> Verificar código
+        </button>
+
+        <div class="otp-actions">
+          <button class="reg-link-btn" id="otpResendBtn" onclick="Registro.reenviar()">
+            <i class="fa-solid fa-rotate-right"></i> Reenviar código
+          </button>
+          <button class="reg-link-btn" onclick="Registro.volverAlFormulario()">
+            <i class="fa-solid fa-arrow-left"></i> Cambiar datos
+          </button>
+        </div>
+      </div>
+
+      <!-- ── PASO 3: Éxito ─────────────────────── -->
+      <div id="stepExito" class="reg-step">
+        <div class="exito-wrap">
+          <div class="exito-icon-wrap">
+            <i class="fa-solid fa-circle-check exito-icon"></i>
+          </div>
+          <h2 class="exito-title">¡Cuenta verificada!</h2>
+          <p class="exito-sub" id="exitoSub">Bienvenido a SERTECSUR. Tu cuenta está lista.</p>
+          <button class="reg-btn reg-btn--primary" style="margin-top:1.5rem;" onclick="showView('home')">
+            <i class="fa-solid fa-house"></i> Ir al inicio
+          </button>
+          <button class="reg-btn reg-btn--ghost" style="margin-top:.5rem;" onclick="showView('catalogo')">
+            <i class="fa-solid fa-box-open"></i> Ver catálogo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+
+</div>

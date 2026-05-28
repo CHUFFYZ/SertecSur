@@ -366,6 +366,35 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `direccion`, `telefono`, `correo`
 	(4, 'Ana Torres', 'Calle 4 #40, Col. Obrera', '9384444444', 'ana@mail.com', '1234', '2026-05-18 20:08:09'),
 	(5, 'Admin SERTECSUR', 'Calle 55 #50, Col. Electricistas', '9381532506', 'admin@mail.com', 'admin', '2026-05-18 20:08:09');
 
+
+ALTER TABLE `usuario` ADD COLUMN `verificado` TINYINT(1) DEFAULT 0 AFTER `contrasena`;
+ALTER TABLE `usuario` ADD COLUMN `via_verificacion` VARCHAR(20) DEFAULT 'email' AFTER `verificado`;
+
+CREATE TABLE IF NOT EXISTS `verificaciones_temporales` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `usuario_id` INT NOT NULL,
+  `token` VARCHAR(6) NOT NULL,
+  `tipo` ENUM('registro','reset') NOT NULL DEFAULT 'registro',
+  `via` ENUM('email','whatsapp') NOT NULL DEFAULT 'email',
+  `intentos` TINYINT UNSIGNED DEFAULT 0,
+  `usado` TINYINT(1) DEFAULT 0,
+  `expira_en` DATETIME NOT NULL,
+  `creado_en` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_usuario_tipo` (`usuario_id`, `tipo`),
+  CONSTRAINT `vt_usuario_fk` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `rate_limit_otp` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `identificador` VARCHAR(100) NOT NULL,
+  `accion` VARCHAR(50) NOT NULL,
+  `contador` SMALLINT UNSIGNED DEFAULT 1,
+  `ventana_inicio` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_ident_accion` (`identificador`, `accion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

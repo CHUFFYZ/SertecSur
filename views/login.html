@@ -74,9 +74,63 @@
       </div>
 
       <hr class="login-divider" />
-      <a class="login-link" href="#"><i class="fa-solid fa-key"></i> ¿Olvidaste tu contraseña?</a>
-
+      <a class="login-link" href="#" 
+        onclick="Registro.abrirReset();return false;">
+        <i class="fa-solid fa-key"></i> ¿Olvidaste tu contraseña?
+      </a>
+      <a class="login-link" href="#"
+        onclick="showView('registro');return false;">
+        <i class="fa-solid fa-user-plus"></i> Crear cuenta nueva
+      </a>
     </div>
   </div>
+  <!-- ── MODAL Reset de contraseña ─────────── -->
+  <div id="resetOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:800;display:none;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)Registro.cerrarReset()">
+    <div id="resetModal" style="background:#fff;border-radius:14px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.2);animation:regStepIn .3s cubic-bezier(.34,1.2,.64,1);">
+      <div style="background:var(--clr-primary);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <p style="color:#fff;font-weight:700;font-size:.95rem;"><i class="fa-solid fa-key"></i> Restablecer contraseña</p>
+          <p style="color:rgba(255,255,255,.6);font-size:.75rem;" id="resetSubtitle">Ingresa tu correo registrado</p>
+        </div>
+        <button onclick="Registro.cerrarReset()" style="color:rgba(255,255,255,.7);font-size:1.1rem;background:none;border:none;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="padding:1.5rem;">
+        <div id="resetAlert" class="reg-alert" style="display:none;margin-bottom:1rem;"></div>
 
+        <div id="resetStep1">
+          <div class="reg-field">
+            <label class="reg-label" for="reset-correo"><i class="fa-solid fa-envelope"></i> Correo electrónico</label>
+            <input class="reg-input" type="email" id="reset-correo" placeholder="tu@correo.com"/>
+          </div>
+          <button class="reg-btn reg-btn--primary" onclick="Registro.resetSolicitar()">
+            <i class="fa-solid fa-paper-plane"></i> Enviar código
+          </button>
+        </div>
+
+        <div id="resetStep2" style="display:none;">
+          <p style="font-size:.84rem;color:var(--clr-muted);margin-bottom:1rem;">Ingresa el código recibido y tu nueva contraseña.</p>
+          <div class="otp-inputs" id="resetOtpInputs" role="group" style="margin-bottom:1rem;">
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d"/>
+            <div class="otp-sep">—</div>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d"/>
+            <input class="otp-cell" type="text" inputmode="numeric" maxlength="1" pattern="\d"/>
+          </div>
+          <div class="reg-field">
+            <label class="reg-label" for="reset-pass"><i class="fa-solid fa-lock"></i> Nueva contraseña</label>
+            <div class="reg-pass-wrap">
+              <input class="reg-input" type="password" id="reset-pass" placeholder="Mínimo 8 caracteres"/>
+              <button type="button" class="reg-eye" onclick="Registro.togglePass('reset-pass',this)"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <button class="reg-btn reg-btn--primary" onclick="Registro.resetVerificar()">
+            <i class="fa-solid fa-shield-check"></i> Cambiar contraseña
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>

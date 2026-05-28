@@ -11,6 +11,7 @@ const Loader = (() => {
     'views/home.html','views/catalogo.html','views/detalle.html',
     'views/simulador.html','views/vision.html','views/clientes.html',
     'views/login.html','views/contacto.html','views/mis-cotizaciones.html',
+    'views/registro.html',
   ];
   async function fetchHTML(url) {
     try { const r=await fetch(url); if(!r.ok){console.warn(`[Loader] No cargó: ${url}`);return '';} return r.text(); }
